@@ -1,4 +1,4 @@
-namespace API.Domain;
+namespace api.Domain;
 
 public class User
 {
