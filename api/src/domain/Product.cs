@@ -6,7 +6,6 @@ public class Product
     public required string Name { get; set; }
     public string? Brand { get; set; }
     public string? ImageUrl { get; set; }
-    
     public string Category { get; set; } = "General";
 
     public int SustainabilityScore { get; set; }

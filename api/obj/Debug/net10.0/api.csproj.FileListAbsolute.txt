@@ -154,3 +154,8 @@ C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\bin\Debug\net10
 C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\bin\Debug\net10.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\bin\Debug\net10.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\obj\Debug\net10.0\api.csproj.Up2Date
+C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\bin\Debug\net10.0\Microsoft.OpenApi.dll
+C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Danie\OneDrive\Desktop\AI-keukenkastje\AIkeukenkast\api\obj\Debug\net10.0\api.MvcApplicationPartsAssemblyInfo.cs
