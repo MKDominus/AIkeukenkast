@@ -1,6 +1,18 @@
+<script lang="ts">
+    type KpiStatistic = {
+        statisticTitle: string
+        statistic: string
+    }
+
+    let {
+        statisticTitle,
+        statistic
+    }: KpiStatistic = $props()
+</script>
+
 <div id="contentBody">
-    <slot id="statisticTitle" name="statisticTitle"></slot>
-    <slot name="statistic"></slot>
+    <h2 id="statisticTitle">{statisticTitle}</h2>
+    <p>{statistic}</p>
 </div>
 
 <style>
@@ -8,7 +20,7 @@
         background-color: grey;
         padding: 20px;
         margin: auto;
-        min-width: 200px;
+        min-width: 230px;
         max-width: 400px;
     }
 
