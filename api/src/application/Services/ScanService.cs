@@ -18,6 +18,7 @@ public class ScanService : IScanService
     {
         return await _context.Scans
             .Include(s => s.DetectedProducts)
+            .ThenInclude(dp => dp.Product)
             .Include(s => s.User)
             .Include(s => s.Municipality)
             .ToListAsync();
@@ -60,6 +61,7 @@ public class ScanService : IScanService
     {
         return await _context.Scans
             .Include(s => s.DetectedProducts)
+            .ThenInclude(dp => dp.Product)
             .Where(s => s.UserId == userId)
             .ToListAsync();
     }

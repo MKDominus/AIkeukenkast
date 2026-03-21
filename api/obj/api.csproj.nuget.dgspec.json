@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\api.csproj": {}
+    "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\api.csproj": {
+    "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\api.csproj",
+        "projectUniqueName": "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\api.csproj",
-        "packagesPath": "C:\\Users\\youss\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\obj\\",
+        "projectPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj",
+        "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\youss\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.104/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
