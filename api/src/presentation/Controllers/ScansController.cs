@@ -111,7 +111,8 @@ public class ScansController : ControllerBase
             { 
                 Id = dp.Product.Id, 
                 Name = dp.Product.Name, 
-                Brand = dp.Product.Brand 
+                Brand = dp.Product.Brand,
+                IsSustainable = dp.Product.IsSustainable
             } : null
         }).ToList()
     };

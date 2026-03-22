@@ -7,6 +7,7 @@ export type ScanProduct = {
         id: number;
         name: string;
         brand: string;
+        isSustainable: boolean;
     } | null;
 };
 

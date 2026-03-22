@@ -2,6 +2,8 @@
 	import Header from '$lib/components/Header.svelte';
     import KpiStatistic from '$lib/components/KpiStatistic.svelte';
     import DropdownMenu from '$lib/components/DropdownMenu.svelte';
+    import ScanCard from '$lib/components/ScanCard.svelte';
+    import type { Scan } from '$lib/services/scanService';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -12,6 +14,14 @@
         title: string
         value: string
     }
+
+    type Props = {
+        data: {
+            scans: Scan[];
+        };
+    };
+
+    let { data }: Props = $props();
 
     let exampleMunicipalities: MunicipalityDropDownItem[] = [
         {label: "test", value: 1}, 
@@ -43,6 +53,16 @@
     <DropdownMenu dropdownTitle="Test" dropdownItems={exampleMunicipalities} itemChosenEvent={applyFilter}></DropdownMenu>
 </div>
 
+<div class="scansContainer">
+    {#if data.scans.length === 0}
+        <p>No scans found.</p>
+    {:else}
+        {#each data.scans as scan}
+            <ScanCard {scan} />
+        {/each}
+    {/if}
+</div>
+
 <style>
     #KpiStatisticsFlexBox {
         display: flex;
@@ -54,4 +74,11 @@
         padding: 10px;
         margin: 30px;
     }
+
+	.scansContainer {
+        padding: 10px;
+        margin: 30px;
+        width: calc(100% - 60px);
+        box-sizing: border-box;
+	}
 </style>
