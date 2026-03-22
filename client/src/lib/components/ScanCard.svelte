@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { cubicOut } from 'svelte/easing';
+	import { slide } from 'svelte/transition';
 	import type { Scan, ScanProduct } from '$lib/services/scanService';
 
 	type Props = {
@@ -25,8 +27,14 @@
 <article class="scan-card">
 	<div class="scan-card-header">
 		<div class="scan-main-info">
-			<h3 class="municipality-label">municipality</h3>
-			<p class="municipality-name">{scan.municipality?.name ?? 'Onbekende gemeente'}</p>
+			<div class="municipality-block">
+				<svg class="municipality-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2001" height="2001" viewBox="0 0 2001 2001" aria-hidden="true">
+					<path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="0" d="M 0.921875 0.078125 L 2000.921875 0.078125 L 2000.921875 2000.078125 L 0.921875 2000.078125 L 0.921875 0.078125 "/>
+					<path fill-rule="evenodd" fill="currentColor" fill-opacity="1" d="M 1000.921875 506.410156 C 1185.269531 506.410156 1334.710938 655.851562 1334.710938 840.199219 C 1334.710938 960.078125 1262.21875 1049.703125 1204.289062 1148.144531 L 1000.921875 1493.753906 L 797.546875 1148.144531 C 739.617188 1049.703125 667.128906 960.078125 667.128906 840.199219 C 667.128906 655.851562 816.570312 506.410156 1000.921875 506.410156 Z M 1000.921875 689.648438 C 1086.308594 689.648438 1155.53125 758.871094 1155.53125 844.261719 C 1155.53125 929.648438 1086.308594 998.871094 1000.921875 998.871094 C 915.53125 998.871094 846.308594 929.648438 846.308594 844.261719 C 846.308594 758.871094 915.53125 689.648438 1000.921875 689.648438 "/>
+				</svg>
+				<h3 class="municipality-label">municipality</h3>
+				<p class="municipality-name">{scan.municipality?.name ?? 'Onbekende gemeente'}</p>
+			</div>
 			<p class="scan-date">gescanned op {new Date(scan.scanDate).toLocaleString()}</p>
 			<p class="detected-products">{scan.detectedProducts.length} product(en) gedetecteerd</p>
 			<p class="sustainability-summary">
@@ -47,7 +55,10 @@
 	</div>
 
 	{#if showAllProducts}
-		<section class="products-details">
+		<section
+			class="products-details"
+			transition:slide={{ duration: 220, easing: cubicOut, axis: 'y' }}
+		>
 			{#each scan.detectedProducts as detectedProduct, index}
 				{@const sustainabilityScore = Math.max(
 					0,
@@ -174,6 +185,21 @@
 
 	.scan-main-info {
 		flex: 1;
+	}
+
+	.municipality-block {
+		position: relative;
+		padding-left: 34px;
+	}
+
+	.municipality-icon {
+		position: absolute;
+		left: -16px;
+		top: -2px;
+		width: 52px;
+		height: 52px; 
+		color: #2563eb;
+		pointer-events: none;
 	}
 
 	.municipality-label {
@@ -452,5 +478,87 @@
 		margin: 0;
 		font-weight: 600;
 		color: #111827;
+	}
+
+	@media (max-width: 900px) {
+		.scan-card {
+			padding: 14px;
+		}
+
+		.scan-card-header {
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.show-products-toggle {
+			align-self: stretch;
+			width: 100%;
+			min-width: 0;
+		}
+
+		.sustainability-row {
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		.sustainability-row p {
+			white-space: normal;
+		}
+
+		.sustainability-bar {
+			width: 84px;
+			min-width: 84px;
+			margin-top: 0;
+		}
+
+		.ingredients-modal {
+			width: min(560px, calc(100vw - 24px));
+			max-height: calc(100vh - 28px);
+			padding: 16px;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.municipality-block {
+			padding-left: 28px;
+		}
+
+		.municipality-icon {
+			left: -12px;
+			top: -1px;
+			width: 40px;
+			height: 40px;
+		}
+
+		.municipality-name {
+			font-size: 1.15rem;
+		}
+
+		.product-meta-row {
+			flex-direction: column;
+			gap: 4px;
+			align-items: flex-start;
+		}
+
+		.ingredients-section {
+			align-items: flex-start;
+		}
+
+		.view-ingredients-link {
+			margin-top: 2px;
+		}
+
+		.ingredients-modal {
+			padding: 14px;
+		}
+
+		.modal-meta-row {
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.modal-ingredients-list {
+			padding-left: 0;
+		}
 	}
 </style>
