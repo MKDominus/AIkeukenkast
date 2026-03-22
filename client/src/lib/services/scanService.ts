@@ -1,3 +1,11 @@
+export type ProductIngredient = {
+    id: number;
+    name: string;
+    description?: string | null;
+    isHazardous: boolean;
+    concentration: number;
+};
+
 export type ScanProduct = {
     id: number;
     productId: number;
@@ -6,8 +14,13 @@ export type ScanProduct = {
     product?: {
         id: number;
         name: string;
-        brand: string;
+        brand?: string | null;
+        imageUrl?: string | null;
+        category: string;
+        sustainabilityScore: number;
         isSustainable: boolean;
+        safetyWarnings?: string | null;
+        ingredients: ProductIngredient[];
     } | null;
 };
 
