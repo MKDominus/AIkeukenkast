@@ -48,23 +48,32 @@
 	{#if showAllProducts}
 		<section class="products-details">
 			{#each scan.detectedProducts as detectedProduct, index}
+				{@const sustainabilityScore = Math.max(
+					0,
+					Math.min(100, detectedProduct.product?.sustainabilityScore ?? 0)
+				)}
 				<article class="product-details-card">
 					<h4 class="product-name">{detectedProduct.product?.name ?? `Onbekend product ${index + 1}`}</h4>
-					<p><strong>Merk:</strong> {detectedProduct.product?.brand ?? '-'}</p>
-					<p><strong>Categorie:</strong> {detectedProduct.product?.category ?? '-'}</p>
-					<p><strong>Aantal gedetecteerd:</strong> {detectedProduct.count}</p>
-					<p><strong>Betrouwbaarheid:</strong> {(detectedProduct.confidence).toFixed(1)}%</p>
-					<p><strong>Duurzaamheidsscore:</strong> {detectedProduct.product?.sustainabilityScore ?? '-'}</p>
-					<p>
-						<strong>Duurzaam:</strong>
-						{detectedProduct.product?.isSustainable == null
-							? '-'
-							: detectedProduct.product.isSustainable
-								? 'Ja'
-								: 'Nee'}
-					</p>
-					<p><strong>Veiligheidswaarschuwingen:</strong> {detectedProduct.product?.safetyWarnings ?? '-'}</p>
-					<p><strong>Afbeelding URL:</strong> {detectedProduct.product?.imageUrl ?? '-'}</p>
+					<div class="product-meta-row">
+						<p><strong>Merk:</strong> {detectedProduct.product?.brand ?? '-'}</p>
+						<p><strong>Categorie:</strong> {detectedProduct.product?.category ?? '-'}</p>
+					</div>
+					<div class="sustainability-row">
+						<p><strong>Duurzaamheidsscore:</strong> {sustainabilityScore}%</p>
+						<div class="sustainability-bar" aria-hidden="true">
+							<div
+								class={`sustainability-fill ${sustainabilityScore >= 50 ? 'sustainability-fill-safe' : 'sustainability-fill-unsafe'}`}
+								style={`width: ${sustainabilityScore}%`}
+							></div>
+						</div>
+						<p>
+							{#if detectedProduct.product?.safetyWarnings?.trim()}
+								<span class="warnings-yes">Waarschuwingen aanwezig</span>
+							{:else}
+								<span class="warnings-no">Geen waarschuwingen</span>
+							{/if}
+						</p>
+					</div>
 
 					<div class="ingredients-section">
 						<p><strong>Ingrediënten:</strong></p>
@@ -198,8 +207,60 @@
 
 	.product-name {
 		margin: 0 0 8px;
-		font-size: 1rem;
+		font-size: 1.2rem;
 		color: #111827;
+	}
+
+	.product-meta-row {
+		display: flex;
+		gap: 16px;
+		align-items: baseline;
+		flex-wrap: wrap;
+	}
+
+	.sustainability-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 6px;
+	}
+
+	.sustainability-row p {
+		margin: 0;
+		white-space: nowrap;
+		line-height: 1.2;
+	}
+
+	.sustainability-bar {
+		width: 6%;
+		height: 8px;
+		background: #e5e7eb;
+		border-radius: 999px;
+		overflow: hidden;
+		min-width: 48px;
+		align-self: center;
+		margin-top: 7px;
+	}
+
+	.sustainability-fill {
+		height: 100%;
+		border-radius: 999px;
+	}
+
+	.sustainability-fill-safe {
+		background: #16a34a;
+	}
+
+	.sustainability-fill-unsafe {
+		background: #dc2626;
+	}
+
+	.warnings-yes{
+		color: #dc2626;
+	}
+
+	.warnings-no{
+		color: #16a34a;
 	}
 
 	.product-details-card p {
