@@ -2,6 +2,7 @@
 	import Header from '$lib/components/Header.svelte';
     import KpiStatistic from '$lib/components/KpiStatistic.svelte';
     import DropdownMenu from '$lib/components/DropdownMenu.svelte';
+    import MunicipalitiesJson from '$lib/assets/Municipalities.json'
 
     type MunicipalityDropDownItem = {
         label: string
@@ -12,11 +13,6 @@
         title: string
         value: string
     }
-
-    let exampleMunicipalities: MunicipalityDropDownItem[] = [
-        {label: "test", value: 1}, 
-        {label: "test2", value: "testvalue2"}
-    ]
 
     //Dummy data
     let statistics: Statistic[] = [
@@ -40,7 +36,7 @@
 </div>
 
 <div id="filtersContainer">
-    <DropdownMenu dropdownTitle="Test" dropdownItems={exampleMunicipalities} itemChosenEvent={applyFilter}></DropdownMenu>
+    <DropdownMenu dropdownTitle="Gemeentes" dropdownItems={MunicipalitiesJson} itemChosenEvent={applyFilter}></DropdownMenu>
 </div>
 
 <style>
@@ -50,8 +46,9 @@
     }
 
     #filtersContainer {
-        background-color: grey;
+        background-color: #b5daab;
         padding: 10px;
         margin: 30px;
+        border-radius: 10px;
     }
 </style>

@@ -12,19 +12,21 @@
 
 <div id="contentBody">
     <h2 id="statisticTitle">{statisticTitle}</h2>
-    <p>{statistic}</p>
+    <p id="statistic">{statistic}</p>
 </div>
 
 <style>
     #contentBody {
-        background-color: grey;
+        background-color: #b5daab;
         padding: 20px;
         margin: auto;
         min-width: 230px;
         max-width: 400px;
+        border-radius: 10px;
     }
 
-    #statisticTitle {
+    #statistic {
         font-weight: bold;
+        font-size: larger;
     }
 </style>
