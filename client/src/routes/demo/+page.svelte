@@ -2,7 +2,8 @@
 	import Header from '$lib/components/Header.svelte';
     import KpiStatistic from '$lib/components/KpiStatistic.svelte';
     import DropdownMenu from '$lib/components/DropdownMenu.svelte';
-    import MunicipalitiesJson from '$lib/assets/Municipalities.json'
+    import MunicipalitiesJson from '$lib/assets/Municipalities.json';
+    import PieChart from '$lib/components/PieChart.svelte';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -38,6 +39,8 @@
 <div id="filtersContainer">
     <DropdownMenu dropdownTitle="Gemeentes" dropdownItems={MunicipalitiesJson} itemChosenEvent={applyFilter}></DropdownMenu>
 </div>
+
+<PieChart labels={["test1", "test2", "test3"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
 
 <style>
     #KpiStatisticsFlexBox {
