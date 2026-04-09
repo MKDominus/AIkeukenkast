@@ -53,7 +53,7 @@ Usage
 	}
 </script>
 
-<select onchange={handleChange}>
+<select id="dropdownMenu" onchange={handleChange}>
     <option selected disabled>{dropdownTitle}</option>
     {#each dropdownItems as item}
         <option value={item.value}>
@@ -61,3 +61,11 @@ Usage
         </option>
     {/each}
 </select>
+
+<style>
+	#dropdownMenu {
+		background: gray;
+		text-align: center;
+		border-radius: 10px;
+	}
+</style>

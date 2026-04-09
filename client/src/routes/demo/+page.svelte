@@ -2,6 +2,8 @@
 	import Header from '$lib/components/Header.svelte';
     import KpiStatistic from '$lib/components/KpiStatistic.svelte';
     import DropdownMenu from '$lib/components/DropdownMenu.svelte';
+    import MunicipalitiesJson from '$lib/assets/Municipalities.json';
+    import PieChart from '$lib/components/PieChart.svelte';
     import ScanCard from '$lib/components/ScanCard.svelte';
     import type { Scan } from '$lib/services/scanService';
 
@@ -50,9 +52,10 @@
 </div>
 
 <div id="filtersContainer">
-    <DropdownMenu dropdownTitle="Test" dropdownItems={exampleMunicipalities} itemChosenEvent={applyFilter}></DropdownMenu>
+    <DropdownMenu dropdownTitle="Gemeentes" dropdownItems={MunicipalitiesJson} itemChosenEvent={applyFilter}></DropdownMenu>
 </div>
 
+<PieChart labels={["test1", "test2", "test3"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
 <div class="scansContainer">
     {#if data.scans.length === 0}
         <p>No scans found.</p>
@@ -70,9 +73,10 @@
     }
 
     #filtersContainer {
-        background-color: grey;
+        background-color: #b5daab;
         padding: 10px;
         margin: 30px;
+        border-radius: 10px;
     }
 
 	.scansContainer {
