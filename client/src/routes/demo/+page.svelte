@@ -4,6 +4,8 @@
     import DropdownMenu from '$lib/components/DropdownMenu.svelte';
     import MunicipalitiesJson from '$lib/assets/Municipalities.json';
     import PieChart from '$lib/components/PieChart.svelte';
+    import ScanCard from '$lib/components/ScanCard.svelte';
+    import type { Scan } from '$lib/services/scanService';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -14,6 +16,19 @@
         title: string
         value: string
     }
+
+    type Props = {
+        data: {
+            scans: Scan[];
+        };
+    };
+
+    let { data }: Props = $props();
+
+    let exampleMunicipalities: MunicipalityDropDownItem[] = [
+        {label: "test", value: 1}, 
+        {label: "test2", value: "testvalue2"}
+    ]
 
     //Dummy data
     let statistics: Statistic[] = [
@@ -41,6 +56,15 @@
 </div>
 
 <PieChart labels={["test1", "test2", "test3"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
+<div class="scansContainer">
+    {#if data.scans.length === 0}
+        <p>No scans found.</p>
+    {:else}
+        {#each data.scans as scan}
+            <ScanCard {scan} />
+        {/each}
+    {/if}
+</div>
 
 <style>
     #KpiStatisticsFlexBox {
@@ -54,4 +78,11 @@
         margin: 30px;
         border-radius: 10px;
     }
+
+	.scansContainer {
+        padding: 10px;
+        margin: 30px;
+        width: calc(100% - 60px);
+        box-sizing: border-box;
+	}
 </style>

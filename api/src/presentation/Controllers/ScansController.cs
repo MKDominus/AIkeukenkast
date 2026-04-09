@@ -111,7 +111,20 @@ public class ScansController : ControllerBase
             { 
                 Id = dp.Product.Id, 
                 Name = dp.Product.Name, 
-                Brand = dp.Product.Brand 
+                Brand = dp.Product.Brand,
+                ImageUrl = dp.Product.ImageUrl,
+                Category = dp.Product.Category,
+                SustainabilityScore = dp.Product.SustainabilityScore,
+                IsSustainable = dp.Product.IsSustainable,
+                SafetyWarnings = dp.Product.SafetyWarnings,
+                Ingredients = dp.Product.Ingredients.Select(i => new IngredientDto
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Description = i.Description,
+                    IsHazardous = i.IsHazardous,
+                    Concentration = i.Concentration
+                }).ToList()
             } : null
         }).ToList()
     };
