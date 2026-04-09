@@ -59,4 +59,18 @@ public class ProductService : IProductService
 
         return product?.Ingredients ?? Enumerable.Empty<Ingredient>();
     }
+
+    public async Task<List<Ingredient>> GetIngredientsByIdsAsync(IEnumerable<int> ingredientIds)
+    {
+        var ids = ingredientIds.Distinct().ToList();
+
+        if (ids.Count == 0)
+        {
+            return new List<Ingredient>();
+        }
+
+        return await _context.Ingredients
+            .Where(i => ids.Contains(i.Id))
+            .ToListAsync();
+    }
 }

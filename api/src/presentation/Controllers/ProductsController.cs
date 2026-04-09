@@ -34,6 +34,8 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ProductDto>> Create(CreateProductDto dto)
     {
+        var ingredients = await _service.GetIngredientsByIdsAsync(dto.IngredientIds ?? new List<int>());
+
         var entity = new Product 
         { 
             Name = dto.Name,
@@ -42,7 +44,8 @@ public class ProductsController : ControllerBase
             Category = dto.Category,
             SustainabilityScore = dto.SustainabilityScore,
             IsSustainable = dto.IsSustainable,
-            SafetyWarnings = dto.SafetyWarnings
+            SafetyWarnings = dto.SafetyWarnings,
+            Ingredients = ingredients
         };
         
         await _service.AddAsync(entity);
@@ -56,6 +59,8 @@ public class ProductsController : ControllerBase
         
         var entity = await _service.GetByIdAsync(id);
         if (entity == null) return NotFound();
+
+        var ingredients = await _service.GetIngredientsByIdsAsync(dto.IngredientIds ?? new List<int>());
         
         entity.Name = dto.Name;
         entity.Brand = dto.Brand;
@@ -64,6 +69,7 @@ public class ProductsController : ControllerBase
         entity.SustainabilityScore = dto.SustainabilityScore;
         entity.IsSustainable = dto.IsSustainable;
         entity.SafetyWarnings = dto.SafetyWarnings;
+        entity.Ingredients = ingredients;
         
         await _service.UpdateAsync(entity);
         return NoContent();
