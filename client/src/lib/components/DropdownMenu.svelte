@@ -64,8 +64,29 @@ Usage
 
 <style>
 	#dropdownMenu {
-		background: gray;
+		appearance: none;
+		background: linear-gradient(90deg, #e8f5e4 0%, #ffffff 100%);
+		color: #25561d;
 		text-align: center;
+		border: 1px solid #83c171;
 		border-radius: 10px;
+		padding: 10px 14px;
+		font-weight: 600;
+		cursor: pointer;
+		box-shadow: 0 2px 8px rgba(37, 86, 29, 0.12);
+		transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+	}
+
+	#dropdownMenu:hover {
+		background: linear-gradient(90deg, #d9edd2 0%, #f6fbf4 100%);
+		border-color: #6aa85a;
+		box-shadow: 0 4px 12px rgba(37, 86, 29, 0.2);
+		transform: translateY(-1px);
+	}
+
+	#dropdownMenu:focus-visible {
+		outline: none;
+		border-color: #4d8f40;
+		box-shadow: 0 0 0 3px rgba(131, 193, 113, 0.35);
 	}
 </style>

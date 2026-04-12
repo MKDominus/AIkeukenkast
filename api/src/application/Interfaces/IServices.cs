@@ -1,3 +1,4 @@
+using api.Application.DTOs;
 using api.Domain;
 
 namespace api.Application.Interfaces;
@@ -20,6 +21,7 @@ public interface IProductService : IBaseService<Product>
 public interface IScanService : IBaseService<Scan>
 {
     Task<IEnumerable<Scan>> GetScansByUserIdAsync(int userId);
+    Task<ScanStatsDto> GetStatsAsync();
 }
 
 public interface IIngredientService : IBaseService<Ingredient>

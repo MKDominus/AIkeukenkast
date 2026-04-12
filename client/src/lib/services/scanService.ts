@@ -43,6 +43,13 @@ export type Scan = {
     detectedProducts: ScanProduct[];
 };
 
+export type ScanStats = {
+    totalScans: number;
+    productsScanned: number;
+    averageSafety: number;
+    averageSustainability: number;
+};
+
 const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL ?? 'http://localhost:5141';
 
 function buildApiUrl(path: string): string {
@@ -54,6 +61,16 @@ export async function getScans(fetch: typeof window.fetch): Promise<Scan[]> {
 
     if (!res.ok) {
         throw new Error(`Failed to load scans: ${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+}
+
+export async function getScanStats(fetch: typeof window.fetch): Promise<ScanStats> {
+    const res = await fetch(buildApiUrl('/api/scans/stats'));
+
+    if (!res.ok) {
+        throw new Error(`Failed to load scan stats: ${res.status} ${res.statusText}`);
     }
 
     return res.json();

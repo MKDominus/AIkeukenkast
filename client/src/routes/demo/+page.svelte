@@ -5,7 +5,7 @@
     import MunicipalitiesJson from '$lib/assets/Municipalities.json';
     import PieChart from '$lib/components/PieChart.svelte';
     import ScanCard from '$lib/components/ScanCard.svelte';
-    import type { Scan } from '$lib/services/scanService';
+    import type { Scan, ScanStats } from '$lib/services/scanService';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -20,6 +20,7 @@
     type Props = {
         data: {
             scans: Scan[];
+            stats: ScanStats;
         };
     };
 
@@ -30,13 +31,12 @@
         {label: "test2", value: "testvalue2"}
     ]
 
-    //Dummy data
-    let statistics: Statistic[] = [
-        {title: "Totale Scans", value: "16"},
-        {title: "Producten Gescanned", value: "104"},
-        {title: "Veiligheidsbeoordeling", value: "64%"},
-        {title: "Gemiddelde Duurzaamheid", value: "78%"}
-    ]
+    let statistics: Statistic[] = $derived([
+        {title: "Totale Scans", value: data.stats.totalScans.toString()},
+        {title: "Producten Gescanned", value: data.stats.productsScanned.toString()},
+        {title: "Veiligheidsbeoordeling", value: `${Math.round(data.stats.averageSafety)}%`},
+        {title: "Gemiddelde Duurzaamheid", value: `${Math.round(data.stats.averageSustainability)}%`}
+    ])
 
     function applyFilter(value: any){
         //do something here to apply the chosen filter on the list
@@ -55,7 +55,6 @@
     <DropdownMenu dropdownTitle="Gemeentes" dropdownItems={MunicipalitiesJson} itemChosenEvent={applyFilter}></DropdownMenu>
 </div>
 
-<PieChart labels={["test1", "test2", "test3"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
 <div class="scansContainer">
     {#if data.scans.length === 0}
         <p>No scans found.</p>
@@ -65,6 +64,8 @@
         {/each}
     {/if}
 </div>
+
+<PieChart labels={["vloerReiniger", "kalk", "toiletreiniger"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
 
 <style>
     #KpiStatisticsFlexBox {
@@ -85,4 +86,6 @@
         width: calc(100% - 60px);
         box-sizing: border-box;
 	}
+
+    
 </style>

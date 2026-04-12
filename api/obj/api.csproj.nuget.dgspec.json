@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj": {}
+    "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj": {
+    "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj",
+        "projectUniqueName": "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj",
+        "projectPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\api.csproj",
         "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\obj\\",
+        "outputPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config"

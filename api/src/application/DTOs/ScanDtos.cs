@@ -27,3 +27,11 @@ public class UpdateScanDto
     public int? MunicipalityId { get; set; }
     public int? UserId { get; set; }
 }
+
+public class ScanStatsDto
+{
+    public int TotalScans { get; set; }
+    public int ProductsScanned { get; set; }
+    public double AverageSafety { get; set; }
+    public double AverageSustainability { get; set; }
+}
