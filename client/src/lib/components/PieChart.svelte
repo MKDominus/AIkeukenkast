@@ -73,7 +73,7 @@
     border: 2px solid var(--color-primary);
     border-top: 6px solid var(--color-secondary-dark);
     padding: 16px;
-    height: fit-content;
+    height: 100%;
     width: 300px;
     border-radius: 10px;
   }

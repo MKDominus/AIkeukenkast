@@ -46,9 +46,11 @@
 
 <Header></Header>
 <div id="KpiStatisticsFlexBox">
-    {#each statistics as statistic}
-        <KpiStatistic statisticTitle={statistic.title} statistic={statistic.value}></KpiStatistic>
-    {/each}
+    <div id="kpiCardsGrid">
+        {#each statistics as statistic}
+            <KpiStatistic statisticTitle={statistic.title} statistic={statistic.value}></KpiStatistic>
+        {/each}
+    </div>
 
     <PieChart labels={["vloerReiniger", "kalk", "toiletreiniger"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
 </div>
@@ -70,12 +72,35 @@
 <style>
     #KpiStatisticsFlexBox {
         display: flex;
-        flex-wrap: wrap;
         gap: 16px;
         align-items: stretch;
         margin-top: 30px;
         margin-left: 30px;
         margin-right: 30px;
+    }
+
+    #kpiCardsGrid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    @media (max-width: 1200px) {
+        #KpiStatisticsFlexBox {
+            flex-direction: column;
+        }
+
+        #kpiCardsGrid {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 700px) {
+        #kpiCardsGrid {
+            grid-template-columns: 1fr;
+        }
     }
 
     #filtersContainer {
