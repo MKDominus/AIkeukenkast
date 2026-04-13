@@ -49,6 +49,8 @@
     {#each statistics as statistic}
         <KpiStatistic statisticTitle={statistic.title} statistic={statistic.value}></KpiStatistic>
     {/each}
+
+    <PieChart labels={["vloerReiniger", "kalk", "toiletreiniger"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
 </div>
 
 <div id="filtersContainer">
@@ -65,16 +67,21 @@
     {/if}
 </div>
 
-<PieChart labels={["vloerReiniger", "kalk", "toiletreiniger"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
-
 <style>
     #KpiStatisticsFlexBox {
         display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: stretch;
         margin-top: 30px;
+        margin-left: 30px;
+        margin-right: 30px;
     }
 
     #filtersContainer {
-        background-color: #b5daab;
+        background-color: var(--color-primary);
+        border: 1px solid var(--color-primary-dark);
+        border-left: 4px solid var(--color-secondary-dark);
         padding: 10px;
         margin: 30px;
         border-radius: 10px;

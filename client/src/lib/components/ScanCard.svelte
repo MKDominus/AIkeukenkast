@@ -167,9 +167,9 @@
 
 <style>
 	.scan-card {
-		background-color: white;
-		border: 1px solid #d1d5db;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+		background-color: var(--color-bg);
+		border: 1px solid var(--color-border);
+		box-shadow: 0 2px 8px rgba(65, 20, 71, 0.12);
 		border-radius: 10px;
 		padding: 18px;
 		width: 100%;
@@ -198,7 +198,7 @@
 		top: -2px;
 		width: 52px;
 		height: 52px; 
-		color: #2563eb;
+		color: var(--color-primary);
 		pointer-events: none;
 	}
 
@@ -206,7 +206,7 @@
 		margin: 0;
 		font-size: 1.1rem;
 		font-weight: 700;
-		color: #6b7280;
+		color: var(--color-text-muted);
 		line-height: 1.1;
 	}
 
@@ -214,14 +214,14 @@
 		margin: 8px 0 0;
 		font-size: 1.3rem;
 		font-weight: 700;
-		color: #111827;
+		color: var(--color-primary-dark);
 	}
 
 	.scan-date,
 	.detected-products,
 	.sustainability-summary {
 		margin: 8px 0 0;
-		color: #6b7280;
+		color: var(--color-text-muted);
 	}
 
 	.sustainability-summary {
@@ -242,13 +242,15 @@
 	}
 
 	.sustainability-safe {
-		background: #b3e1c5;
-		color: #008555;
+		background: var(--color-bg);
+		border: 1px solid var(--color-secondary);
+		color: var(--color-secondary-dark);
 	}
 
 	.sustainability-unsafe {
-		background: #ffd3d3;
-		color: #b42318;
+		background: var(--color-bg);
+		border: 1px solid var(--color-primary);
+		color: var(--color-primary-dark);
 	}
 
 	.show-products-toggle {
@@ -259,12 +261,20 @@
 		justify-content: center;
 		gap: 4px;
 		padding: 8px 12px;
-		color: #374151;
+		color: var(--color-primary);
 		font-size: 0.85rem;
 		font-weight: 600;
 		cursor: pointer;
 		text-align: center;
 		min-width: 155px;
+		border: 1px solid var(--color-primary);
+		background: var(--color-bg);
+		border-radius: 2rem;
+	}
+
+	.show-products-toggle:hover {
+		background: var(--color-primary);
+		color: var(--color-bg);
 	}
 
 	.toggle-arrow {
@@ -279,17 +289,18 @@
 	}
 
 	.product-details-card {
-		border: 1px solid #e5e7eb;
+		border: 1px solid var(--color-border);
 		border-radius: 10px;
 		padding: 12px;
-		background: #fcfcfd;
+		background-color: #ffffff;
+		background-image: none;
 	}
 
 	.product-name {
 		margin: 0 0 8px;
 		font-size: 1.2rem;
 		font-weight: 700;
-		color: #111827;
+		color: var(--color-primary-dark);
 	}
 
 	.product-meta-row {
@@ -315,7 +326,7 @@
 	.sustainability-bar {
 		width: 6%;
 		height: 8px;
-		background: #e5e7eb;
+		background: var(--color-border);
 		border-radius: 999px;
 		overflow: hidden;
 		min-width: 48px;
@@ -329,24 +340,24 @@
 	}
 
 	.sustainability-fill-safe {
-		background: #16a34a;
+		background: var(--color-secondary);
 	}
 
 	.sustainability-fill-unsafe {
-		background: #dc2626;
+		background: var(--color-primary);
 	}
 
 	.warnings-yes{
-		color: #dc2626;
+		color: var(--color-primary-dark);
 	}
 
 	.warnings-no{
-		color: #16a34a;
+		color: var(--color-secondary-dark);
 	}
 
 	.product-details-card p {
 		margin: 6px 0 0;
-		color: #4b5563;
+		color: var(--color-text-muted);
 	}
 
 	.ingredients-section {
@@ -358,24 +369,26 @@
 	}
 
 	.view-ingredients-link {
-		background: none;
-		border: none;
-		padding: 0;
+		background: var(--color-bg);
+		border: 1px solid var(--color-primary);
+		padding: 6px 10px;
 		margin-top: 6px;
 		font-size: 0.95rem;
 		font-weight: 500;
-		color: #2563eb;
-		text-decoration: underline;
+		color: var(--color-primary);
+		text-decoration: none;
 		cursor: pointer;
+		border-radius: 2rem;
 	}
 
 	.view-ingredients-link:hover {
-		color: #1d4ed8;
+		background: var(--color-primary);
+		color: var(--color-bg);
 	}
 
 	.empty-ingredients {
 		margin: 4px 0 0;
-		color: #6b7280;
+		color: var(--color-text-muted);
 	}
 
 	.ingredients-modal-backdrop {
@@ -383,7 +396,9 @@
 		inset: 0;
 		border: none;
 		padding: 0;
-		background: rgba(17, 24, 39, 0.45);
+		background: rgba(17, 24, 39, 0.28);
+		backdrop-filter: blur(4px);
+		-webkit-backdrop-filter: blur(4px);
 		z-index: 40;
 	}
 
@@ -396,10 +411,10 @@
 		width: min(640px, calc(100vw - 32px));
 		max-height: calc(100vh - 48px);
 		overflow-y: auto;
-		background: white;
-		border: 1px solid #d1d5db;
+		background: var(--color-bg);
+		border: 1px solid var(--color-border);
 		border-radius: 14px;
-		box-shadow: 0 24px 50px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 24px 50px rgba(65, 20, 71, 0.24);
 		padding: 18px;
 	}
 
@@ -411,7 +426,7 @@
 		background: transparent;
 		font-size: 1.5rem;
 		line-height: 1;
-		color: #6b7280;
+		color: var(--color-text-muted);
 		cursor: pointer;
 	}
 
@@ -419,12 +434,12 @@
 		margin: 0;
 		font-weight: 700;
 		font-size: 1.35rem;
-		color: #111827;
+		color: var(--color-primary-dark);
 	}
 
 	.modal-manufacturer {
 		margin: 6px 0 0;
-		color: #4b5563;
+		color: var(--color-text-muted);
 	}
 
 	.modal-meta-row {
@@ -436,48 +451,48 @@
 
 	.modal-meta-row p {
 		margin: 0;
-		color: #4b5563;
+		color: var(--color-text-muted);
 	}
 
 	.modal-warnings {
 		margin-top: 10px;
 		padding: 10px;
-		border: 1px solid #e5e7eb;
+		border: 1px solid var(--color-primary);
 		border-radius: 10px;
-		background: #f9fafb;
-		color: #374151;
+		background: var(--color-bg);
+		color: var(--color-primary-dark);
 	}
 
 	.modal-ingredients-header {
 		margin: 14px 0 0;
 		font-size: 1.05rem;
-		color: #111827;
+		color: var(--color-primary-dark);
 	}
 
 	.modal-ingredients-list {
 		margin: 8px 0 0;
 		padding-left: 18px;
-		color: #374151;
+		color: var(--color-text);
 	}
 
 	.modal-ingredients-list li {
 		margin-top: 8px;
 		padding: 8px;
-		border: 1px solid #e5e7eb;
+		border: 1px solid var(--color-primary);
 		border-radius: 8px;
-		background: #fcfcfd;
+		background: var(--color-bg);
 		list-style: none;
 	}
 
 	.modal-ingredients-list p {
 		margin: 4px 0 0;
-		color: #4b5563;
+		color: var(--color-text-muted);
 	}
 
 	.modal-ingredient-name {
 		margin: 0;
 		font-weight: 600;
-		color: #111827;
+		color: var(--color-primary-dark);
 	}
 
 	@media (max-width: 900px) {

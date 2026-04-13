@@ -24,10 +24,8 @@
   
   let { labels, values, pieChartTitle }: PieChartData = $props();
 
-  let colors: string[] = values.map((_, i) => {
-    const hue = (i * 360) / values.length;
-    return `hsl(${hue}, 70%, 60%)`;
-  });
+  const palette = ['#662773', '#87B140', '#411447', '#446817', '#8C4A98', '#A5C86D'];
+  let colors = $derived(values.map((_, i) => palette[i % palette.length]));
 
   onMount(() => {
     if (!canvas) return;
@@ -71,8 +69,10 @@
 
 <style>
   #pieChartContainer {
-    background-color: #DFE7F0;
-    padding: 10px;
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-primary);
+    border-top: 6px solid var(--color-secondary-dark);
+    padding: 16px;
     height: fit-content;
     width: 300px;
     border-radius: 10px;
@@ -86,5 +86,6 @@
   #pieChartTitle {
     text-align: center;
     font-size: medium;
+    color: var(--color-primary-dark);
   }
 </style>
