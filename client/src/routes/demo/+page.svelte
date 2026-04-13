@@ -2,6 +2,7 @@
 	import Header from '$lib/components/Header.svelte';
     import KpiStatistic from '$lib/components/KpiStatistic.svelte';
     import DropdownMenu from '$lib/components/DropdownMenu.svelte';
+    import ShowOnlyDangerousFIlter from '$lib/components/ShowOnlyDangerousFIlter.svelte';
     import MunicipalitiesJson from '$lib/assets/Municipalities.json';
     import PieChart from '$lib/components/PieChart.svelte';
     import ScanCard from '$lib/components/ScanCard.svelte';
@@ -38,9 +39,33 @@
         {title: "Gemiddelde Duurzaamheid", value: `${Math.round(data.stats.averageSustainability)}%`}
     ])
 
+    let filterRenderKey = $state(0)
+    let selectedMunicipality = $state<string | null>(null)
+
+    let filteredScans = $derived(
+        data.scans.filter((scan) => {
+            if (!selectedMunicipality) {
+                return true;
+            }
+
+            const municipalityName = scan.municipality?.name?.trim().toLowerCase() ?? '';
+            return municipalityName === selectedMunicipality;
+        })
+    )
+
     function applyFilter(value: any){
-        //do something here to apply the chosen filter on the list
+        selectedMunicipality = typeof value === 'string' ? value.toLowerCase() : null;
+    }
+
+    function applySafetyFilter(value: 'all' | 'dangerous' | 'safe') {
+        //do something here to apply the chosen safety filter on the list
         console.log(value)
+    }
+
+    function clearAllFilters() {
+        filterRenderKey += 1;
+        applyFilter(null);
+        applySafetyFilter('all');
     }
 </script>
 
@@ -56,14 +81,24 @@
 </div>
 
 <div id="filtersContainer">
-    <DropdownMenu dropdownTitle="Gemeentes" dropdownItems={MunicipalitiesJson} itemChosenEvent={applyFilter}></DropdownMenu>
+    {#key filterRenderKey}
+        <DropdownMenu dropdownTitle="Gemeentes" dropdownItems={MunicipalitiesJson} itemChosenEvent={applyFilter}></DropdownMenu>
+    {/key}
+
+    {#key `danger-${filterRenderKey}`}
+        <ShowOnlyDangerousFIlter itemChosenEvent={applySafetyFilter}></ShowOnlyDangerousFIlter>
+    {/key}
+
+    <button id="clearFiltersButton" type="button" onclick={clearAllFilters}>
+        x Verwijder filters
+    </button>
 </div>
 
 <div class="scansContainer">
-    {#if data.scans.length === 0}
+    {#if filteredScans.length === 0}
         <p>No scans found.</p>
     {:else}
-        {#each data.scans as scan}
+        {#each filteredScans as scan}
             <ScanCard {scan} />
         {/each}
     {/if}
@@ -107,9 +142,26 @@
         background-color: var(--color-primary);
         border: 1px solid var(--color-primary-dark);
         border-left: 4px solid var(--color-secondary-dark);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
         padding: 10px;
         margin: 30px;
         border-radius: 10px;
+    }
+
+    #clearFiltersButton {
+        background-color: var(--color-bg);
+        color: var(--color-primary-dark);
+        border: 1px solid var(--color-primary-dark);
+        font-weight: 700;
+    }
+
+    #clearFiltersButton:hover {
+        background-color: var(--color-primary-dark);
+        color: var(--color-bg);
+        cursor: pointer;    
     }
 
 	.scansContainer {
