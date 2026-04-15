@@ -1,12 +1,15 @@
 <script lang="ts">
+	import { onMount, tick } from 'svelte';
 	import Header from '$lib/components/Header.svelte';
     import KpiStatistic from '$lib/components/KpiStatistic.svelte';
     import DropdownMenu from '$lib/components/DropdownMenu.svelte';
     import ShowOnlyDangerousFIlter from '$lib/components/ShowOnlyDangerousFIlter.svelte';
     import MunicipalitiesJson from '$lib/assets/Municipalities.json';
     import PieChart from '$lib/components/PieChart.svelte';
+    import NetherlandsMap from '$lib/components/NetherlandsMap.svelte';
     import ScanCard from '$lib/components/ScanCard.svelte';
     import type { Scan, ScanStats } from '$lib/services/scanService';
+    import type { ProductCategoryCount } from '$lib/services/productService';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -22,15 +25,11 @@
         data: {
             scans: Scan[];
             stats: ScanStats;
+            categoryCounts: ProductCategoryCount[];
         };
     };
 
     let { data }: Props = $props();
-
-    let exampleMunicipalities: MunicipalityDropDownItem[] = [
-        {label: "test", value: 1}, 
-        {label: "test2", value: "testvalue2"}
-    ]
 
     let statistics: Statistic[] = $derived([
         {title: "Totale Scans", value: data.stats.totalScans.toString()},
@@ -39,8 +38,13 @@
         {title: "Gemiddelde Duurzaamheid", value: `${Math.round(data.stats.averageSustainability)}%`}
     ])
 
+    let categoryLabels = $derived(data.categoryCounts.map((item) => item.category));
+    let categoryValues = $derived(data.categoryCounts.map((item) => item.count));
+
     let filterRenderKey = $state(0)
     let selectedMunicipality = $state<string | null>(null)
+    let scansContainerElement: HTMLDivElement | null = $state(null)
+    let scansContainerMaxHeight = $state('none')
 
     let filteredScans = $derived(
         data.scans.filter((scan) => {
@@ -58,7 +62,7 @@
     }
 
     function applySafetyFilter(value: 'all' | 'dangerous' | 'safe') {
-        //do something here to apply the chosen safety filter on the list
+        //need to make this function still 
         console.log(value)
     }
 
@@ -67,6 +71,57 @@
         applyFilter(null);
         applySafetyFilter('all');
     }
+
+    async function updateScansContainerMaxHeight() {
+        await tick();
+
+        if (!scansContainerElement) {
+            scansContainerMaxHeight = 'none';
+            return;
+        }
+
+        const cards = Array.from(
+            scansContainerElement.querySelectorAll<HTMLElement>('.scan-card')
+        );
+
+        if (cards.length === 0) {
+            scansContainerMaxHeight = 'none';
+            return;
+        }
+
+        const visibleCardsCount = Math.min(3, cards.length);
+        const firstCard = cards[0];
+        const lastVisibleCard = cards[visibleCardsCount - 1];
+        const lastCardStyles = getComputedStyle(lastVisibleCard);
+        const marginBottom = parseFloat(lastCardStyles.marginBottom || '0');
+
+        const height =
+            lastVisibleCard.offsetTop +
+            lastVisibleCard.offsetHeight +
+            marginBottom -
+            firstCard.offsetTop;
+
+        scansContainerMaxHeight = `${Math.ceil(height)}px`;
+    }
+
+    $effect(() => {
+        filteredScans.length;
+        updateScansContainerMaxHeight();
+    });
+
+    onMount(() => {
+        updateScansContainerMaxHeight();
+
+        const onResize = () => {
+            updateScansContainerMaxHeight();
+        };
+
+        window.addEventListener('resize', onResize);
+
+        return () => {
+            window.removeEventListener('resize', onResize);
+        };
+    });
 </script>
 
 <Header></Header>
@@ -77,7 +132,7 @@
         {/each}
     </div>
 
-    <PieChart labels={["vloerReiniger", "kalk", "toiletreiniger"]} values={[10, 50, 40]} pieChartTitle="Product Categorieën"></PieChart>
+    <PieChart labels={categoryLabels} values={categoryValues} pieChartTitle="Product Categorieën"></PieChart>
 </div>
 
 <div id="filtersContainer">
@@ -94,7 +149,7 @@
     </button>
 </div>
 
-<div class="scansContainer">
+<div class="scansContainer" bind:this={scansContainerElement} style={`max-height: ${scansContainerMaxHeight};`}>
     {#if filteredScans.length === 0}
         <p>No scans found.</p>
     {:else}
@@ -103,6 +158,8 @@
         {/each}
     {/if}
 </div>
+
+<NetherlandsMap></NetherlandsMap>
 
 <style>
     #KpiStatisticsFlexBox {
@@ -169,7 +226,15 @@
         margin: 30px;
         width: calc(100% - 60px);
         box-sizing: border-box;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
 	}
+
+    .scansContainer::-webkit-scrollbar {
+        display: none;
+    }
 
     
 </style>

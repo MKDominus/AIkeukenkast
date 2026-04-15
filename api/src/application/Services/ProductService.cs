@@ -1,5 +1,6 @@
 using api.Domain;
 using api.Application.Interfaces;
+using api.Application.DTOs;
 using api.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,6 +72,21 @@ public class ProductService : IProductService
 
         return await _context.Ingredients
             .Where(i => ids.Contains(i.Id))
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ProductCategoryCountDto>> GetCategoryCountsAsync()
+    {
+        return await _context.Products
+            .AsNoTracking()
+            .GroupBy(p => p.Category)
+            .Select(group => new ProductCategoryCountDto
+            {
+                Category = group.Key,
+                Count = group.Count()
+            })
+            .OrderByDescending(item => item.Count)
+            .ThenBy(item => item.Category)
             .ToListAsync();
     }
 }

@@ -16,6 +16,7 @@ public interface IProductService : IBaseService<Product>
 {
     Task<IEnumerable<Ingredient>> GetIngredientsByProductIdAsync(int productId);
     Task<List<Ingredient>> GetIngredientsByIdsAsync(IEnumerable<int> ingredientIds);
+    Task<IEnumerable<ProductCategoryCountDto>> GetCategoryCountsAsync();
 }
 
 public interface IScanService : IBaseService<Scan>
