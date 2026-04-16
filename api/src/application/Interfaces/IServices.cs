@@ -31,6 +31,7 @@ public interface IIngredientService : IBaseService<Ingredient>
 
 public interface IMunicipalityService : IBaseService<Municipality>
 {
+    Task<IEnumerable<MunicipalityScanCountDto>> GetScanCountsAsync();
 }
 
 public interface IUserService : IBaseService<User>

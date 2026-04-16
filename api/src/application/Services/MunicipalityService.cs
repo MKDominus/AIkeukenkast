@@ -1,4 +1,5 @@
 using api.Domain;
+using api.Application.DTOs;
 using api.Application.Interfaces;
 using api.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -45,5 +46,22 @@ public class MunicipalityService : IMunicipalityService
             _context.Municipalities.Remove(entity);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<IEnumerable<MunicipalityScanCountDto>> GetScanCountsAsync()
+    {
+        return await (
+            from scan in _context.Scans
+            where scan.MunicipalityId != null
+            join municipality in _context.Municipalities on scan.MunicipalityId equals municipality.Id
+            group scan by new { municipality.Id, municipality.Name } into grouped
+            orderby grouped.Count() descending
+            select new MunicipalityScanCountDto
+            {
+                MunicipalityId = grouped.Key.Id,
+                MunicipalityName = grouped.Key.Name,
+                ScanCount = grouped.Count()
+            }
+        ).ToListAsync();
     }
 }

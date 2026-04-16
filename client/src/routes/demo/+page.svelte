@@ -10,6 +10,7 @@
     import ScanCard from '$lib/components/ScanCard.svelte';
     import type { Scan, ScanStats } from '$lib/services/scanService';
     import type { ProductCategoryCount } from '$lib/services/productService';
+    import type { MunicipalityScanCount } from '$lib/services/municipalityService';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -26,6 +27,7 @@
             scans: Scan[];
             stats: ScanStats;
             categoryCounts: ProductCategoryCount[];
+            municipalityScanCounts: MunicipalityScanCount[];
         };
     };
 
@@ -160,7 +162,7 @@
     {/if}
 </div>
 
-<NetherlandsMap></NetherlandsMap>
+<NetherlandsMap municipalityCounts={data.municipalityScanCounts}></NetherlandsMap>
 
 <style>
     #KpiStatisticsFlexBox {

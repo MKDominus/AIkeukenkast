@@ -19,3 +19,10 @@ public class UpdateMunicipalityDto
     public required string Name { get; set; }
     public int Population { get; set; }
 }
+
+public class MunicipalityScanCountDto
+{
+    public int MunicipalityId { get; set; }
+    public string MunicipalityName { get; set; } = string.Empty;
+    public int ScanCount { get; set; }
+}
