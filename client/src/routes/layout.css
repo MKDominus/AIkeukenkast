@@ -30,6 +30,7 @@ html,
 body {
 	margin: 0;
 	padding: 0;
+	scroll-behavior: smooth;
 	background-color: var(--color-bg);
 	color: var(--color-text);
 	font-family: var(--font-paragraph);

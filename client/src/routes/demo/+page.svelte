@@ -124,6 +124,7 @@
     });
 </script>
 
+<div id="dashboard-top"></div>
 <Header></Header>
 <div id="KpiStatisticsFlexBox">
     <div id="kpiCardsGrid">
