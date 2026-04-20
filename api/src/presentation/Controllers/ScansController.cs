@@ -23,7 +23,7 @@ public class ScansController : ControllerBase
         return Ok(entities.Select(ToDto));
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<ScanDto>> GetById(int id)
     {
         var item = await _service.GetByIdAsync(id);
@@ -52,7 +52,7 @@ public class ScansController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = entity.Id }, ToDto(entity));
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, UpdateScanDto dto)
     {
         if (id != dto.Id) return BadRequest();
@@ -68,7 +68,7 @@ public class ScansController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);
@@ -80,6 +80,13 @@ public class ScansController : ControllerBase
     {
         var entities = await _service.GetScansByUserIdAsync(userId);
         return Ok(entities.Select(ToDto));
+    }
+
+    [HttpGet("stats")]
+    public async Task<ActionResult<ScanStatsDto>> GetStats()
+    {
+        var stats = await _service.GetStatsAsync();
+        return Ok(stats);
     }
 
     private static ScanDto ToDto(Scan s) => new ScanDto

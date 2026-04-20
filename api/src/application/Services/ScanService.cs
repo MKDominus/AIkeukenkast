@@ -1,5 +1,6 @@
 using api.Domain;
 using api.Application.Interfaces;
+using api.Application.DTOs;
 using api.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,5 +68,40 @@ public class ScanService : IScanService
             .ThenInclude(p => p!.Ingredients)
             .Where(s => s.UserId == userId)
             .ToListAsync();
+    }
+
+    public async Task<ScanStatsDto> GetStatsAsync()
+    {
+        var aggregates = await _context.DetectedProducts
+            .Include(dp => dp.Product)
+            .GroupBy(_ => 1)
+            .Select(g => new
+            {
+                ProductsScanned = g.Sum(dp => dp.Count),
+                SafetyProducts = g.Sum(dp => !string.IsNullOrWhiteSpace(dp.Product != null ? dp.Product.SafetyWarnings : null) ? 0 : dp.Count),
+                WeightedSustainability = g.Sum(dp => (dp.Product != null ? dp.Product.SustainabilityScore : 0) * dp.Count)
+            })
+            .FirstOrDefaultAsync();
+
+        var totalScans = await _context.Scans.CountAsync();
+
+        if (aggregates == null || aggregates.ProductsScanned == 0)
+        {
+            return new ScanStatsDto
+            {
+                TotalScans = totalScans,
+                ProductsScanned = 0,
+                AverageSafety = 0,
+                AverageSustainability = 0
+            };
+        }
+
+        return new ScanStatsDto
+        {
+            TotalScans = totalScans,
+            ProductsScanned = aggregates.ProductsScanned,
+            AverageSafety = (double)aggregates.SafetyProducts / aggregates.ProductsScanned * 100,
+            AverageSustainability = (double)aggregates.WeightedSustainability / aggregates.ProductsScanned
+        };
     }
 }

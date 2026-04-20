@@ -23,6 +23,13 @@ public class MunicipalitiesController : ControllerBase
         return Ok(entities.Select(ToDto));
     }
 
+    [HttpGet("scan-counts")]
+    public async Task<ActionResult<IEnumerable<MunicipalityScanCountDto>>> GetScanCounts()
+    {
+        var counts = await _service.GetScanCountsAsync();
+        return Ok(counts);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<MunicipalityDto>> GetById(int id)
     {

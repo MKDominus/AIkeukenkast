@@ -1,3 +1,4 @@
+using api.Application.DTOs;
 using api.Domain;
 
 namespace api.Application.Interfaces;
@@ -15,11 +16,13 @@ public interface IProductService : IBaseService<Product>
 {
     Task<IEnumerable<Ingredient>> GetIngredientsByProductIdAsync(int productId);
     Task<List<Ingredient>> GetIngredientsByIdsAsync(IEnumerable<int> ingredientIds);
+    Task<IEnumerable<ProductCategoryCountDto>> GetCategoryCountsAsync();
 }
 
 public interface IScanService : IBaseService<Scan>
 {
     Task<IEnumerable<Scan>> GetScansByUserIdAsync(int userId);
+    Task<ScanStatsDto> GetStatsAsync();
 }
 
 public interface IIngredientService : IBaseService<Ingredient>
@@ -28,6 +31,7 @@ public interface IIngredientService : IBaseService<Ingredient>
 
 public interface IMunicipalityService : IBaseService<Municipality>
 {
+    Task<IEnumerable<MunicipalityScanCountDto>> GetScanCountsAsync();
 }
 
 public interface IUserService : IBaseService<User>

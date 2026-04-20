@@ -95,6 +95,13 @@ public class ProductsController : ControllerBase
             Concentration = i.Concentration
         }));
     }
+
+    [HttpGet("categories")]
+    public async Task<ActionResult<IEnumerable<ProductCategoryCountDto>>> GetCategoryCounts()
+    {
+        var categories = await _service.GetCategoryCountsAsync();
+        return Ok(categories);
+    }
     
     private static ProductDto ToDto(Product p) => new ProductDto
     {

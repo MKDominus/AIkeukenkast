@@ -37,3 +37,9 @@ public class UpdateProductDto
     public string? SafetyWarnings { get; set; }
     public List<int>? IngredientIds { get; set; }
 }
+
+public class ProductCategoryCountDto
+{
+    public string Category { get; set; } = string.Empty;
+    public int Count { get; set; }
+}

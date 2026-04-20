@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8gT3+3R/wU4=",
+  "dgSpecHash": "h1G4OvrhZNY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Danie\\OneDrive\\Desktop\\AI-keukenkastje\\AIkeukenkast\\api\\api.csproj",
+  "projectFilePath": "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Danie\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Danie\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
