@@ -62,7 +62,7 @@
 	<ProgressIndicator steps={3} visualCurrentStep={currentStep} />
 	<div id="stepContent">
 		{#if currentStep === 1}
-			<p class="instructionText">
+			<p class="instructionText_small">
 				Maak een foto of selecteer een afbeelding uit uw galerij
 			</p>
 			<form id="imageForm" onsubmit={handleImageSelected}>
