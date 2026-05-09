@@ -34,7 +34,7 @@
         margin-right: 16px;
         box-sizing: border-box;
 
-        --circle-size: 40px;
+        --circle-size: 30px;
         --track-height: 4px;
         --inactive-color: #999999;
     }
@@ -87,7 +87,7 @@
         border-radius: 50%;
         background-color: var(--inactive-color);
         color: white;
-        font-size: 25px;
+        font-size: 20px;
         font-weight: 700;
         line-height: 1;
     }

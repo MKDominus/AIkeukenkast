@@ -14,8 +14,8 @@
     }
 
     #headerLogo {
-        height: 80px;
-        margin: 13px;
+        height: 45px;
+        margin: 14px;
     }
 
     

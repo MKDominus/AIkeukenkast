@@ -3,28 +3,55 @@
 	import TitleCard from "$lib/components/TitleCard.svelte";
 	import ProgressIndicator from "$lib/components/ProgressIndicator.svelte";
 	import ImageButton from "$lib/components/ImageButton.svelte";
+	import ImageCarousel from "$lib/components/ImageCarousel.svelte";
 
 	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
 	import CameraIcon from "$lib/assets/camera_icon.png"
 	import GalleryIcon from "$lib/assets/photo_icon.png"
 	import LoadingGif from "$lib/assets/loading.gif"
+	import ImportCompleteIcon from "$lib/assets/importComplete_icon.png"
 
 	let currentStep = $state(1);
+
+	let uploadedImages = $state<
+		{
+			file: File;
+			url: string;
+		}[]
+	>([]);
+
+	function deleteImage(index: number) {
+		URL.revokeObjectURL(uploadedImages[index].url);
+		uploadedImages.splice(index, 1);
+	}
+
+	function submitImages(images: { file: File; url: string }[]) {
+		const formData = new FormData();
+
+		for (const image of images) {
+			formData.append("images", image.file);
+		}
+
+		console.log("Sending images:", formData.getAll("images"));
+	}
 
 	let cameraInput: HTMLInputElement;
 	let galleryInput: HTMLInputElement;
 
-	function submitForm() {
-		const form = document.getElementById("imageForm") as HTMLFormElement;
-		form.requestSubmit();
-	}
+	function handleImageSelected(event: Event) {
+		const input = event.currentTarget as HTMLInputElement;
+		const files = input.files;
 
-	function handleSubmit(event: SubmitEvent) {
-		event.preventDefault();
+		if (!files || files.length === 0) return;
 
-		const formData = new FormData(event.currentTarget as HTMLFormElement);
+		for (const file of files) {
+			uploadedImages.push({
+				file,
+				url: URL.createObjectURL(file)
+			});
+		}
 
-		console.log("Submitted image:", formData.get("image"));
+		input.value = "";
 	}
 </script>
 
@@ -35,10 +62,10 @@
 	<ProgressIndicator steps={3} visualCurrentStep={currentStep} />
 	<div id="stepContent">
 		{#if currentStep === 1}
-			<p id="instructionText">
+			<p class="instructionText">
 				Maak een foto of selecteer een afbeelding uit uw galerij
 			</p>
-			<form id="imageForm" onsubmit={handleSubmit}>
+			<form id="imageForm" onsubmit={handleImageSelected}>
 				<input
 					bind:this={cameraInput}
 					type="file"
@@ -46,7 +73,7 @@
 					accept="image/*"
 					capture="environment"
 					hidden
-					onchange={submitForm}
+					onchange={handleImageSelected}
 				/>
 
 				<input
@@ -55,7 +82,7 @@
 					name="image"
 					accept="image/*"
 					hidden
-					onchange={submitForm}
+					onchange={handleImageSelected}
 				/>
 
 				<div id="buttonsContainer">
@@ -74,10 +101,14 @@
 					/>
 				</div>
 			</form>
+			<ImageCarousel images={uploadedImages} onDelete={deleteImage} onSubmit={submitImages} />
 		{:else if currentStep === 2}
-
-		{:else if currentStep === 2}
-
+			<img class="visualAidIcon" src={LoadingGif} alt="Bezig met verwerken" />
+			<p class="instructionText">Afbeelding(en) Analyseren</p>
+		{:else if currentStep === 3}
+			<img class="visualAidIcon" src={ImportCompleteIcon} alt="Importeren voltooid" />
+			<p class="instructionText">Scannen voltooid!</p>
+			<p class="instructionText_small">U wordt automatisch doorverwezen naar de resultatenpagina.</p>
 		{/if}
 		
 	</div>
@@ -86,6 +117,12 @@
 
 
 <style>
+	.visualAidIcon {
+		width: 150px;
+		height: 150px;
+		margin-bottom: 20px;
+	}
+
 	#stepContent {
 		display: flex;
 		justify-content: center;
@@ -106,11 +143,16 @@
 		flex-direction: column;
 		align-items: stretch;
 		justify-self: center;
-		height: calc(100dvh - 800px);
+		height: calc(100dvh - 200px);
 	}
 
-	#instructionText {
-		font-size: 1.5rem;
+	.instructionText {
+		font-size: 1.2rem;
+		font-weight: bold;
+	}
+
+	.instructionText_small {
+		text-align: center;
 	}
 
 	#buttonsContainer {
