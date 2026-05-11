@@ -1,4 +1,49 @@
-<!-- Documentation to come -->
+<!--
+@component
+
+### PieChart
+
+---
+
+#### Description
+
+Displays a pie chart using Chart.js.
+
+The component receives labels and numeric values from the parent component and
+renders them as a responsive pie chart with a legend.
+
+---
+
+#### Usage
+
+```svelte
+<PieChart
+	pieChartTitle="Productcategorieën"
+	labels={["Groente", "Fruit", "Zuivel"]}
+	values={[30, 45, 25]}
+/>
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| pieChartTitle | string | Title displayed above the chart |
+| labels | string[] | Labels shown in the chart legend |
+| values | number[] | Numeric values used for the pie chart segments |
+
+---
+
+#### Dependencies
+
+| Dependency | Usage |
+| ---- | ----------- |
+| chart.js | Used to render the pie chart |
+
+-->
+
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import {

@@ -1,3 +1,49 @@
+<!--
+@component
+
+### ProgressIndicator
+
+---
+
+#### Description
+
+Displays a horizontal step progress indicator.
+
+Shows numbered step circles connected by a progress track. Completed/current
+steps are highlighted based on the current step value.
+
+---
+
+#### Usage
+
+```svelte
+<ProgressIndicator
+	steps={3}
+	visualCurrentStep={1}
+/>
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| steps | number | Total number of steps to display |
+| visualCurrentStep | number | Current active step shown visually |
+
+---
+
+#### Behavior
+
+| Logic | Description |
+| ---- | ----------- |
+| clampedStep | Keeps the current step between `1` and `steps` |
+| progressScale | Calculates how much of the progress line should be active |
+| active class | Applied to every step circle up to and including the current step |
+
+-->
+
 <script lang="ts">
 	type ProgressIndicatorProps = {
 		steps: number;

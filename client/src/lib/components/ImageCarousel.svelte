@@ -1,3 +1,73 @@
+<!--
+@component
+
+### ImageCarousel
+
+---
+
+#### Description
+
+Displays a carousel for uploaded images.
+
+Allows users to:
+- Navigate between uploaded images
+- Delete the currently selected image
+- Submit all uploaded images through a callback function
+
+The carousel is only rendered when at least one image is available.
+
+---
+
+#### Usage
+
+```svelte
+<ImageCarousel
+	images={uploadedImages}
+	onDelete={deleteImage}
+	onSubmit={submitImages}
+/>
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| images | UploadedImage[] | Array of uploaded images displayed in the carousel |
+| onDelete | (index: number) => void | Optional callback executed when an image is deleted |
+| onSubmit | (images: UploadedImage[]) => void | Optional callback executed when the submit button is pressed |
+
+##### UploadedImage Structure
+
+```ts
+type UploadedImage = {
+	file: File;
+	url: string;
+};
+```
+
+---
+
+#### Events / Callbacks
+
+| Name | Description |
+| ---- | ----------- |
+| onDelete(index) | Fired when the currently active image is deleted |
+| onSubmit(images) | Fired when the submit button is pressed |
+
+---
+
+#### Behavior
+
+| Logic | Description |
+| ---- | ----------- |
+| previousImage | Navigates to the previous image and loops to the end when at the beginning |
+| nextImage | Navigates to the next image and loops back to the beginning when at the end |
+| deleteActiveImage | Deletes the currently selected image and adjusts the active index if needed |
+
+-->
+
 <script lang="ts">
     import NextIcon from "$lib/assets/next_icon.png";
     import PreviousIcon from "$lib/assets/previous_icon.png";
