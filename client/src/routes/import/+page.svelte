@@ -4,6 +4,7 @@
 	import ProgressIndicator from "$lib/components/ProgressIndicator.svelte";
 	import ImageButton from "$lib/components/ImageButton.svelte";
 	import ImageCarousel from "$lib/components/ImageCarousel.svelte";
+	import ErrorMessage from "$lib/components/ErrorMessage.svelte";
 
 	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
 	import CameraIcon from "$lib/assets/camera_icon.png"
@@ -12,6 +13,8 @@
 	import ImportCompleteIcon from "$lib/assets/importComplete_icon.png"
 
 	let currentStep = $state(1);
+	let errorMessage = $state("");
+	let errorOccurred = $state(false);
 
 	let uploadedImages = $state<
 		{
@@ -32,6 +35,7 @@
 			formData.append("images", image.file);
 		}
 
+		//Connection with API and Backend with error handling should be implemented here.
 		console.log("Sending images:", formData.getAll("images"));
 	}
 
@@ -39,20 +43,27 @@
 	let galleryInput: HTMLInputElement;
 
 	function handleImageSelected(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		const files = input.files;
+	const input = event.currentTarget as HTMLInputElement;
+	const files = input.files;
 
-		if (!files || files.length === 0) return;
+	if (!files || files.length === 0) return;
 
-		for (const file of files) {
-			uploadedImages.push({
-				file,
-				url: URL.createObjectURL(file)
-			});
+	for (const file of files) {
+		if (!file.type.startsWith("image/")) {
+			errorOccurred = true;
+			errorMessage = `"${file.name}" is geen geldige afbeelding.`;
+
+			continue;
 		}
 
-		input.value = "";
+		uploadedImages.push({
+			file,
+			url: URL.createObjectURL(file)
+		});
 	}
+
+	input.value = "";
+}
 </script>
 
 <PhoneHeader />
@@ -102,9 +113,15 @@
 				</div>
 			</form>
 			<ImageCarousel images={uploadedImages} onDelete={deleteImage} onSubmit={submitImages} />
+			{#if errorOccurred}
+				<ErrorMessage message={errorMessage} />
+			{/if}
 		{:else if currentStep === 2}
 			<img class="visualAidIcon" src={LoadingGif} alt="Bezig met verwerken" />
 			<p class="instructionText">Afbeelding(en) Analyseren</p>
+			{#if errorOccurred}
+				<ErrorMessage message={errorMessage} />
+			{/if}
 		{:else if currentStep === 3}
 			<img class="visualAidIcon" src={ImportCompleteIcon} alt="Importeren voltooid" />
 			<p class="instructionText">Scannen voltooid!</p>

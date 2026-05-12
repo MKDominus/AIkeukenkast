@@ -171,6 +171,9 @@ type UploadedImage = {
         background: var(--color-primary);
         cursor: pointer;
         flex-shrink: 0;
+		box-shadow: 1px 10px 12px -6px rgba(0,0,0,0.42);
+        -webkit-box-shadow: 1px 10px 12px -6px rgba(0,0,0,0.42);
+        -moz-box-shadow: 1px 10px 12px -6px rgba(0,0,0,0.42);
     }
 
     .carouselButton img {
@@ -214,8 +217,11 @@ type UploadedImage = {
 		border-radius: 6px;
 		background: var(--color-primary);
 		color: white;
-		font-size: 1rem;
+		font-size: 1.2rem;
 		font-weight: bold;
 		cursor: pointer;
+		box-shadow: 1px 10px 12px -6px rgba(0,0,0,0.42);
+        -webkit-box-shadow: 1px 10px 12px -6px rgba(0,0,0,0.42);
+        -moz-box-shadow: 1px 10px 12px -6px rgba(0,0,0,0.42);
 	}
 </style>
