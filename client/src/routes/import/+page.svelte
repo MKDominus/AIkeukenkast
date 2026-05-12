@@ -13,6 +13,7 @@
 	import ImportCompleteIcon from "$lib/assets/importComplete_icon.png"
 
 	let currentStep = $state(1);
+	let totalSteps = 3;
 	let errorMessage = $state("");
 	let errorOccurred = $state(false);
 
@@ -43,34 +44,34 @@
 	let galleryInput: HTMLInputElement;
 
 	function handleImageSelected(event: Event) {
-	const input = event.currentTarget as HTMLInputElement;
-	const files = input.files;
+		const input = event.currentTarget as HTMLInputElement;
+		const files = input.files;
 
-	if (!files || files.length === 0) return;
+		if (!files || files.length === 0) return;
 
-	for (const file of files) {
-		if (!file.type.startsWith("image/")) {
-			errorOccurred = true;
-			errorMessage = `"${file.name}" is geen geldige afbeelding.`;
+		for (const file of files) {
+			if (!file.type.startsWith("image/")) {
+				errorOccurred = true;
+				errorMessage = `"${file.name}" is geen geldige afbeelding.`;
 
-			continue;
+				continue;
+			}
+
+			uploadedImages.push({
+				file,
+				url: URL.createObjectURL(file)
+			});
 		}
 
-		uploadedImages.push({
-			file,
-			url: URL.createObjectURL(file)
-		});
+		input.value = "";
 	}
-
-	input.value = "";
-}
 </script>
 
 <PhoneHeader />
 <img id="headerImage" src={ThuishulpHeaderImage} alt="Thuishulp Header Image">
 <div id="importContainer">
 	<TitleCard title="Scan keukenkastje" />
-	<ProgressIndicator steps={3} visualCurrentStep={currentStep} />
+	<ProgressIndicator steps={totalSteps} visualCurrentStep={currentStep} />
 	<div id="stepContent">
 		{#if currentStep === 1}
 			<p class="instructionText_small">
