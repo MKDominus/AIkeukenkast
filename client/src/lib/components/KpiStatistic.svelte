@@ -1,3 +1,39 @@
+<!--
+@component
+
+### KpiStatistic
+
+---
+
+#### Description
+
+Displays a KPI/statistic card containing a title and a statistic value.
+
+Used for dashboards or overview sections where compact statistic visualization
+is required.
+
+---
+
+#### Usage
+
+```svelte
+<KpiStatistic
+	statisticTitle="Totale gebruikers"
+	statistic="1.245"
+/>
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| statisticTitle | string | Title/label describing the statistic |
+| statistic | string | Statistic value displayed on the right side |
+
+-->
+
 <script lang="ts">
     type KpiStatistic = {
         statisticTitle: string
