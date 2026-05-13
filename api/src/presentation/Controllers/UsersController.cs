@@ -80,7 +80,6 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-    // Delete remains the same
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

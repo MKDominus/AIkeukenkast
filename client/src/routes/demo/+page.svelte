@@ -6,11 +6,9 @@
     import ShowOnlyDangerousFIlter from '$lib/components/ShowOnlyDangerousFIlter.svelte';
     import MunicipalitiesJson from '$lib/assets/Municipalities.json';
     import PieChart from '$lib/components/PieChart.svelte';
-    import NetherlandsMap from '$lib/components/NetherlandsMap.svelte';
     import ScanCard from '$lib/components/ScanCard.svelte';
     import type { Scan, ScanStats } from '$lib/services/scanService';
     import type { ProductCategoryCount } from '$lib/services/productService';
-    import type { MunicipalityScanCount } from '$lib/services/municipalityService';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -27,7 +25,6 @@
             scans: Scan[];
             stats: ScanStats;
             categoryCounts: ProductCategoryCount[];
-            municipalityScanCounts: MunicipalityScanCount[];
         };
     };
 
@@ -128,6 +125,7 @@
 
 <div id="dashboard-top"></div>
 <Header></Header>
+
 <div id="KpiStatisticsFlexBox">
     <div id="kpiCardsGrid">
         {#each statistics as statistic}
@@ -161,8 +159,6 @@
         {/each}
     {/if}
 </div>
-
-<NetherlandsMap municipalityCounts={data.municipalityScanCounts}></NetherlandsMap>
 
 <style>
     #KpiStatisticsFlexBox {

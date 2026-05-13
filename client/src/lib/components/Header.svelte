@@ -7,8 +7,8 @@
     <h1 id="headerTitle">AI Keukenkastje</h1>
 
     <nav id="headerNav" aria-label="Pagina navigatie">
-        <a class="headerLink" href="#dashboard-top">Dashboard</a>
-        <a class="headerLink" href="#map-section">Map</a>
+        <a class="headerLink" href="/demo">Dashboard</a>
+        <a class="headerLink" href="/map">Map</a>
     </nav>
 </div>
 
