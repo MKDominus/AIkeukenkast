@@ -15,11 +15,11 @@
 <style>
     #contentContainer {
         background-color: var(--color-primary);
-        margin: 16px;
         padding: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-bottom: 16px;
     }
 
     #title {
@@ -31,7 +31,6 @@
 
     @media (max-width: 768px) {
         #contentContainer {
-            margin: 16px;
             padding: 15px;
         }
 

@@ -145,7 +145,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin: 16px;
 		flex: 1;
 		flex-direction: column;
 	}
@@ -162,6 +161,7 @@
 		align-items: stretch;
 		justify-self: center;
 		height: calc(100dvh - 200px);
+		padding: 16px;
 	}
 
 	.instructionText {
