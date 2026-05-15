@@ -54,7 +54,7 @@ behavior to the parent component.
 		height?: string;
 		color?: string;
 		onclick: () => void;
-	};
+	}
 
 	let {
 		buttonTitle,
@@ -62,7 +62,7 @@ behavior to the parent component.
 		height = 'fit-content',
 		color = 'var(--color-secondary)',
 		onclick
-	}: StyledButtonProps = $props();
+	}: StyledButtonProps = $props()
 </script>
 
 <button

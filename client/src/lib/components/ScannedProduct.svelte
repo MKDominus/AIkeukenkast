@@ -1,16 +1,21 @@
 <script lang="ts">
-	import TzorgDefault from "$lib/assets/tzorgDefault.png";
-    import StyledButton from "$lib/components/StyledButton.svelte";
+	import TzorgDefault from "$lib/assets/tzorgDefault.png"
+    import StyledButton from "$lib/components/StyledButton.svelte"
 
-	type RiskLevel = "Veilig" | "Riskant" | "Onveilig";
+	type RiskLevel = "Veilig" | "Riskant" | "Onveilig"
 
-	type Props = {
+    type Ghs = {
+        type: string;
+        description: string;
+    }
+
+	type ScannedProduct = {
 		image?: string;
 		productName: string;
 		productType: string;
-		warningLabels?: string[];
+		warningLabels?: Ghs[];
 		riskLevel: RiskLevel;
-	};
+	}
 
 	let {
 		image,
@@ -18,77 +23,92 @@
 		productType,
 		warningLabels = [],
 		riskLevel
-	}: Props = $props();
+	}: ScannedProduct = $props()
 
 	const riskColors: Record<RiskLevel, string> = {
 		Veilig: "var(--color-secondary)",
 		Riskant: "orange",
 		Onveilig: "red"
-	};
+	}
 
-	const riskColor = $derived(riskColors[riskLevel]);
+	const riskColor = $derived(riskColors[riskLevel])
 </script>
+<div id="scannedProductContainer"> 
+    <div class="productItem" style:border-color={riskColor}>
+        <div class="imageContainer">
+            {#if image}
+                <img
+                    src={image}
+                    alt={productName}
+                />
+            {:else}
+                <img
+                    src={TzorgDefault}
+                    alt="geen product afbeelding beschikbaar"
+                />
+            {/if}
+        </div>
 
-<div class="productItem" style:border-color={riskColor}>
-	<div class="imageContainer">
-        {#if image}
-            <img
-                src={image}
-                alt={productName}
-            />
-        {:else}
-            <img
-                src={TzorgDefault}
-                alt="geen product afbeelding beschikbaar"
-            />
-        {/if}
+        <div class="infoContainer">
+            <div class="headerRow">
+                <div class="titleBlock">
+                    <h3>{productName}</h3>
+                    <p>{productType}</p>
+                </div>
+
+                <div
+                    class="riskBadge"
+                    style:background-color={riskColor}
+                >
+                    {riskLevel}
+                </div>
+            </div>
+
+            <div class="warningContainer">
+                {#if warningLabels.length > 0}
+                    {#each warningLabels as warning}
+                        <div class="warningLabelContainer">
+                            <img class="ghsIcon" src={`/src/lib/assets/ghs_icons/${warning.type}.png`} alt={warning.description} />
+                            <p>{warning.description}</p>
+                        </div>
+                    {/each}
+                {:else}
+                    <p class="noWarnings">Geen gevaren info</p>
+                {/if}
+            </div>
+        </div>
     </div>
+    <div class="buttonContainer">
+        <StyledButton
+            buttonTitle="Extra info"
+            width="100%"
+            height="30px"
+            color="var(--color-primary)"
+            onclick={() => alert("Meer info over het product")}
+        />
 
-	<div class="infoContainer">
-		<div class="headerRow">
-			<div class="titleBlock">
-				<h3>{productName}</h3>
-				<p>{productType}</p>
-			</div>
-
-			<div
-				class="riskBadge"
-				style:background-color={riskColor}
-			>
-				{riskLevel}
-			</div>
-		</div>
-
-		<div class="warningContainer">
-			{#if warningLabels.length > 0}
-				{#each warningLabels as warning}
-					<p>{warning}</p>
-				{/each}
-			{:else}
-				<p class="noWarnings">Geen gevaren info</p>
-			{/if}
-		</div>
-	</div>
+        <StyledButton
+            buttonTitle="Alternatieven"
+            width="100%"
+            height="30px"
+            onclick={() => alert("Meer info over het product")}
+        />
+    </div>
 </div>
-<div class="buttonContainer">
-    <StyledButton
-        buttonTitle="Extra info"
-        width="100%"
-        height="30px"
-        color="var(--color-primary)"
-        onclick={() => alert("Meer info over het product")}
-    />
 
-    <StyledButton
-        buttonTitle="Alternatieven"
-        width="100%"
-        height="30px"
-        onclick={() => alert("Meer info over het product")}
-    />
-</div>
 
 
 <style>
+    #scannedProductContainer{
+        margin-bottom: 30px;
+    }
+
+    .ghsIcon {
+        width: 25px;
+        height: 25px;
+        margin-right: 6px;
+    }
+
 	.productItem {
         height: 100px;
         margin-bottom: 10px;
@@ -153,6 +173,7 @@
     .headerRow {
         height: fit-content;
 
+
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
@@ -178,7 +199,7 @@
         margin: 0;
 
         font-size: 0.8rem;
-        line-height: 1;
+        line-height: 1.3;
 
         font-weight: 800;
 
@@ -193,7 +214,7 @@
         margin: 2px 0 0 0;
 
         font-size: 0.8rem;
-        line-height: 1;
+        line-height: 1.2;
 
         color: var(--color-primary);
 
@@ -224,9 +245,16 @@
         flex: 0 0 auto;
     }
 
+    .warningLabelContainer {
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+
     .warningContainer {
         flex: 1;
-        margin: 0 0 4px 0;
+        
 
         padding: 6px;
 
