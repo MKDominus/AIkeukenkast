@@ -1,26 +1,14 @@
 <script lang="ts">
 	import TzorgDefault from "$lib/assets/tzorgDefault.png"
     import StyledButton from "$lib/components/StyledButton.svelte"
-
-	type RiskLevel = "Veilig" | "Riskant" | "Onveilig"
-
-    type Ghs = {
-        type: string;
-        description: string;
-    }
-
-	type ScannedProduct = {
-		image?: string;
-		productName: string;
-		productType: string;
-		warningLabels?: Ghs[];
-		riskLevel: RiskLevel;
-	}
+    import { goto } from "$app/navigation";
+    import type { ScannedProduct, RiskLevel } from "$lib/stores/thuishulpScanResultaten.svelte";
 
 	let {
-		image,
+		imageURL,
 		productName,
 		productType,
+        productId,
 		warningLabels = [],
 		riskLevel
 	}: ScannedProduct = $props()
@@ -33,12 +21,13 @@
 
 	const riskColor = $derived(riskColors[riskLevel])
 </script>
+
 <div id="scannedProductContainer"> 
     <div class="productItem" style:border-color={riskColor}>
         <div class="imageContainer">
-            {#if image}
+            {#if imageURL}
                 <img
-                    src={image}
+                    src={imageURL}
                     alt={productName}
                 />
             {:else}
@@ -84,14 +73,14 @@
             width="100%"
             height="30px"
             color="var(--color-primary)"
-            onclick={() => alert("Meer info over het product")}
+            onclick={() => goto(`/extra_scan_info/${productId}`)}
         />
 
         <StyledButton
             buttonTitle="Alternatieven"
             width="100%"
             height="30px"
-            onclick={() => alert("Meer info over het product")}
+            onclick={() => goto(`/scan_alternatieven/${productId}`)}
         />
     </div>
 </div>
