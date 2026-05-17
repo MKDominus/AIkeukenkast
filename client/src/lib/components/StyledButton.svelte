@@ -1,49 +1,47 @@
 <!--
-@component
+	@component
 
-### ImageButton
+	### StyledButton
 
----
+	---
 
-#### Description
+	#### Description
 
-Reusable image-based button component.
+	Reusable styled button component.
 
-Displays a styled button containing an image icon and delegates all click
-behavior to the parent component.
+	Displays a rounded button with customizable dimensions and background color.
+	All click behavior is delegated to the parent component.
 
----
+	---
 
-#### Usage
+	#### Usage
 
-```svelte
-<ImageButton
-	src={CameraIcon}
-	onclick={openCamera}
-/>
-```
+	```svelte
+	<StyledButton
+	buttonTitle="Scannen"
+	onclick={handleScan}
+	/>
+	```
 
----
+	---
 
-#### Props
+	#### Props
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| src | string | required | Image source displayed inside the button |
-| width | string | `"100px"` | Width of the button |
-| height | string | `"100px"` | Height of the button |
-| imageWidth | string | `"75px"` | Width of the image inside the button |
-| imageHeight | string | `"75px"` | Height of the image inside the button |
-| color | string | `"var(--color-secondary)"` | Background color of the button |
-| onclick | () => void | required | Callback executed when the button is clicked |
+	| Prop | Type | Default | Description |
+	| ---- | ---- | ------- | ----------- |
+	| buttonTitle | string | required | Text displayed inside the button |
+	| width | string | `"fit-content"` | Width of the button |
+	| height | string | `"fit-content"` | Height of the button |
+	| color | string | `"var(--color-secondary)"` | Background color of the button |
+	| onclick | () => void | required | Callback executed when the button is clicked |
 
----
+	---
 
-#### Events / Callbacks
+	#### Events / Callbacks
 
-| Name | Description |
-| ---- | ----------- |
-| onclick() | Fired when the button is clicked |
+	| Name | Description |
+	| ---- | ----------- |
+	| onclick() | Fired when the button is clicked |
 
 -->
 

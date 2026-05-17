@@ -1,3 +1,50 @@
+<!--
+	@component
+
+	### StyledButton
+
+	---
+
+	#### Description
+
+	Reusable styled button component.
+
+	Displays a rounded button with customizable dimensions and background color.
+	All click behavior is delegated to the parent component.
+
+	---
+
+	#### Usage
+
+	```svelte
+	<StyledButton
+		buttonTitle="Scannen"
+		onclick={handleScan}
+	/>
+	```
+
+	---
+
+	#### Props
+
+	| Prop | Type | Default | Description |
+	| ---- | ---- | ------- | ----------- |
+	| buttonTitle | string | required | Text displayed inside the button |
+	| width | string | `"fit-content"` | Width of the button |
+	| height | string | `"fit-content"` | Height of the button |
+	| color | string | `"var(--color-secondary)"` | Background color of the button |
+	| onclick | () => void | required | Callback executed when the button is clicked |
+
+	---
+
+	#### Events / Callbacks
+
+	| Name | Description |
+	| ---- | ----------- |
+	| onclick() | Fired when the button is clicked |
+
+-->
+
 <script lang="ts">
 	import TzorgDefault from "$lib/assets/tzorgDefault.png"
     import StyledButton from "$lib/components/StyledButton.svelte"
