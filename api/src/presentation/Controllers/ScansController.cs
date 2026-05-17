@@ -116,14 +116,19 @@ public class ScansController : ControllerBase
             Count = dp.Count,
             Product = dp.Product != null ? new ProductDto 
             { 
-                Id = dp.Product.Id, 
-                Name = dp.Product.Name, 
-                Brand = dp.Product.Brand,
-                ImageUrl = dp.Product.ImageUrl,
-                Category = dp.Product.Category,
-                SustainabilityScore = dp.Product.SustainabilityScore,
-                IsSustainable = dp.Product.IsSustainable,
-                SafetyWarnings = dp.Product.SafetyWarnings,
+                ProductId = dp.Product.ProductId,
+                ProductName = dp.Product.ProductName,
+                ProductType = dp.Product.ProductType,
+                ImageURL = dp.Product.ImageURL,
+                RiskLevel = dp.Product.RiskLevel.ToString(),
+                WarningLabels = dp.Product.WarningLabels.Select(label => new ProductWarningLabelDto
+                {
+                    Type = label.Type,
+                    Description = label.Description
+                }).ToList(),
+                Dangers = dp.Product.Dangers,
+                Precautions = dp.Product.Precautions,
+                Alternatives = dp.Product.Alternatives,
                 Ingredients = dp.Product.Ingredients.Select(i => new IngredientDto
                 {
                     Id = i.Id,

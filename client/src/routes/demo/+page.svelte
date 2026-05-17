@@ -34,10 +34,10 @@
         {title: "Totale Scans", value: data.stats.totalScans.toString()},
         {title: "Producten Gescanned", value: data.stats.productsScanned.toString()},
         {title: "Veiligheidsbeoordeling", value: `${Math.round(data.stats.averageSafety)}%`},
-        {title: "Gemiddelde Duurzaamheid", value: `${Math.round(data.stats.averageSustainability)}%`}
+        {title: "Gemiddeld Risico", value: `${Math.round(data.stats.averageRisk)}%`}
     ])
 
-    let categoryLabels = $derived(data.categoryCounts.map((item) => item.category));
+    let categoryLabels = $derived(data.categoryCounts.map((item) => item.productType));
     let categoryValues = $derived(data.categoryCounts.map((item) => item.count));
 
     let filterRenderKey = $state(0)

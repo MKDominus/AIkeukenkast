@@ -78,8 +78,8 @@ public class ScanService : IScanService
             .Select(g => new
             {
                 ProductsScanned = g.Sum(dp => dp.Count),
-                SafetyProducts = g.Sum(dp => !string.IsNullOrWhiteSpace(dp.Product != null ? dp.Product.SafetyWarnings : null) ? 0 : dp.Count),
-                WeightedSustainability = g.Sum(dp => (dp.Product != null ? dp.Product.SustainabilityScore : 0) * dp.Count)
+                SafetyProducts = g.Sum(dp => dp.Product == null || dp.Product.RiskLevel == ProductRiskLevel.Veilig ? dp.Count : 0),
+                RiskProducts = g.Sum(dp => dp.Product != null && dp.Product.RiskLevel != ProductRiskLevel.Veilig ? dp.Count : 0)
             })
             .FirstOrDefaultAsync();
 
@@ -92,7 +92,7 @@ public class ScanService : IScanService
                 TotalScans = totalScans,
                 ProductsScanned = 0,
                 AverageSafety = 0,
-                AverageSustainability = 0
+                AverageRisk = 0
             };
         }
 
@@ -101,7 +101,7 @@ public class ScanService : IScanService
             TotalScans = totalScans,
             ProductsScanned = aggregates.ProductsScanned,
             AverageSafety = (double)aggregates.SafetyProducts / aggregates.ProductsScanned * 100,
-            AverageSustainability = (double)aggregates.WeightedSustainability / aggregates.ProductsScanned
+            AverageRisk = (double)aggregates.RiskProducts / aggregates.ProductsScanned * 100
         };
     }
 }

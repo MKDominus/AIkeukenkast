@@ -11,17 +11,41 @@
 	let showAllProducts = $state(false);
 	let selectedProduct = $state<ScanProduct | null>(null);
 
-	let sustainableProductsDetected = $derived(
+	let safeProductsDetected = $derived(
 		scan.detectedProducts
-			.filter((detectedProduct) => detectedProduct.product?.isSustainable === true)
+			.filter((detectedProduct) => detectedProduct.product?.riskLevel === 'Veilig')
 			.reduce((sum, detectedProduct) => sum + detectedProduct.count, 0)
 	);
 
-	let nonSustainableProductsDetected = $derived(
+	let riskyProductsDetected = $derived(
 		scan.detectedProducts
-			.filter((detectedProduct) => detectedProduct.product?.isSustainable === false)
+			.filter((detectedProduct) => detectedProduct.product?.riskLevel !== 'Veilig')
 			.reduce((sum, detectedProduct) => sum + detectedProduct.count, 0)
 	);
+
+	function getRiskLabel(riskLevel: string | null | undefined) {
+		return riskLevel ?? 'Onbekend';
+	}
+
+	function getRiskClass(riskLevel: string | null | undefined) {
+		return riskLevel === 'Veilig' ? 'warnings-no' : 'warnings-yes';
+	}
+
+	function formatTextList(values: string[] | undefined | null) {
+		if (!values || values.length === 0) {
+			return 'Geen';
+		}
+
+		return values.join(', ');
+	}
+
+	function formatWarningLabels(labels: { type: string; description: string }[] | undefined | null) {
+		if (!labels || labels.length === 0) {
+			return 'Geen waarschuwingen';
+		}
+
+		return labels.map((label) => `${label.type}: ${label.description}`).join('; ');
+	}
 </script>
 
 <article class="scan-card">
@@ -38,8 +62,8 @@
 			<p class="scan-date">gescanned op {new Date(scan.scanDate).toLocaleString()}</p>
 			<p class="detected-products">{scan.detectedProducts.length} product(en) gedetecteerd</p>
 			<p class="sustainability-summary">
-				<span class="sustainability-safe">{sustainableProductsDetected} duurzaam</span>
-				<span class="sustainability-unsafe">{nonSustainableProductsDetected} niet duurzaam</span>
+				<span class="sustainability-safe">{safeProductsDetected} veilig</span>
+				<span class="sustainability-unsafe">{riskyProductsDetected} met risico</span>
 			</p>
 		</div>
 
@@ -60,32 +84,22 @@
 			transition:slide={{ duration: 220, easing: cubicOut, axis: 'y' }}
 		>
 			{#each scan.detectedProducts as detectedProduct, index}
-				{@const sustainabilityScore = Math.max(
-					0,
-					Math.min(100, detectedProduct.product?.sustainabilityScore ?? 0)
-				)}
+				{@const riskLevel = detectedProduct.product?.riskLevel ?? 'Onbekend'}
 				<article class="product-details-card">
-					<h4 class="product-name">{detectedProduct.product?.name ?? `Onbekend product ${index + 1}`}</h4>
+					<h4 class="product-name">{detectedProduct.product?.productName ?? `Onbekend product ${index + 1}`}</h4>
 					<div class="product-meta-row">
-						<p><strong>{detectedProduct.product?.brand ?? '-'}</strong></p>
-						<p><strong>{detectedProduct.product?.category ?? '-'}</strong></p>
+						<p><strong>{detectedProduct.product?.productType ?? '-'}</strong></p>
+						<p><strong class={getRiskClass(riskLevel)}>{getRiskLabel(riskLevel)}</strong></p>
 					</div>
-					<div class="sustainability-row">
-						<p><strong>Duurzaamheidsscore:</strong> {sustainabilityScore}%</p>
-						<div class="sustainability-bar" aria-hidden="true">
-							<div
-								class={`sustainability-fill ${sustainabilityScore >= 50 ? 'sustainability-fill-safe' : 'sustainability-fill-unsafe'}`}
-								style={`width: ${sustainabilityScore}%`}
-							></div>
-						</div>
-						<p>
-							{#if detectedProduct.product?.safetyWarnings?.trim()}
-								<span class="warnings-yes">Waarschuwingen aanwezig</span>
-							{:else}
-								<span class="warnings-no">Geen waarschuwingen</span>
-							{/if}
-						</p>
-					</div>
+					<p class="sustainability-row">
+						<strong>Waarschuwingen:</strong> {detectedProduct.product?.warningLabels?.length ?? 0}
+						<span class={detectedProduct.product?.warningLabels?.length ? 'warnings-yes' : 'warnings-no'}>
+							{detectedProduct.product?.warningLabels?.length ? 'Aanwezig' : 'Geen'}
+						</span>
+					</p>
+					<p class="sustainability-row">
+						<strong>Gevaar:</strong> {formatTextList(detectedProduct.product?.dangers)}
+					</p>
 
 					<div class="ingredients-section">
 						<p><strong>Ingrediënten:</strong> {detectedProduct.product?.ingredients?.length ?? 0}</p>
@@ -104,10 +118,7 @@
 </article>
 
 {#if selectedProduct}
-	{@const detailSustainabilityScore = Math.max(
-		0,
-		Math.min(100, selectedProduct.product?.sustainabilityScore ?? 0)
-	)}
+	{@const selectedRiskLevel = selectedProduct.product?.riskLevel ?? 'Onbekend'}
 	<button
 		type="button"
 		class="ingredients-modal-backdrop"
@@ -124,27 +135,31 @@
 			×
 		</button>
 
-		<h3 class="modal-product-name">{selectedProduct.product?.name ?? 'Onbekend product'}</h3>
-		<p class="modal-manufacturer"><strong>Fabrikant:</strong> {selectedProduct.product?.brand ?? '-'}</p>
+		<h3 class="modal-product-name">{selectedProduct.product?.productName ?? 'Onbekend product'}</h3>
+		<p class="modal-manufacturer"><strong>Producttype:</strong> {selectedProduct.product?.productType ?? '-'}</p>
 
 		<div class="modal-meta-row">
-			<p><strong>Categorie:</strong> {selectedProduct.product?.category ?? '-'}</p>
 			<p>
-				<strong>Duurzaamheidsscore:</strong>
-				<span class={detailSustainabilityScore > 50
-					? 'warnings-no'
-					: detailSustainabilityScore < 50
-						? 'warnings-yes'
-						: ''}
-				>
-					{detailSustainabilityScore}%
-				</span>
+				<strong>Risiconiveau:</strong>
+				<span class={getRiskClass(selectedRiskLevel)}>{getRiskLabel(selectedRiskLevel)}</span>
 			</p>
 		</div>
 
 		<p class="modal-warnings">
-			<strong>Veiligheidswaarschuwingen:</strong>
-			{selectedProduct.product?.safetyWarnings?.trim() ?? 'geen veiligheids waarshuwingen'}
+			<strong>Waarschuwingen:</strong>
+			{formatWarningLabels(selectedProduct.product?.warningLabels)}
+		</p>
+
+		<p class="modal-warnings">
+			<strong>Gevaar:</strong> {formatTextList(selectedProduct.product?.dangers)}
+		</p>
+
+		<p class="modal-warnings">
+			<strong>Voorzorgsmaatregelen:</strong> {formatTextList(selectedProduct.product?.precautions)}
+		</p>
+
+		<p class="modal-warnings">
+			<strong>Alternatieven:</strong> {formatTextList(selectedProduct.product?.alternatives)}
 		</p>
 
 		<h4 class="modal-ingredients-header">Ingredients</h4>
@@ -315,12 +330,6 @@
 		align-items: center;
 		gap: 10px;
 		margin-top: 6px;
-	}
-
-	.sustainability-row p {
-		margin: 0;
-		white-space: nowrap;
-		line-height: 1.2;
 	}
 
 	.sustainability-bar {
@@ -514,10 +523,6 @@
 		.sustainability-row {
 			flex-wrap: wrap;
 			align-items: center;
-		}
-
-		.sustainability-row p {
-			white-space: normal;
 		}
 
 		.sustainability-bar {

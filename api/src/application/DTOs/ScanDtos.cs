@@ -33,5 +33,5 @@ public class ScanStatsDto
     public int TotalScans { get; set; }
     public int ProductsScanned { get; set; }
     public double AverageSafety { get; set; }
-    public double AverageSustainability { get; set; }
+    public double AverageRisk { get; set; }
 }

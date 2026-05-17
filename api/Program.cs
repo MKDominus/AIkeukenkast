@@ -11,6 +11,7 @@ builder.Services.AddControllers()
     {
         // Prevents infinite loops.. For now handy but need to see if we should want this. 
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
 builder.Services.AddCors(options =>
@@ -43,6 +44,17 @@ builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IDetectedProductService, DetectedProductService>();
 
 var app = builder.Build();
+
+// Seed example data (Dutch ingredients, products, scans)
+try
+{
+    SeedData.Initialize(app.Services);
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while seeding the database.");
+}
 
 if (app.Environment.IsDevelopment())
 {
