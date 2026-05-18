@@ -57,7 +57,8 @@
 		productType,
         productId,
 		warningLabels = [],
-		riskLevel
+		riskLevel,
+        alternatives = []
 	}: ScannedProduct = $props()
 
 	const riskColors: Record<RiskLevel, string> = {
@@ -127,6 +128,7 @@
             buttonTitle="Alternatieven"
             width="100%"
             height="30px"
+            isDisabled={alternatives.length === 0}
             onclick={() => goto(`/scan_alternatieven/${productId}`)}
         />
     </div>

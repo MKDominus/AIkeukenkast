@@ -51,6 +51,7 @@
 		width?: string;
 		height?: string;
 		color?: string;
+		isDisabled?: boolean;
 		onclick: () => void;
 	}
 
@@ -59,6 +60,7 @@
 		width = 'fit-content',
 		height = 'fit-content',
 		color = 'var(--color-secondary)',
+		isDisabled = false,
 		onclick
 	}: StyledButtonProps = $props()
 </script>
@@ -68,7 +70,8 @@
 	onclick={onclick}
 	style:width
 	style:height
-	style:background-color={color}
+	style:background-color={isDisabled ? "gray" : color}
+	disabled={isDisabled}
 >
 	{buttonTitle}
 </button>
