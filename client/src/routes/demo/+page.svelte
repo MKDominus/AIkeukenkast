@@ -33,7 +33,10 @@
     let statistics: Statistic[] = $derived([
         {title: "Totale Scans", value: data.stats.totalScans.toString()},
         {title: "Producten Gescanned", value: data.stats.productsScanned.toString()},
-        {title: "Veiligheidsbeoordeling", value: `${Math.round(data.stats.averageSafety)}%`},
+        {
+            title: "Gemiddeld Producten per Scan",
+            value: `${data.stats.totalScans > 0 ? (data.stats.productsScanned / data.stats.totalScans).toFixed(1) : '0.0'}`
+        },
         {title: "Gemiddeld Risico", value: `${Math.round(data.stats.averageRisk)}%`}
     ])
 

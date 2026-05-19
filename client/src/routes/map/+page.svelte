@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte';
 	import NetherlandsMap from '$lib/components/NetherlandsMap.svelte';
-	import cleaningPic from '$lib/assets/cleaning_pic.png';
 	import type { MunicipalityScanCount } from '$lib/services/municipalityService';
 
 	type Props = {
@@ -30,13 +29,13 @@
 
 <main id="mapPage">
 	<section id="mapBanner" aria-label="Map banner">
-		<img src={cleaningPic} alt="Schoonmaakproducten banner" />
 		<div class="bannerLabel">Scans per gemeente</div>
 	</section>
-
 	<section id="mapPanel" aria-label="Kaart panel">
-		<h2>Scanintensiteit Per Gemeente</h2>
-		<p>Klik op een marker om het aantal scans per gemeente te bekijken.</p>
+		<div id="mapPanelHeader">
+			<h2>Scanintensiteit Per Gemeente</h2>
+			<p>Klik op een marker om het aantal scans per gemeente te bekijken.</p>
+		</div>
 
 		<div id="mapLayout">
 			<aside id="mapSummary" aria-label="Kaart samenvatting">
@@ -83,6 +82,11 @@
 </main>
 
 <style>
+
+	#mapPanelHeader{
+		margin-left: 320px;
+	}
+
 	#mapPage {
 		margin: 24px 0 30px;
 		display: grid;
@@ -96,19 +100,9 @@
 		justify-content: flex-end;
 		overflow: hidden;
 		background-color: var(--color-primary);
-		min-height: clamp(210px, 25vw, 290px);
+		min-height: clamp(140px, 140px, 140px);
 		padding-top: 18px;
 		padding-bottom: 18px;
-	}
-
-	#mapBanner img {
-		display: block;
-		width: clamp(340px, 64%, 820px);
-		height: clamp(190px, 23vw, 280px);
-		object-fit: cover;
-		object-position: 28% center;
-		margin-right: clamp(14px, 4vw, 62px);
-		border-radius: 22px;
 	}
 
 	.bannerLabel {
@@ -157,8 +151,6 @@
 
 	#mapSummary {
 		background: var(--color-bg);
-		border: 2px solid var(--color-primary);
-		border-top: 6px solid var(--color-secondary-dark);
 		border-radius: 12px;
 		padding: 14px;
 	}
@@ -272,12 +264,6 @@
 			max-width: none;
 			text-align: center;
 			font-size: 1.3rem;
-		}
-
-		#mapBanner img {
-			width: calc(100% - 28px);
-			margin-right: 14px;
-			height: 200px;
 		}
 	}
 </style>

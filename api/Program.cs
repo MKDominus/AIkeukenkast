@@ -45,17 +45,6 @@ builder.Services.AddScoped<IDetectedProductService, DetectedProductService>();
 
 var app = builder.Build();
 
-// Seed example data (Dutch ingredients, products, scans)
-try
-{
-    SeedData.Initialize(app.Services);
-}
-catch (Exception ex)
-{
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occurred while seeding the database.");
-}
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

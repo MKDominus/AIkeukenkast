@@ -11,26 +11,40 @@
 	let showAllProducts = $state(false);
 	let selectedProduct = $state<ScanProduct | null>(null);
 
-	let safeProductsDetected = $derived(
-		scan.detectedProducts
-			.filter((detectedProduct) => detectedProduct.product?.riskLevel === 'Veilig')
-			.reduce((sum, detectedProduct) => sum + detectedProduct.count, 0)
-	);
+let safeProductsDetected = $derived(
+scan.detectedProducts
+.filter((detectedProduct) => detectedProduct.product?.riskLevel === 'Veilig')
+.reduce((sum, detectedProduct) => sum + detectedProduct.count, 0)
+);
 
-	let riskyProductsDetected = $derived(
-		scan.detectedProducts
-			.filter((detectedProduct) => detectedProduct.product?.riskLevel !== 'Veilig')
-			.reduce((sum, detectedProduct) => sum + detectedProduct.count, 0)
-	);
+let riskantProductsDetected = $derived(
+scan.detectedProducts
+.filter((detectedProduct) => detectedProduct.product?.riskLevel === 'Riskant')
+.reduce((sum, detectedProduct) => sum + detectedProduct.count, 0)
+);
 
-	function getRiskLabel(riskLevel: string | null | undefined) {
-		return riskLevel ?? 'Onbekend';
-	}
+let onveiligProductsDetected = $derived(
+scan.detectedProducts
+.filter((detectedProduct) => detectedProduct.product?.riskLevel === 'Onveilig')
+.reduce((sum, detectedProduct) => sum + detectedProduct.count, 0)
+);
 
-	function getRiskClass(riskLevel: string | null | undefined) {
-		return riskLevel === 'Veilig' ? 'warnings-no' : 'warnings-yes';
-	}
+function getRiskLabel(riskLevel: string | null | undefined) {
+return riskLevel ?? 'Onbekend';
+}
 
+function getRiskClass(riskLevel: string | null | undefined) {
+switch (riskLevel) {
+case 'Veilig':
+return 'warnings-no';
+case 'Riskant':
+return 'warnings-riskant';
+case 'Onveilig':
+return 'warnings-yes';
+default:
+return 'warnings-no';
+}
+}
 	function formatTextList(values: string[] | undefined | null) {
 		if (!values || values.length === 0) {
 			return 'Geen';
@@ -61,10 +75,11 @@
 			</div>
 			<p class="scan-date">gescanned op {new Date(scan.scanDate).toLocaleString()}</p>
 			<p class="detected-products">{scan.detectedProducts.length} product(en) gedetecteerd</p>
-			<p class="sustainability-summary">
-				<span class="sustainability-safe">{safeProductsDetected} veilig</span>
-				<span class="sustainability-unsafe">{riskyProductsDetected} met risico</span>
-			</p>
+<p class="sustainability-summary">
+<span class="sustainability-safe">{safeProductsDetected} veilig</span>
+<span class="sustainability-riskant">{riskantProductsDetected} riskant</span>
+<span class="sustainability-unsafe">{onveiligProductsDetected} onveilig</span>
+</p>
 		</div>
 
 		<button
@@ -245,17 +260,35 @@
 		flex-wrap: wrap;
 	}
 
-	.sustainability-safe,
-	.sustainability-unsafe {
-		display: inline-flex;
-		align-items: center;
-		padding: 4px 10px;
-		border-radius: 999px;
-		font-size: 0.9rem;
-		font-weight: 600;
-		line-height: 1.2;
-	}
+.sustainability-safe,
+.sustainability-riskant,
+.sustainability-unsafe {
+display: inline-flex;
+align-items: center;
+padding: 4px 10px;
+border-radius: 999px;
+font-size: 0.9rem;
+font-weight: 600;
+line-height: 1.2;
+}
 
+.sustainability-safe {
+background: var(--color-bg);
+border: 1px solid var(--color-secondary);
+color: var(--color-secondary-dark);
+}
+
+.sustainability-riskant {
+background: var(--color-bg);
+border: 1px solid #f59e0b;
+color: #92400e;
+}
+
+.sustainability-unsafe {
+background: var(--color-bg);
+border: 1px solid var(--color-primary);
+color: var(--color-primary-dark);
+}
 	.sustainability-safe {
 		background: var(--color-bg);
 		border: 1px solid var(--color-secondary);
@@ -356,11 +389,15 @@
 		background: var(--color-primary);
 	}
 
-	.warnings-yes{
-		color: var(--color-primary-dark);
-	}
+.warnings-yes{
+color: var(--color-primary-dark);
+}
 
-	.warnings-no{
+.warnings-riskant{
+color: #92400e;
+}
+
+.warnings-no{
 		color: var(--color-secondary-dark);
 	}
 
@@ -582,3 +619,7 @@
 		}
 	}
 </style>
+
+
+
+
