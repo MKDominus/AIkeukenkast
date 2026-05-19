@@ -38,7 +38,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Dependency Injection Registration
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IScanService, ScanService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IDetectedProductService, DetectedProductService>();

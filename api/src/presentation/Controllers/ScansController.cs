@@ -39,7 +39,6 @@ public class ScansController : ControllerBase
             ScanDate = DateTime.UtcNow,
             ImageUrl = dto.ImageUrl,
             MunicipalityId = dto.MunicipalityId,
-            UserId = dto.UserId,
             DetectedProducts = dto.DetectedProducts.Select(dp => new DetectedProduct
             {
                 ProductId = dp.ProductId,
@@ -62,7 +61,6 @@ public class ScansController : ControllerBase
         
         entity.ImageUrl = dto.ImageUrl;
         entity.MunicipalityId = dto.MunicipalityId;
-        entity.UserId = dto.UserId;
         
         await _service.UpdateAsync(entity);
         return NoContent();
@@ -73,13 +71,6 @@ public class ScansController : ControllerBase
     {
         await _service.DeleteAsync(id);
         return NoContent();
-    }
-
-    [HttpGet("user/{userId}")]
-    public async Task<ActionResult<IEnumerable<ScanDto>>> GetByUserId(int userId)
-    {
-        var entities = await _service.GetScansByUserIdAsync(userId);
-        return Ok(entities.Select(ToDto));
     }
 
     [HttpGet("stats")]
@@ -100,13 +91,6 @@ public class ScansController : ControllerBase
             Id = s.Municipality.Id, 
             Name = s.Municipality.Name, 
             Population = s.Municipality.Population 
-        } : null,
-        UserId = s.UserId,
-        User = s.User != null ? new UserDto 
-        { 
-            Id = s.User.Id, 
-            Name = s.User.Name, 
-            Age = s.User.Age 
         } : null,
         DetectedProducts = s.DetectedProducts.Select(dp => new DetectedProductDto
         {
@@ -141,4 +125,3 @@ public class ScansController : ControllerBase
         }).ToList()
     };
 }
-

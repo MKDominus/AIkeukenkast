@@ -21,7 +21,6 @@ public class ScanService : IScanService
             .Include(s => s.DetectedProducts)
             .ThenInclude(dp => dp.Product)
             .ThenInclude(p => p!.Ingredients)
-            .Include(s => s.User)
             .Include(s => s.Municipality)
             .ToListAsync();
     }
@@ -32,7 +31,6 @@ public class ScanService : IScanService
             .Include(s => s.DetectedProducts)
             .ThenInclude(dp => dp.Product)
             .ThenInclude(p => p!.Ingredients)
-            .Include(s => s.User)
             .Include(s => s.Municipality)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
@@ -58,16 +56,6 @@ public class ScanService : IScanService
             _context.Scans.Remove(entity);
             await _context.SaveChangesAsync();
         }
-    }
-
-    public async Task<IEnumerable<Scan>> GetScansByUserIdAsync(int userId)
-    {
-        return await _context.Scans
-            .Include(s => s.DetectedProducts)
-            .ThenInclude(dp => dp.Product)
-            .ThenInclude(p => p!.Ingredients)
-            .Where(s => s.UserId == userId)
-            .ToListAsync();
     }
 
     public async Task<ScanStatsDto> GetStatsAsync()

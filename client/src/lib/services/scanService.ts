@@ -35,12 +35,6 @@ export type Scan = {
         name: string;
         population: number;
     } | null;
-    userId?: number | null;
-    user?: {
-        id: number;
-        name: string;
-        age: number;
-    } | null;
     detectedProducts: ScanProduct[];
 };
 

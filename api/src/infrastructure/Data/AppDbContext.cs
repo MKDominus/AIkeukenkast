@@ -15,7 +15,6 @@ public class AppDbContext : DbContext
     public DbSet<DetectedProduct> DetectedProducts => Set<DetectedProduct>();
     public DbSet<Ingredient> Ingredients => Set<Ingredient>();
     public DbSet<Municipality> Municipalities => Set<Municipality>();
-    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

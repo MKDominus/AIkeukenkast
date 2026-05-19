@@ -116,14 +116,13 @@ return 'warnings-no';
 						<strong>Gevaar:</strong> {formatTextList(detectedProduct.product?.dangers)}
 					</p>
 
-					<div class="ingredients-section">
-						<p><strong>Ingrediënten:</strong> {detectedProduct.product?.ingredients?.length ?? 0}</p>
+					<div class="details-section">
 						<button
 							type="button"
-							class="view-ingredients-link"
+							class="view-details-link"
 							onclick={() => (selectedProduct = detectedProduct)}
 						>
-							view ingredients
+							Toon details
 						</button>
 					</div>
 				</article>
@@ -251,7 +250,6 @@ return 'warnings-no';
 	.detected-products,
 	.sustainability-summary {
 		margin: 8px 0 0;
-		color: var(--color-text-muted);
 	}
 
 	.sustainability-summary {
@@ -289,17 +287,6 @@ background: var(--color-bg);
 border: 1px solid var(--color-primary);
 color: var(--color-primary-dark);
 }
-	.sustainability-safe {
-		background: var(--color-bg);
-		border: 1px solid var(--color-secondary);
-		color: var(--color-secondary-dark);
-	}
-
-	.sustainability-unsafe {
-		background: var(--color-bg);
-		border: 1px solid var(--color-primary);
-		color: var(--color-primary-dark);
-	}
 
 	.show-products-toggle {
 		align-self: flex-start;
@@ -356,6 +343,7 @@ color: var(--color-primary-dark);
 		gap: 16px;
 		align-items: baseline;
 		flex-wrap: wrap;
+		color: var(--color-text);
 	}
 
 	.sustainability-row {
@@ -389,9 +377,9 @@ color: var(--color-primary-dark);
 		background: var(--color-primary);
 	}
 
-.warnings-yes{
-color: var(--color-primary-dark);
-}
+	.warnings-yes{
+	color: var(--color-text);
+	}
 
 .warnings-riskant{
 color: #92400e;
@@ -406,7 +394,7 @@ color: #92400e;
 		color: var(--color-text-muted);
 	}
 
-	.ingredients-section {
+	.details-section {
 		margin-top: 10px;
 		display: flex;
 		gap: 10px;
@@ -414,7 +402,7 @@ color: #92400e;
 		flex-wrap: wrap;
 	}
 
-	.view-ingredients-link {
+	.view-details-link {
 		background: var(--color-bg);
 		border: 1px solid var(--color-primary);
 		padding: 6px 10px;
@@ -427,7 +415,7 @@ color: #92400e;
 		border-radius: 2rem;
 	}
 
-	.view-ingredients-link:hover {
+	.view-details-link:hover {
 		background: var(--color-primary);
 		color: var(--color-bg);
 	}

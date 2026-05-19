@@ -21,7 +21,6 @@ public interface IProductService : IBaseService<Product>
 
 public interface IScanService : IBaseService<Scan>
 {
-    Task<IEnumerable<Scan>> GetScansByUserIdAsync(int userId);
     Task<ScanStatsDto> GetStatsAsync();
 }
 
@@ -32,10 +31,6 @@ public interface IIngredientService : IBaseService<Ingredient>
 public interface IMunicipalityService : IBaseService<Municipality>
 {
     Task<IEnumerable<MunicipalityScanCountDto>> GetScanCountsAsync();
-}
-
-public interface IUserService : IBaseService<User>
-{
 }
 
 public interface IDetectedProductService : IBaseService<DetectedProduct>
