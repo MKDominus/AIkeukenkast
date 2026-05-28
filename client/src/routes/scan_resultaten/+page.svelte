@@ -21,9 +21,7 @@
 	alt="Thuishulp Header Image"
 />
 
-<div id="titleCardwrapper">
-	<TitleCard title="Scan resultaten" />
-</div>
+<TitleCard title="Scan resultaten" />
 
 <div id="scannedProductsContainer">
 	{#if data.scanResults.length === 0}

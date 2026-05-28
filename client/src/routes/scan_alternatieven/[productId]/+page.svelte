@@ -21,9 +21,7 @@
 
 <PhoneHeader />
 <img id="headerImage" src={ThuishulpHeaderImage} alt="Thuishulp Header Image">
-<div id="titleCardwrapper">
-	<TitleCard title="Alternatieven" />
-</div>
+<TitleCard title="Alternatieven" />
 <div id="alternativesContainer">
 	<StyledButton 
         buttonTitle="Terug"

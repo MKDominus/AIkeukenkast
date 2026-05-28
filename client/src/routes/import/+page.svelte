@@ -69,9 +69,7 @@
 
 <PhoneHeader />
 <img id="headerImage" src={ThuishulpHeaderImage} alt="Thuishulp Header Image">
-<div id="titleCardwrapper">
-	<TitleCard title="Scan keukenkastje" />
-</div>
+<TitleCard title="Scan keukenkastje" />
 <div id="importContainer">
 	<ProgressIndicator steps={totalSteps} visualCurrentStep={currentStep} />
 	<div id="stepContent">
@@ -137,10 +135,7 @@
 
 
 <style>
-	#titleCardwrapper {
-		padding: 16px 16px 0 16px;
-	}
-
+	
 	.visualAidIcon {
 		width: 150px;
 		height: 150px;
