@@ -38,37 +38,47 @@ public class ProductsController : ControllerBase
 
         var entity = new Product 
         { 
-            Name = dto.Name,
-            Brand = dto.Brand,
-            ImageUrl = dto.ImageUrl,
-            Category = dto.Category,
-            SustainabilityScore = dto.SustainabilityScore,
-            IsSustainable = dto.IsSustainable,
-            SafetyWarnings = dto.SafetyWarnings,
+            ProductName = dto.ProductName,
+            ProductType = dto.ProductType,
+            ImageURL = dto.ImageURL,
+            RiskLevel = Enum.Parse<ProductRiskLevel>(dto.RiskLevel, ignoreCase: true),
+            WarningLabels = dto.WarningLabels.Select(label => new ProductWarningLabel
+            {
+                Type = label.Type,
+                Description = label.Description
+            }).ToList(),
+            Dangers = dto.Dangers,
+            Precautions = dto.Precautions,
+            Alternatives = dto.Alternatives,
             Ingredients = ingredients
         };
         
         await _service.AddAsync(entity);
-        return CreatedAtAction(nameof(GetById), new { id = entity.Id }, ToDto(entity));
+        return CreatedAtAction(nameof(GetById), new { id = entity.ProductId }, ToDto(entity));
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateProductDto dto)
     {
-        if (id != dto.Id) return BadRequest();
+        if (id != dto.ProductId) return BadRequest();
         
         var entity = await _service.GetByIdAsync(id);
         if (entity == null) return NotFound();
 
         var ingredients = await _service.GetIngredientsByIdsAsync(dto.IngredientIds ?? new List<int>());
         
-        entity.Name = dto.Name;
-        entity.Brand = dto.Brand;
-        entity.ImageUrl = dto.ImageUrl;
-        entity.Category = dto.Category;
-        entity.SustainabilityScore = dto.SustainabilityScore;
-        entity.IsSustainable = dto.IsSustainable;
-        entity.SafetyWarnings = dto.SafetyWarnings;
+        entity.ProductName = dto.ProductName;
+        entity.ProductType = dto.ProductType;
+        entity.ImageURL = dto.ImageURL;
+        entity.RiskLevel = Enum.Parse<ProductRiskLevel>(dto.RiskLevel, ignoreCase: true);
+        entity.WarningLabels = dto.WarningLabels.Select(label => new ProductWarningLabel
+        {
+            Type = label.Type,
+            Description = label.Description
+        }).ToList();
+        entity.Dangers = dto.Dangers;
+        entity.Precautions = dto.Precautions;
+        entity.Alternatives = dto.Alternatives;
         entity.Ingredients = ingredients;
         
         await _service.UpdateAsync(entity);
@@ -105,14 +115,19 @@ public class ProductsController : ControllerBase
     
     private static ProductDto ToDto(Product p) => new ProductDto
     {
-        Id = p.Id,
-        Name = p.Name,
-        Brand = p.Brand,
-        ImageUrl = p.ImageUrl,
-        Category = p.Category,
-        SustainabilityScore = p.SustainabilityScore,
-        IsSustainable = p.IsSustainable,
-        SafetyWarnings = p.SafetyWarnings,
+        ProductId = p.ProductId,
+        ProductName = p.ProductName,
+        ProductType = p.ProductType,
+        ImageURL = p.ImageURL,
+        RiskLevel = p.RiskLevel.ToString(),
+        WarningLabels = p.WarningLabels.Select(label => new ProductWarningLabelDto
+        {
+            Type = label.Type,
+            Description = label.Description
+        }).ToList(),
+        Dangers = p.Dangers,
+        Precautions = p.Precautions,
+        Alternatives = p.Alternatives,
         Ingredients = p.Ingredients.Select(i => new IngredientDto
         {
             Id = i.Id,

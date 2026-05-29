@@ -5,7 +5,7 @@ function buildApiUrl(path: string): string {
 }
 
 export type ProductCategoryCount = {
-    category: string;
+    productType: string;
     count: number;
 };
 

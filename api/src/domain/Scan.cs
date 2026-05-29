@@ -7,7 +7,5 @@ public class Scan
     public required string ImageUrl { get; set; } 
     public int? MunicipalityId { get; set; } 
     public Municipality? Municipality { get; set; }
-    public int? UserId { get; set; }
-    public User? User { get; set; }
     public ICollection<DetectedProduct> DetectedProducts { get; set; } = new List<DetectedProduct>();
 }

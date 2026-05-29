@@ -1,5 +1,5 @@
 <script lang="ts">
-	type FilterMode = 'all' | 'dangerous' | 'safe';
+	type FilterMode = 'all' | 'safe' | 'riskant' | 'unsafe';
 
 	type Props = {
 		itemChosenEvent?: (value: FilterMode) => void;
@@ -14,9 +14,10 @@
 </script>
 
 <select id="dangerousFilter" onchange={handleChange}>
-	<option value="all">laat alles zien</option>
-	<option value="dangerous">laat alleen schadelijke scans zien</option>
-	<option value="safe">laat alleen veilige scans zien</option>
+	<option value="all">laat alle scans zien</option>
+	<option value="safe">laat alleen volledig veilige scans zien</option>
+	<option value="riskant">laat scans met riskante producten zien</option>
+	<option value="unsafe">laat scans met onveilige producten zien</option>
 </select>
 
 <style>

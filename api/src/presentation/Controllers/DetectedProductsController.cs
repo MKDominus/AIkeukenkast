@@ -83,10 +83,19 @@ public class DetectedProductsController : ControllerBase
         Count = dp.Count,
         Product = dp.Product != null ? new ProductDto 
         { 
-            Id = dp.Product.Id, 
-            Name = dp.Product.Name,
-            Brand = dp.Product.Brand,
-            Category = dp.Product.Category
+            ProductId = dp.Product.ProductId,
+            ProductName = dp.Product.ProductName,
+            ProductType = dp.Product.ProductType,
+            ImageURL = dp.Product.ImageURL,
+            RiskLevel = dp.Product.RiskLevel.ToString(),
+            WarningLabels = dp.Product.WarningLabels.Select(label => new ProductWarningLabelDto
+            {
+                Type = label.Type,
+                Description = label.Description
+            }).ToList(),
+            Dangers = dp.Product.Dangers,
+            Precautions = dp.Product.Precautions,
+            Alternatives = dp.Product.Alternatives
         } : null
     };
 }

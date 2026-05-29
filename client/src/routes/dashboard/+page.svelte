@@ -49,14 +49,10 @@
     let scansContainerElement: HTMLDivElement | null = $state(null)
     let scansContainerMaxHeight = $state('none')
 
-    function getScanRiskCategory(scan: Scan): 'safe' | 'riskant' | 'unsafe' | 'all' {
+    function getScanRiskCategory(scan: Scan): 'safe' | 'riskant' | 'unsafe' {
         const riskLevels = scan.detectedProducts
             .map((detectedProduct) => detectedProduct.product?.riskLevel)
             .filter((riskLevel): riskLevel is string => Boolean(riskLevel));
-
-        if (riskLevels.length === 0) {
-            return 'all';
-        }
 
         if (riskLevels.includes('Onveilig')) {
             return 'unsafe';
@@ -177,6 +173,10 @@
     <button id="clearFiltersButton" type="button" onclick={clearAllFilters}>
         x Verwijder filters
     </button>
+
+    <p id="scanCountText">
+        {filteredScans.length} scan{filteredScans.length === 1 ? '' : 's'} zichtbaar
+    </p>
 </div>
 
 <div class="scansContainer" bind:this={scansContainerElement} style={`max-height: ${scansContainerMaxHeight};`}>
@@ -247,6 +247,12 @@
         background-color: var(--color-primary-dark);
         color: var(--color-bg);
         cursor: pointer;    
+    }
+
+    #scanCountText {
+        margin: 0;
+        color: var(--color-bg);
+        font-weight: 600;
     }
 
 	.scansContainer {

@@ -15,11 +15,6 @@ public class ScanConfiguration : IEntityTypeConfiguration<Scan>
             .HasForeignKey(s => s.MunicipalityId)
             .OnDelete(DeleteBehavior.Restrict); 
 
-        builder.HasOne(s => s.User)
-            .WithMany()
-            .HasForeignKey(s => s.UserId)
-            .OnDelete(DeleteBehavior.SetNull);
-
         builder.HasMany(s => s.DetectedProducts)
             .WithOne(dp => dp.Scan)
             .HasForeignKey(dp => dp.ScanId)

@@ -12,14 +12,15 @@ export type ScanProduct = {
     confidence: number;
     count: number;
     product?: {
-        id: number;
-        name: string;
-        brand?: string | null;
-        imageUrl?: string | null;
-        category: string;
-        sustainabilityScore: number;
-        isSustainable: boolean;
-        safetyWarnings?: string | null;
+        productId: number;
+        productName: string;
+        productType: string;
+        imageURL?: string | null;
+        riskLevel: string;
+        warningLabels: { type: string; description: string }[];
+        dangers: string[];
+        precautions: string[];
+        alternatives: string[];
         ingredients: ProductIngredient[];
     } | null;
 };
@@ -34,12 +35,6 @@ export type Scan = {
         name: string;
         population: number;
     } | null;
-    userId?: number | null;
-    user?: {
-        id: number;
-        name: string;
-        age: number;
-    } | null;
     detectedProducts: ScanProduct[];
 };
 
@@ -47,7 +42,7 @@ export type ScanStats = {
     totalScans: number;
     productsScanned: number;
     averageSafety: number;
-    averageSustainability: number;
+    averageRisk: number;
 };
 
 const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL ?? 'http://localhost:5141';

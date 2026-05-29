@@ -26,7 +26,7 @@ public class ProductService : IProductService
     {
         return await _context.Products
             .Include(p => p.Ingredients)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.ProductId == id);
     }
 
     public async Task<Product> AddAsync(Product entity)
@@ -56,7 +56,7 @@ public class ProductService : IProductService
     {
         var product = await _context.Products
             .Include(p => p.Ingredients)
-            .FirstOrDefaultAsync(p => p.Id == productId);
+            .FirstOrDefaultAsync(p => p.ProductId == productId);
 
         return product?.Ingredients ?? Enumerable.Empty<Ingredient>();
     }
@@ -79,14 +79,14 @@ public class ProductService : IProductService
     {
         return await _context.Products
             .AsNoTracking()
-            .GroupBy(p => p.Category)
+            .GroupBy(p => p.ProductType)
             .Select(group => new ProductCategoryCountDto
             {
-                Category = group.Key,
+                ProductType = group.Key,
                 Count = group.Count()
             })
             .OrderByDescending(item => item.Count)
-            .ThenBy(item => item.Category)
+            .ThenBy(item => item.ProductType)
             .ToListAsync();
     }
 }
