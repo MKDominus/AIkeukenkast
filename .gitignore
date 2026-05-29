@@ -1,6 +1,7 @@
 # Dependency directories
 bin/
 obj/
+api/appsettings.Development.json
 
 # Visual Studio files
 .vs/
