@@ -1,26 +1,66 @@
 <!--
 @component
-A dropdown menu component that displays a title and a list of selectable items.
 
-Props
-- dropdownTitle (string): Title displayed on the dropdown button
-- dropdownItems (Item): List of items to render in the dropdown
------
-Events
-- itemChosenEvent: Fired when a user selects an item. 
-the value of the chosen item is passed on with the event
------
-Usage
+### DropdownMenu
+
+---
+
+#### Description
+
+Custom styled dropdown/select component.
+
+Renders a dropdown menu with selectable items and emits the selected item's value
+through a callback function provided by the parent component.
+
+---
+
+#### Usage
+
 ```svelte
-	let exampleMunicipalities = [{label: Amsterdam, value: amsterdam}, ...]
+<script lang="ts">
+	const items = [
+		{ label: "Option 1", value: "option1" },
+		{ label: "Option 2", value: "option2" }
+	];
 
-	function applyFilter(value){
-		console.log(value)
+	function handleSelection(value: string) {
+		console.log(value);
 	}
+</script>
 
-	<DropdownMenu dropdownTitle="Test" dropdownItems={exampleMunicipalities} itemChosenEvent={applyFilter}/>
+<DropdownMenu
+	dropdownTitle="Selecteer een optie"
+	dropdownItems={items}
+	itemChosenEvent={handleSelection}
+/>
 ```
- 
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| dropdownTitle | string | Placeholder/default disabled option shown before selection |
+| dropdownItems | Item[] | Array of dropdown items |
+| itemChosenEvent | (value: any) => void | Callback executed when an item is selected |
+
+##### Item Structure
+
+```ts
+type Item = {
+	label: string;
+	value: any;
+}
+```
+
+---
+
+#### Events / Callbacks
+
+| Name | Description |
+| ---- | ----------- |
+| itemChosenEvent(value) | Fired when the selected option changes |
 
 -->
 

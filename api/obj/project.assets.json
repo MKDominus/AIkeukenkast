@@ -3526,19 +3526,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Danie\\.nuget\\packages\\": {}
+    "C:\\Users\\youss\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\api.csproj",
-      "packagesPath": "C:\\Users\\Danie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Danie\\OneDrive\\Desktop\\CSU\\AIkeukenkast\\api\\obj\\",
+      "projectPath": "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\api.csproj",
+      "packagesPath": "C:\\Users\\youss\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\youss\\OneDrive\\Bureaublad\\School\\Vakken\\INNO\\AIkeukenkast\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Danie\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\youss\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -3602,7 +3602,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.108/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
