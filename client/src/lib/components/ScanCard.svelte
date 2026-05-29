@@ -175,8 +175,8 @@ return 'warnings-no';
 		<p class="modal-warnings">
 			<strong>Alternatieven:</strong> {formatTextList(selectedProduct.product?.alternatives)}
 		</p>
-
-		<h4 class="modal-ingredients-header">Ingredients</h4>
+		<!--maybe we leave this in, maybe we leave it out. For now leave it commented out.-->
+		<!-- <h4 class="modal-ingredients-header">Ingredients</h4>
 		{#if selectedProduct.product?.ingredients?.length}
 			<ul class="modal-ingredients-list">
 				{#each selectedProduct.product.ingredients as ingredient}
@@ -190,8 +190,8 @@ return 'warnings-no';
 			</ul>
 		{:else}
 			<p class="empty-ingredients">Geen ingrediënten beschikbaar.</p>
-		{/if}
-	</div>
+		{/if}-->
+	</div> 
 {/if}
 
 <style>
