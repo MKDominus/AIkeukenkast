@@ -11,6 +11,7 @@ builder.Services.AddControllers()
     {
         // Prevents infinite loops.. For now handy but need to see if we should want this. 
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
 builder.Services.AddCors(options =>
@@ -37,7 +38,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Dependency Injection Registration
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IScanService, ScanService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IDetectedProductService, DetectedProductService>();

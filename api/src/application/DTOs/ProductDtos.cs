@@ -1,45 +1,54 @@
 namespace api.Application.DTOs;
 
+public class ProductWarningLabelDto
+{
+    public required string Type { get; set; }
+    public required string Description { get; set; }
+}
+
 public class ProductDto
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Brand { get; set; }
-    public string? ImageUrl { get; set; }
-    public string Category { get; set; } = string.Empty;
-    public int SustainabilityScore { get; set; }
-    public bool IsSustainable { get; set; }
-    public string? SafetyWarnings { get; set; }
+    public int ProductId { get; set; }
+    public required string ProductName { get; set; }
+    public required string ProductType { get; set; }
+    public string? ImageURL { get; set; }
+    public required string RiskLevel { get; set; }
+    public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
+    public List<string> Dangers { get; set; } = new();
+    public List<string> Precautions { get; set; } = new();
+    public List<string> Alternatives { get; set; } = new();
     public List<IngredientDto> Ingredients { get; set; } = new();
 }
 
 public class CreateProductDto
 {
-    public required string Name { get; set; }
-    public string? Brand { get; set; }
-    public string? ImageUrl { get; set; }
-    public string Category { get; set; } = "General";
-    public int SustainabilityScore { get; set; }
-    public bool IsSustainable { get; set; }
-    public string? SafetyWarnings { get; set; }
+    public required string ProductName { get; set; }
+    public required string ProductType { get; set; }
+    public string? ImageURL { get; set; }
+    public required string RiskLevel { get; set; }
+    public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
+    public List<string> Dangers { get; set; } = new();
+    public List<string> Precautions { get; set; } = new();
+    public List<string> Alternatives { get; set; } = new();
     public List<int>? IngredientIds { get; set; }
 }
 
 public class UpdateProductDto
 {
-    public int Id { get; set; }
-    public required string Name { get; set; }
-    public string? Brand { get; set; }
-    public string? ImageUrl { get; set; }
-    public required string Category { get; set; }
-    public int SustainabilityScore { get; set; }
-    public bool IsSustainable { get; set; }
-    public string? SafetyWarnings { get; set; }
+    public int ProductId { get; set; }
+    public required string ProductName { get; set; }
+    public required string ProductType { get; set; }
+    public string? ImageURL { get; set; }
+    public required string RiskLevel { get; set; }
+    public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
+    public List<string> Dangers { get; set; } = new();
+    public List<string> Precautions { get; set; } = new();
+    public List<string> Alternatives { get; set; } = new();
     public List<int>? IngredientIds { get; set; }
 }
 
 public class ProductCategoryCountDto
 {
-    public string Category { get; set; } = string.Empty;
+    public string ProductType { get; set; } = string.Empty;
     public int Count { get; set; }
 }

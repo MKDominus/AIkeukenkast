@@ -6,11 +6,9 @@
     import ShowOnlyDangerousFIlter from '$lib/components/ShowOnlyDangerousFIlter.svelte';
     import MunicipalitiesJson from '$lib/assets/Municipalities.json';
     import PieChart from '$lib/components/PieChart.svelte';
-    import NetherlandsMap from '$lib/components/NetherlandsMap.svelte';
     import ScanCard from '$lib/components/ScanCard.svelte';
     import type { Scan, ScanStats } from '$lib/services/scanService';
     import type { ProductCategoryCount } from '$lib/services/productService';
-    import type { MunicipalityScanCount } from '$lib/services/municipalityService';
 
     type MunicipalityDropDownItem = {
         label: string
@@ -27,7 +25,6 @@
             scans: Scan[];
             stats: ScanStats;
             categoryCounts: ProductCategoryCount[];
-            municipalityScanCounts: MunicipalityScanCount[];
         };
     };
 
@@ -36,26 +33,56 @@
     let statistics: Statistic[] = $derived([
         {title: "Totale Scans", value: data.stats.totalScans.toString()},
         {title: "Producten Gescanned", value: data.stats.productsScanned.toString()},
-        {title: "Veiligheidsbeoordeling", value: `${Math.round(data.stats.averageSafety)}%`},
-        {title: "Gemiddelde Duurzaamheid", value: `${Math.round(data.stats.averageSustainability)}%`}
+        {
+            title: "Gemiddeld Producten per Scan",
+            value: `${data.stats.totalScans > 0 ? (data.stats.productsScanned / data.stats.totalScans).toFixed(1) : '0.0'}`
+        },
+        {title: "Gemiddeld Risico", value: `${Math.round(data.stats.averageRisk)}%`}
     ])
 
-    let categoryLabels = $derived(data.categoryCounts.map((item) => item.category));
+    let categoryLabels = $derived(data.categoryCounts.map((item) => item.productType));
     let categoryValues = $derived(data.categoryCounts.map((item) => item.count));
 
     let filterRenderKey = $state(0)
     let selectedMunicipality = $state<string | null>(null)
+    let selectedSafetyFilter = $state<'all' | 'safe' | 'riskant' | 'unsafe'>('all')
     let scansContainerElement: HTMLDivElement | null = $state(null)
     let scansContainerMaxHeight = $state('none')
 
+    function getScanRiskCategory(scan: Scan): 'safe' | 'riskant' | 'unsafe' | 'all' {
+        const riskLevels = scan.detectedProducts
+            .map((detectedProduct) => detectedProduct.product?.riskLevel)
+            .filter((riskLevel): riskLevel is string => Boolean(riskLevel));
+
+        if (riskLevels.length === 0) {
+            return 'all';
+        }
+
+        if (riskLevels.includes('Onveilig')) {
+            return 'unsafe';
+        }
+
+        if (riskLevels.includes('Riskant')) {
+            return 'riskant';
+        }
+
+        return 'safe';
+    }
+
     let filteredScans = $derived(
         data.scans.filter((scan) => {
-            if (!selectedMunicipality) {
+            const municipalityName = scan.municipality?.name?.trim().toLowerCase() ?? '';
+            const matchesMunicipality = !selectedMunicipality || municipalityName === selectedMunicipality;
+
+            if (!matchesMunicipality) {
+                return false;
+            }
+
+            if (selectedSafetyFilter === 'all') {
                 return true;
             }
 
-            const municipalityName = scan.municipality?.name?.trim().toLowerCase() ?? '';
-            return municipalityName === selectedMunicipality;
+            return getScanRiskCategory(scan) === selectedSafetyFilter;
         })
     )
 
@@ -63,9 +90,8 @@
         selectedMunicipality = typeof value === 'string' ? value.toLowerCase() : null;
     }
 
-    function applySafetyFilter(value: 'all' | 'dangerous' | 'safe') {
-        //need to make this function still 
-        console.log(value)
+    function applySafetyFilter(value: 'all' | 'safe' | 'riskant' | 'unsafe') {
+        selectedSafetyFilter = value;
     }
 
     function clearAllFilters() {
@@ -128,6 +154,7 @@
 
 <div id="dashboard-top"></div>
 <Header></Header>
+
 <div id="KpiStatisticsFlexBox">
     <div id="kpiCardsGrid">
         {#each statistics as statistic}
@@ -161,8 +188,6 @@
         {/each}
     {/if}
 </div>
-
-<NetherlandsMap municipalityCounts={data.municipalityScanCounts}></NetherlandsMap>
 
 <style>
     #KpiStatisticsFlexBox {

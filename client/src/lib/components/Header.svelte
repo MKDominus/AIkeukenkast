@@ -2,17 +2,24 @@
     import TzorgLogo from "$lib/assets/tzorg_logo.png"
 </script>
 
+<div id="headerBanner"></div>
 <div id="header">
     <img id="headerLogo" src={TzorgLogo} alt="Tzorg Logo">
     <h1 id="headerTitle">AI Keukenkastje</h1>
 
     <nav id="headerNav" aria-label="Pagina navigatie">
-        <a class="headerLink" href="#dashboard-top">Dashboard</a>
-        <a class="headerLink" href="#map-section">Map</a>
+        <a class="headerLink" href="/dashboard">Dashboard</a>
+        <a class="headerLink" href="/map">Map</a>
     </nav>
 </div>
 
 <style>
+
+    #headerBanner {
+        height: 12px;
+        background-color: var(--color-primary);
+    }
+
     #header {
         background: var(--color-bg);
         display: flex;
@@ -44,7 +51,7 @@
     }
 
     #headerNav {
-        margin-left: 18px;
+        margin-left: 800px;
         flex: 0 1 auto;
         display: flex;
         align-items: center;

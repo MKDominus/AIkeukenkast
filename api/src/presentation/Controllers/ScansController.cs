@@ -39,7 +39,6 @@ public class ScansController : ControllerBase
             ScanDate = DateTime.UtcNow,
             ImageUrl = dto.ImageUrl,
             MunicipalityId = dto.MunicipalityId,
-            UserId = dto.UserId,
             DetectedProducts = dto.DetectedProducts.Select(dp => new DetectedProduct
             {
                 ProductId = dp.ProductId,
@@ -62,7 +61,6 @@ public class ScansController : ControllerBase
         
         entity.ImageUrl = dto.ImageUrl;
         entity.MunicipalityId = dto.MunicipalityId;
-        entity.UserId = dto.UserId;
         
         await _service.UpdateAsync(entity);
         return NoContent();
@@ -73,13 +71,6 @@ public class ScansController : ControllerBase
     {
         await _service.DeleteAsync(id);
         return NoContent();
-    }
-
-    [HttpGet("user/{userId}")]
-    public async Task<ActionResult<IEnumerable<ScanDto>>> GetByUserId(int userId)
-    {
-        var entities = await _service.GetScansByUserIdAsync(userId);
-        return Ok(entities.Select(ToDto));
     }
 
     [HttpGet("stats")]
@@ -101,13 +92,6 @@ public class ScansController : ControllerBase
             Name = s.Municipality.Name, 
             Population = s.Municipality.Population 
         } : null,
-        UserId = s.UserId,
-        User = s.User != null ? new UserDto 
-        { 
-            Id = s.User.Id, 
-            Name = s.User.Name, 
-            Age = s.User.Age 
-        } : null,
         DetectedProducts = s.DetectedProducts.Select(dp => new DetectedProductDto
         {
             Id = dp.Id,
@@ -116,14 +100,19 @@ public class ScansController : ControllerBase
             Count = dp.Count,
             Product = dp.Product != null ? new ProductDto 
             { 
-                Id = dp.Product.Id, 
-                Name = dp.Product.Name, 
-                Brand = dp.Product.Brand,
-                ImageUrl = dp.Product.ImageUrl,
-                Category = dp.Product.Category,
-                SustainabilityScore = dp.Product.SustainabilityScore,
-                IsSustainable = dp.Product.IsSustainable,
-                SafetyWarnings = dp.Product.SafetyWarnings,
+                ProductId = dp.Product.ProductId,
+                ProductName = dp.Product.ProductName,
+                ProductType = dp.Product.ProductType,
+                ImageURL = dp.Product.ImageURL,
+                RiskLevel = dp.Product.RiskLevel.ToString(),
+                WarningLabels = dp.Product.WarningLabels.Select(label => new ProductWarningLabelDto
+                {
+                    Type = label.Type,
+                    Description = label.Description
+                }).ToList(),
+                Dangers = dp.Product.Dangers,
+                Precautions = dp.Product.Precautions,
+                Alternatives = dp.Product.Alternatives,
                 Ingredients = dp.Product.Ingredients.Select(i => new IngredientDto
                 {
                     Id = i.Id,
@@ -136,4 +125,3 @@ public class ScansController : ControllerBase
         }).ToList()
     };
 }
-

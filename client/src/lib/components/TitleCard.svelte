@@ -15,7 +15,6 @@
 <style>
     #contentContainer {
         background-color: var(--color-primary);
-        margin: 16px;
         padding: 20px;
         display: flex;
         align-items: center;
@@ -31,7 +30,6 @@
 
     @media (max-width: 768px) {
         #contentContainer {
-            margin: 16px;
             padding: 15px;
         }
 
