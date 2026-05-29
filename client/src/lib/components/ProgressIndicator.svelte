@@ -74,10 +74,8 @@ steps are highlighted based on the current step value.
 <style>
     #mainContainer {
         position: relative;
-        width: calc(100% - 32px);
+        width: 100%;
         height: 30px;
-        margin-left: 16px;
-        margin-right: 16px;
         box-sizing: border-box;
 
         --circle-size: 30px;
@@ -145,10 +143,8 @@ steps are highlighted based on the current step value.
 	@media (max-width: 768px) {
         #mainContainer {
             position: relative;
-            width: calc(100% - 32px);
+            width: 100%;
             height: 30px;
-            margin-left: 16px;
-            margin-right: 16px;
             box-sizing: border-box;
 
             --circle-size: 30px;

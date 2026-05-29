@@ -69,8 +69,8 @@
 
 <PhoneHeader />
 <img id="headerImage" src={ThuishulpHeaderImage} alt="Thuishulp Header Image">
+<TitleCard title="Scan keukenkastje" />
 <div id="importContainer">
-	<TitleCard title="Scan keukenkastje" />
 	<ProgressIndicator steps={totalSteps} visualCurrentStep={currentStep} />
 	<div id="stepContent">
 		{#if currentStep === 1}
@@ -135,6 +135,7 @@
 
 
 <style>
+	
 	.visualAidIcon {
 		width: 150px;
 		height: 150px;
@@ -145,7 +146,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin: 16px;
 		flex: 1;
 		flex-direction: column;
 	}
@@ -162,6 +162,7 @@
 		align-items: stretch;
 		justify-self: center;
 		height: calc(100dvh - 200px);
+		padding: 16px;
 	}
 
 	.instructionText {
