@@ -4,8 +4,8 @@ from azure.ai.vision.imageanalysis.models import VisualFeatures
 from azure.core.credentials import AzureKeyCredential
 
 client = ImageAnalysisClient(
-    endpoint="https://tzorgcostum-prediction.cognitiveservices.azure.com/",
-    credential=AzureKeyCredential("17DcTn1BcArIzyA98XC7XJOH3z84TUnbjK7WtnbqSaPWyiCgxqjJJQQJ99CDACPV0roXJ3w3AAAIACOG1taC")
+    endpoint="YOUR_ENDPOINT",
+    credential=AzureKeyCredential("YOUR_KEY")
 )
 
 image_path = "test.jpg"
