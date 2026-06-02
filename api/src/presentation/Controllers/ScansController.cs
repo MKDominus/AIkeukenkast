@@ -1,0 +1,127 @@
+using api.Application.DTOs;
+using api.Application.Interfaces;
+using api.Domain;
+using Microsoft.AspNetCore.Mvc;
+
+namespace api.Presentation.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ScansController : ControllerBase
+{
+    private readonly IScanService _service;
+
+    public ScansController(IScanService service)
+    {
+        _service = service;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ScanDto>>> GetAll()
+    {
+        var entities = await _service.GetAllAsync();
+        return Ok(entities.Select(ToDto));
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<ScanDto>> GetById(int id)
+    {
+        var item = await _service.GetByIdAsync(id);
+        if (item == null) return NotFound();
+        return Ok(ToDto(item));
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<ScanDto>> Create(CreateScanDto dto)
+    {
+        var entity = new Scan 
+        { 
+            ScanDate = DateTime.UtcNow,
+            ImageUrl = dto.ImageUrl,
+            MunicipalityId = dto.MunicipalityId,
+            DetectedProducts = dto.DetectedProducts.Select(dp => new DetectedProduct
+            {
+                ProductId = dp.ProductId,
+                Confidence = dp.Confidence,
+                Count = dp.Count
+            }).ToList()
+        };
+        
+        await _service.AddAsync(entity);
+        return CreatedAtAction(nameof(GetById), new { id = entity.Id }, ToDto(entity));
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdateScanDto dto)
+    {
+        if (id != dto.Id) return BadRequest();
+        
+        var entity = await _service.GetByIdAsync(id);
+        if (entity == null) return NotFound();
+        
+        entity.ImageUrl = dto.ImageUrl;
+        entity.MunicipalityId = dto.MunicipalityId;
+        
+        await _service.UpdateAsync(entity);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _service.DeleteAsync(id);
+        return NoContent();
+    }
+
+    [HttpGet("stats")]
+    public async Task<ActionResult<ScanStatsDto>> GetStats()
+    {
+        var stats = await _service.GetStatsAsync();
+        return Ok(stats);
+    }
+
+    private static ScanDto ToDto(Scan s) => new ScanDto
+    {
+        Id = s.Id,
+        ScanDate = s.ScanDate,
+        ImageUrl = s.ImageUrl,
+        MunicipalityId = s.MunicipalityId,
+        Municipality = s.Municipality != null ? new MunicipalityDto 
+        { 
+            Id = s.Municipality.Id, 
+            Name = s.Municipality.Name, 
+            Population = s.Municipality.Population 
+        } : null,
+        DetectedProducts = s.DetectedProducts.Select(dp => new DetectedProductDto
+        {
+            Id = dp.Id,
+            ProductId = dp.ProductId,
+            Confidence = dp.Confidence,
+            Count = dp.Count,
+            Product = dp.Product != null ? new ProductDto 
+            { 
+                ProductId = dp.Product.ProductId,
+                ProductName = dp.Product.ProductName,
+                ProductType = dp.Product.ProductType,
+                ImageURL = dp.Product.ImageURL,
+                RiskLevel = dp.Product.RiskLevel.ToString(),
+                WarningLabels = dp.Product.WarningLabels.Select(label => new ProductWarningLabelDto
+                {
+                    Type = label.Type,
+                    Description = label.Description
+                }).ToList(),
+                Dangers = dp.Product.Dangers,
+                Precautions = dp.Product.Precautions,
+                Alternatives = dp.Product.Alternatives,
+                Ingredients = dp.Product.Ingredients.Select(i => new IngredientDto
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Description = i.Description,
+                    IsHazardous = i.IsHazardous,
+                    Concentration = i.Concentration
+                }).ToList()
+            } : null
+        }).ToList()
+    };
+}
