@@ -29,15 +29,42 @@
 		uploadedImages.splice(index, 1);
 	}
 
-	function submitImages(images: { file: File; url: string }[]) {
+	async function submitImages(images: { file: File; url: string }[]) {
 		const formData = new FormData();
 
 		for (const image of images) {
 			formData.append("images", image.file);
 		}
 
-		//Connection with API and Backend with error handling should be implemented here.
-		console.log("Sending images:", formData.getAll("images"));
+		try {
+			currentStep = 2;
+			errorOccurred = false;
+
+			// stuur afbeelding naar backend
+			const response = await fetch("http://localhost:8000/predict", {
+				method: "POST",
+				body: formData
+			});
+
+			if (!response.ok) {
+				throw new Error("Afbeelding analyseren mislukt.");
+			}
+
+			const result = await response.json();
+			console.log("AI result:", result);
+
+			currentStep = 3;
+
+			// Later: navigate to results page here
+			// goto("/results");
+
+		} catch (error) {
+			currentStep = 1;
+			errorOccurred = true;
+			errorMessage = error instanceof Error
+				? error.message
+				: "Er ging iets mis bij het analyseren.";
+		}
 	}
 
 	let cameraInput: HTMLInputElement;

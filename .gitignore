@@ -1,6 +1,7 @@
 # Dependency directories
 bin/
 obj/
+.env
 
 # Visual Studio files
 .vs/

@@ -1,21 +1,35 @@
 from azure.cognitiveservices.vision.customvision.prediction import CustomVisionPredictionClient
 from msrest.authentication import ApiKeyCredentials
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 from typing import List
 import numpy as np
 import random
 import cv2
 import os
+import base64
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Maak een FastAPI-applicatie aan
 app = FastAPI()
 
-# Haal de prediction key en endpoint op uit environment variables
-# prediction_key = key
-prediction_key = os.getenv("PREDICTION_KEY")
+# CORS voor Svelte frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# prediction_endpoint = endpoint
+# Haal de prediction key en endpoint op uit environment variables
+prediction_key = os.getenv("PREDICTION_KEY")
 prediction_endpoint = os.getenv("ENDPOINT_PREDICTION")
 
 # Azure Custom Vision project ID
@@ -35,6 +49,7 @@ predictor = CustomVisionPredictionClient(
     credentials
 )
 
+
 def get_color():
     """Genereert een willekeurige kleur (BGR) voor bounding boxes"""
     return random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
@@ -48,13 +63,11 @@ def get_bounding_box(prediction, image_bytes):
     image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
     for obj in prediction.predictions:
-        # Filter voorspellingen met lage betrouwbaarheid
         if obj.probability < 0.6:
             continue
 
         box = obj.bounding_box
 
-        # Zet relatieve coördinaten om naar absolute pixels
         x = int(box.left * image.shape[1])
         y = int(box.top * image.shape[0])
         w = int(box.width * image.shape[1])
@@ -62,44 +75,48 @@ def get_bounding_box(prediction, image_bytes):
 
         color = get_color()
 
-        # Teken rechthoek rond object
         cv2.rectangle(image, (x, y), (x + w, y + h), color, 5)
 
-        # Maak labeltekst
         label = f"{obj.tag_name} ({obj.probability:.2f})"
 
-        # Plaats tekst op afbeelding
-        cv2.putText(image, label, (x, y - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    2, color, 4)
+        cv2.putText(
+            image,
+            label,
+            (x, y - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            color,
+            4
+        )
 
-    # Encodeer afbeelding terug naar JPG bytes
     _, buffer = cv2.imencode(".jpg", image)
     image_bytes = buffer.tobytes()
     return image_bytes
 
 
-def get_predict(prediction, file_name, content_type):
+def get_predict(prediction, file_name, content_type, image_bytes):
     """
     Zet Azure voorspellingen om naar een gestructureerd JSON-object
     """
-    predict = {}
-    predict["file name"] = file_name
-    predict["content type"] = content_type
+    predict = {
+        "file name": file_name,
+        "content type": content_type
+    }
 
     list_predictions = []
 
     for obj in prediction.predictions:
-        # Filter op minimale betrouwbaarheid
         if obj.probability >= 0.6:
-            product = {}
-            product["product name"] = obj.tag_name
-            product["probability"] = obj.probability
+            product = {
+                "product name": obj.tag_name,
+                "probability": obj.probability
+            }
             list_predictions.append(product)
 
+    boxed_image_bytes = get_bounding_box(prediction, image_bytes)
+    predict["bounding_box_image"] = base64.b64encode(boxed_image_bytes).decode("utf-8")
     predict["predictions"] = list_predictions
 
-    # predict["bounding_box_image"] = get_bounding_box(prediction)
     return predict
 
 
@@ -113,21 +130,19 @@ async def predict(images: List[UploadFile] = File(...)):
     for image in images:
         image_bytes = await image.read()
 
-        # Stuur afbeelding naar Azure Custom Vision model
         prediction = predictor.detect_image(
             project_id,
             publish_iteration_name,
             image_bytes
         )
 
-        # Verwerk voorspellingen
         predict_result = get_predict(
             prediction,
             image.filename,
-            image.content_type
+            image.content_type,
+            image_bytes
         )
 
         results.append(predict_result)
 
     return {"results": results}
-
