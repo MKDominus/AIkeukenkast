@@ -16,6 +16,7 @@
 	let totalSteps = 3;
 	let errorMessage = $state("");
 	let errorOccurred = $state(false);
+	let debugImage = $state("");
 
 	let uploadedImages = $state<
 		{
@@ -41,7 +42,7 @@
 			errorOccurred = false;
 
 			// stuur afbeelding naar backend
-			const response = await fetch("http://localhost:8000/predict", {
+			const response = await fetch("http://localhost:5141/api/scans", {
 				method: "POST",
 				body: formData
 			});
@@ -52,7 +53,6 @@
 
 			const result = await response.json();
 			console.log("AI result:", result);
-
 			currentStep = 3;
 
 			// Later: navigate to results page here
@@ -155,7 +155,6 @@
 			<p class="instructionText">Scannen voltooid!</p>
 			<p class="instructionText_small">U wordt automatisch doorverwezen naar de resultatenpagina.</p>
 		{/if}
-		
 	</div>
 </div>
 
