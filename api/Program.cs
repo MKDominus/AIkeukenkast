@@ -35,9 +35,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHttpClient();
+
 // Dependency Injection Registration
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IScanService, ScanService>();
+builder.Services.AddScoped<IScanImportService, ScanImportService>();
 builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IDetectedProductService, DetectedProductService>();

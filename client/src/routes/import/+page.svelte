@@ -16,7 +16,6 @@
 	let totalSteps = 3;
 	let errorMessage = $state("");
 	let errorOccurred = $state(false);
-	let debugImage = $state("");
 
 	let uploadedImages = $state<
 		{
