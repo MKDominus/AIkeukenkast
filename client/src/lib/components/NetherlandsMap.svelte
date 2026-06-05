@@ -16,6 +16,7 @@
 	type GeocodeCache = Partial<Record<string, GeocodeCacheEntry>>;
 
 	const GEOCODE_CACHE_KEY = 'municipality-geocode-cache-v1';
+	//smallest and largest marker radius. 
 	const MIN_MARKER_RADIUS = 8;
 	const MAX_MARKER_RADIUS = 26;
 
@@ -60,7 +61,7 @@
 		try {
 			localStorage.setItem(GEOCODE_CACHE_KEY, JSON.stringify(cache));
 		} catch {
-			// Ignore storage failures and continue with in-memory results.
+			// Ignore storage failures and continue with in-memory results... not sure what else we could do here?
 		}
 	}
 
@@ -120,7 +121,7 @@
 				if (coordinates) {
 					cache[normalizedName] = coordinates;
 				}
-				// Keep requests polite to avoid geocoding rate-limits.
+				// nominatim has a rate limit, so we wait a little.
 				await wait(275);
 			}
 

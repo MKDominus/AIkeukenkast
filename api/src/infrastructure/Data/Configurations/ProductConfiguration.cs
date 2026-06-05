@@ -21,6 +21,12 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.Property(p => p.Supplier)
+            .HasMaxLength(200);
+
+        builder.Property(p => p.DangerSymbol)
+            .HasMaxLength(200);
+
         builder.Property(p => p.ImageURL)
             .HasMaxLength(2048);
 

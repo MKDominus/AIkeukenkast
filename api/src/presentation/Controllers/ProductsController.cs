@@ -40,6 +40,8 @@ public class ProductsController : ControllerBase
         { 
             ProductName = dto.ProductName,
             ProductType = dto.ProductType,
+            Supplier = dto.Supplier,
+            DangerSymbol = dto.DangerSymbol,
             ImageURL = dto.ImageURL,
             RiskLevel = Enum.Parse<ProductRiskLevel>(dto.RiskLevel, ignoreCase: true),
             WarningLabels = dto.WarningLabels.Select(label => new ProductWarningLabel
@@ -69,6 +71,8 @@ public class ProductsController : ControllerBase
         
         entity.ProductName = dto.ProductName;
         entity.ProductType = dto.ProductType;
+        entity.Supplier = dto.Supplier;
+        entity.DangerSymbol = dto.DangerSymbol;
         entity.ImageURL = dto.ImageURL;
         entity.RiskLevel = Enum.Parse<ProductRiskLevel>(dto.RiskLevel, ignoreCase: true);
         entity.WarningLabels = dto.WarningLabels.Select(label => new ProductWarningLabel
@@ -118,6 +122,8 @@ public class ProductsController : ControllerBase
         ProductId = p.ProductId,
         ProductName = p.ProductName,
         ProductType = p.ProductType,
+        Supplier = p.Supplier,
+        DangerSymbol = p.DangerSymbol,
         ImageURL = p.ImageURL,
         RiskLevel = p.RiskLevel.ToString(),
         WarningLabels = p.WarningLabels.Select(label => new ProductWarningLabelDto
