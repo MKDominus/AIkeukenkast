@@ -116,15 +116,14 @@ renders them as a responsive pie chart with a legend.
   #pieChartContainer {
     background-color: var(--color-bg);
     border: 2px solid var(--color-primary);
-    border-top: 6px solid var(--color-secondary-dark);
     padding: 16px;
     height: 100%;
-    width: 300px;
+    width: 360px;
     border-radius: 10px;
   }
 
   #pieChart {
-    max-height: 100px;
+    max-height: 120px;
     margin-top: 10px;
   }
 
