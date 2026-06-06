@@ -309,10 +309,6 @@
         margin: 30px;
         width: calc(100% - 60px);
         box-sizing: border-box;
-		overflow-y: auto;
-		overscroll-behavior: contain;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
 	}
 
     .recentScans{

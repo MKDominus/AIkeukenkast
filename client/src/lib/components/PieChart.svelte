@@ -118,7 +118,7 @@ renders them as a responsive pie chart with a legend.
     border: 2px solid var(--color-primary);
     padding: 16px;
     height: 100%;
-    width: 360px;
+    width: 410px;
     border-radius: 10px;
   }
 

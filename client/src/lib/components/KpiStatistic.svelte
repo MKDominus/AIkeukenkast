@@ -117,7 +117,7 @@ is required.
 	padding: 8px;
     max-width: 30px;
     max-height: 30px;
-	background-color: rgba(102, 39, 115, 0.748);
+	background-color: rgba(135, 177, 64, 0.648);
 	border-radius: 10px;
     }
 
