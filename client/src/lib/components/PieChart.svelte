@@ -120,6 +120,7 @@ renders them as a responsive pie chart with a legend.
     height: 100%;
     width: 410px;
     border-radius: 10px;
+    box-shadow: var(--shadow-card);
   }
 
   #pieChart {

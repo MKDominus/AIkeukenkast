@@ -96,6 +96,7 @@ is required.
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
+		box-shadow: var(--shadow-card);
 	}
 
 

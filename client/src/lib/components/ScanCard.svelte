@@ -119,22 +119,8 @@ return 'warnings-no';
 			transition:slide={{ duration: 220, easing: cubicOut, axis: 'y' }}
 		>
 			{#each scan.detectedProducts as detectedProduct, index}
-				{@const riskLevel = detectedProduct.product?.riskLevel ?? 'Onbekend'}
 				<article class="product-details-card">
-					<h4 class="product-name">{detectedProduct.product?.productName ?? `Onbekend product ${index + 1}`}</h4>
-					<div class="product-meta-row">
-						<p><strong>{detectedProduct.product?.productType ?? '-'}</strong></p>
-						<p><strong class={getRiskClass(riskLevel)}>{getRiskLabel(riskLevel)}</strong></p>
-					</div>
-					<p class="sustainability-row">
-						<strong>Waarschuwingen:</strong> {detectedProduct.product?.warningLabels?.length ?? 0}
-						<span class={detectedProduct.product?.warningLabels?.length ? 'warnings-yes' : 'warnings-no'}>
-							{detectedProduct.product?.warningLabels?.length ? 'Aanwezig' : 'Geen'}
-						</span>
-					</p>
-					<p class="sustainability-row">
-						<strong>Gevaar:</strong> {formatTextList(detectedProduct.product?.dangers)}
-					</p>
+					<h2 class="product-name">{detectedProduct.product?.productName ?? `Onbekend product ${index + 1}`}</h2>
 
 					<div class="details-section">
 						<button
@@ -195,22 +181,6 @@ return 'warnings-no';
 		<p class="modal-warnings">
 			<strong>Alternatieven:</strong> {formatTextList(selectedProduct.product?.alternatives)}
 		</p>
-		<!--maybe we leave this in, maybe we leave it out. For now leave it commented out.-->
-		<!-- <h4 class="modal-ingredients-header">Ingredients</h4>
-		{#if selectedProduct.product?.ingredients?.length}
-			<ul class="modal-ingredients-list">
-				{#each selectedProduct.product.ingredients as ingredient}
-					<li>
-						<p class="modal-ingredient-name">{ingredient.name}</p>
-						<p>{ingredient.description ?? 'geen beschrijving'}</p>
-						<p>Gevaarlijk: {ingredient.isHazardous ? 'ja' : 'nee'}</p>
-						<p>Concentratie: {ingredient.concentration}</p>
-					</li>
-				{/each}
-			</ul>
-		{:else}
-			<p class="empty-ingredients">Geen ingrediënten beschikbaar.</p>
-		{/if}-->
 	</div> 
 {/if}
 
@@ -218,7 +188,7 @@ return 'warnings-no';
 	.scan-card {
 		background-color: var(--color-bg);
 		border: 1px solid var(--color-border);
-		box-shadow: 0 2px 8px rgba(65, 20, 71, 0.12);
+		box-shadow: var(--shadow-card);
 		border-radius: 10px;
 		padding: 18px;
 		width: 100%;
@@ -364,6 +334,9 @@ return 'warnings-no';
 
 	.product-details-card {
 		border: 1px solid var(--color-border);
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 		border-radius: 10px;
 		padding: 12px;
 		background-color: #ffffff;
@@ -371,9 +344,9 @@ return 'warnings-no';
 	}
 
 	.product-name {
-		margin: 0 0 8px;
-		font-size: 1.2rem;
-		font-weight: 700;
+		margin-top: 6px;
+		font-size: 1rem;
+		font-weight: 500;
 		color: var(--color-primary-dark);
 	}
 
@@ -428,24 +401,11 @@ color: #92400e;
 		color: var(--color-secondary-dark);
 	}
 
-	.product-details-card p {
-		margin: 6px 0 0;
-		color: var(--color-text-muted);
-	}
-
-	.details-section {
-		margin-top: 10px;
-		display: flex;
-		gap: 10px;
-		align-items: center;
-		flex-wrap: wrap;
-	}
 
 	.view-details-link {
 		background: var(--color-bg);
 		border: 1px solid var(--color-primary);
 		padding: 6px 10px;
-		margin-top: 6px;
 		font-size: 0.95rem;
 		font-weight: 500;
 		color: var(--color-primary);
@@ -546,20 +506,6 @@ color: #92400e;
 		margin: 8px 0 0;
 		padding-left: 18px;
 		color: var(--color-text);
-	}
-
-	.modal-ingredients-list li {
-		margin-top: 8px;
-		padding: 8px;
-		border: 1px solid var(--color-primary);
-		border-radius: 8px;
-		background: var(--color-bg);
-		list-style: none;
-	}
-
-	.modal-ingredients-list p {
-		margin: 4px 0 0;
-		color: var(--color-text-muted);
 	}
 
 	.modal-ingredient-name {
