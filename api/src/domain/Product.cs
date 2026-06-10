@@ -5,6 +5,8 @@ public class Product
     public int ProductId { get; set; }
     public required string ProductName { get; set; }
     public required string ProductType { get; set; }
+    public string? Supplier { get; set; }
+    public string? DangerSymbol { get; set; }
     public string? ImageURL { get; set; }
     public required ProductRiskLevel RiskLevel { get; set; }
 

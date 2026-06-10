@@ -1,5 +1,6 @@
 using api.Application.DTOs;
 using api.Domain;
+using Microsoft.AspNetCore.Http;
 
 namespace api.Application.Interfaces;
 
@@ -22,6 +23,11 @@ public interface IProductService : IBaseService<Product>
 public interface IScanService : IBaseService<Scan>
 {
     Task<ScanStatsDto> GetStatsAsync();
+}
+
+public interface IScanImportService
+{
+    Task<IReadOnlyList<Scan>> CreateFromImagesAsync(IReadOnlyCollection<IFormFile> images);
 }
 
 public interface IIngredientService : IBaseService<Ingredient>

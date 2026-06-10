@@ -158,28 +158,43 @@
         {/each}
     </div>
 
-    <PieChart labels={categoryLabels} values={categoryValues} pieChartTitle="Product Categorieën"></PieChart>
 </div>
+<div id=pieAndFiltersContainer>
+    <PieChart labels={categoryLabels} values={categoryValues} pieChartTitle="Product Categorieën"></PieChart>
+    <div id="filtersContainer">
+    <div class="filtersHeader">
+        <h2 class="filterTitle">Filters</h2>
 
-<div id="filtersContainer">
-    {#key filterRenderKey}
-        <DropdownMenu dropdownTitle="Gemeentes" dropdownItems={MunicipalitiesJson} itemChosenEvent={applyFilter}></DropdownMenu>
-    {/key}
+        <button id="clearFiltersButton" type="button" onclick={clearAllFilters}>
+            ✕ Verwijder filters
+        </button>
+    </div>
 
-    {#key `danger-${filterRenderKey}`}
-        <ShowOnlyDangerousFIlter itemChosenEvent={applySafetyFilter}></ShowOnlyDangerousFIlter>
-    {/key}
+    <div class="allFilters">
+        {#key filterRenderKey}
+            <DropdownMenu
+                dropdownTitle="Gemeentes"
+                dropdownItems={MunicipalitiesJson}
+                itemChosenEvent={applyFilter}
+                variant="primary"
+            />
+        {/key}
 
-    <button id="clearFiltersButton" type="button" onclick={clearAllFilters}>
-        x Verwijder filters
-    </button>
+        {#key `danger-${filterRenderKey}`}
+            <ShowOnlyDangerousFIlter
+                itemChosenEvent={applySafetyFilter}
+            />
+        {/key}
+    </div>
 
     <p id="scanCountText">
         {filteredScans.length} scan{filteredScans.length === 1 ? '' : 's'} zichtbaar
     </p>
 </div>
-
+</div>
 <div class="scansContainer" bind:this={scansContainerElement} style={`max-height: ${scansContainerMaxHeight};`}>
+<h2 class="recentScans"> Recente Scans</h2>
+<p class="scanDescription">Per gemeente, gesorteerd op datum</p>
     {#if filteredScans.length === 0}
         <p>No scans found.</p>
     {:else}
@@ -195,16 +210,16 @@
         gap: 16px;
         align-items: stretch;
         margin-top: 30px;
-        margin-left: 30px;
-        margin-right: 30px;
+        margin-left: 100px;
+        margin-right: 100px;
     }
 
     #kpiCardsGrid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: flex;
         gap: 16px;
         flex: 1 1 auto;
         min-width: 0;
+        height: 120px;
     }
 
     @media (max-width: 1200px) {
@@ -223,52 +238,97 @@
         }
     }
 
-    #filtersContainer {
-        background-color: var(--color-primary);
-        border: 1px solid var(--color-primary-dark);
-        border-left: 4px solid var(--color-secondary-dark);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        padding: 10px;
-        margin: 30px;
-        border-radius: 10px;
-    }
+    #pieAndFiltersContainer {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-top: 30px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
 
-    #clearFiltersButton {
-        background-color: var(--color-bg);
-        color: var(--color-primary-dark);
-        border: 1px solid var(--color-primary-dark);
-        font-weight: 700;
-    }
+   #filtersContainer {
+    border: 2px solid var(--color-primary);
+    border-radius: 10px;
+    width: 100%;
+    height: 190px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow-card);
+}
 
-    #clearFiltersButton:hover {
-        background-color: var(--color-primary-dark);
-        color: var(--color-bg);
-        cursor: pointer;    
-    }
+.filtersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
 
-    #scanCountText {
-        margin: 0;
-        color: var(--color-bg);
-        font-weight: 600;
-    }
+.filterTitle {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.allFilters {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#clearFiltersButton {
+    background-color: var(--color-bg);
+    color: var(--color-primary);
+    border: none;
+    padding: 6px 10px;
+
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+#clearFiltersButton:hover {
+    background-color: var(--color-bg);
+    color: var(--color-primary-dark);
+    cursor: pointer;
+}
+
+#scanCountText {
+    margin: 0;
+    margin-top: auto;
+
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
 
 	.scansContainer {
         padding: 10px;
+        padding-left: 70px;
+        padding-right: 70px;
         margin: 30px;
         width: calc(100% - 60px);
         box-sizing: border-box;
-		overflow-y: auto;
-		overscroll-behavior: contain;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
 	}
+
+    .recentScans{
+        font-weight: 600;
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+
+    .scanDescription{
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        margin-bottom: 10px;
+    }
 
     .scansContainer::-webkit-scrollbar {
         display: none;
     }
+
+    
 
     
 </style>

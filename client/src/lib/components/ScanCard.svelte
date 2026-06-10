@@ -2,6 +2,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import type { Scan, ScanProduct } from '$lib/services/scanService';
+	import locationIcon from '$lib/assets/dashboard_icons/location_icon.png';
 
 	type Props = {
 		scan: Scan;
@@ -64,22 +65,40 @@ return 'warnings-no';
 
 <article class="scan-card">
 	<div class="scan-card-header">
-		<div class="scan-main-info">
-			<div class="municipality-block">
-				<svg class="municipality-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2001" height="2001" viewBox="0 0 2001 2001" aria-hidden="true">
-					<path fill-rule="evenodd" fill="rgb(100%, 100%, 100%)" fill-opacity="0" d="M 0.921875 0.078125 L 2000.921875 0.078125 L 2000.921875 2000.078125 L 0.921875 2000.078125 L 0.921875 0.078125 "/>
-					<path fill-rule="evenodd" fill="currentColor" fill-opacity="1" d="M 1000.921875 506.410156 C 1185.269531 506.410156 1334.710938 655.851562 1334.710938 840.199219 C 1334.710938 960.078125 1262.21875 1049.703125 1204.289062 1148.144531 L 1000.921875 1493.753906 L 797.546875 1148.144531 C 739.617188 1049.703125 667.128906 960.078125 667.128906 840.199219 C 667.128906 655.851562 816.570312 506.410156 1000.921875 506.410156 Z M 1000.921875 689.648438 C 1086.308594 689.648438 1155.53125 758.871094 1155.53125 844.261719 C 1155.53125 929.648438 1086.308594 998.871094 1000.921875 998.871094 C 915.53125 998.871094 846.308594 929.648438 846.308594 844.261719 C 846.308594 758.871094 915.53125 689.648438 1000.921875 689.648438 "/>
-				</svg>
-				<h3 class="municipality-label">municipality</h3>
-				<p class="municipality-name">{scan.municipality?.name ?? 'Onbekende gemeente'}</p>
+	<div class="scan-left">
+		<img src={locationIcon} alt="Locatie icoon" class="municipality-icon" />
+
+		<div class="scan-info">
+			<div class="scan-meta">
+				<span class="municipality-tag">GEMEENTE</span>
+				<span class="scan-date">
+					{new Date(scan.scanDate).toLocaleString()}
+				</span>
 			</div>
-			<p class="scan-date">gescanned op {new Date(scan.scanDate).toLocaleString()}</p>
-			<p class="detected-products">{scan.detectedProducts.length} product(en) gedetecteerd</p>
-<p class="sustainability-summary">
-<span class="sustainability-safe">{safeProductsDetected} veilig</span>
-<span class="sustainability-riskant">{riskantProductsDetected} riskant</span>
-<span class="sustainability-unsafe">{onveiligProductsDetected} onveilig</span>
-</p>
+
+			<h3 class="municipality-name">
+				{scan.municipality?.name ?? 'Onbekende gemeente'}
+			</h3>
+
+			<p class="detected-products">
+				{scan.detectedProducts.length} product(en) gedetecteerd
+			</p>
+		</div>
+	</div>
+
+	<div class="scan-right">
+		<div class="sustainability-summary">
+			<span class="sustainability-safe">
+				{safeProductsDetected} veilig
+			</span>
+
+			<span class="sustainability-riskant">
+				{riskantProductsDetected} riskant
+			</span>
+
+			<span class="sustainability-unsafe">
+				{onveiligProductsDetected} onveilig
+			</span>
 		</div>
 
 		<button
@@ -88,10 +107,11 @@ return 'warnings-no';
 			onclick={() => (showAllProducts = !showAllProducts)}
 			aria-expanded={showAllProducts}
 		>
-			<span>klik om alle producten te zien</span>
-			<span class="toggle-arrow" aria-hidden="true">{showAllProducts ? '▲' : '▼'}</span>
+			Bekijk producten
+			<span>{showAllProducts ? '▲' : '▼'}</span>
 		</button>
 	</div>
+</div>
 
 	{#if showAllProducts}
 		<section
@@ -99,22 +119,8 @@ return 'warnings-no';
 			transition:slide={{ duration: 220, easing: cubicOut, axis: 'y' }}
 		>
 			{#each scan.detectedProducts as detectedProduct, index}
-				{@const riskLevel = detectedProduct.product?.riskLevel ?? 'Onbekend'}
 				<article class="product-details-card">
-					<h4 class="product-name">{detectedProduct.product?.productName ?? `Onbekend product ${index + 1}`}</h4>
-					<div class="product-meta-row">
-						<p><strong>{detectedProduct.product?.productType ?? '-'}</strong></p>
-						<p><strong class={getRiskClass(riskLevel)}>{getRiskLabel(riskLevel)}</strong></p>
-					</div>
-					<p class="sustainability-row">
-						<strong>Waarschuwingen:</strong> {detectedProduct.product?.warningLabels?.length ?? 0}
-						<span class={detectedProduct.product?.warningLabels?.length ? 'warnings-yes' : 'warnings-no'}>
-							{detectedProduct.product?.warningLabels?.length ? 'Aanwezig' : 'Geen'}
-						</span>
-					</p>
-					<p class="sustainability-row">
-						<strong>Gevaar:</strong> {formatTextList(detectedProduct.product?.dangers)}
-					</p>
+					<h2 class="product-name">{detectedProduct.product?.productName ?? `Onbekend product ${index + 1}`}</h2>
 
 					<div class="details-section">
 						<button
@@ -175,22 +181,6 @@ return 'warnings-no';
 		<p class="modal-warnings">
 			<strong>Alternatieven:</strong> {formatTextList(selectedProduct.product?.alternatives)}
 		</p>
-		<!--maybe we leave this in, maybe we leave it out. For now leave it commented out.-->
-		<!-- <h4 class="modal-ingredients-header">Ingredients</h4>
-		{#if selectedProduct.product?.ingredients?.length}
-			<ul class="modal-ingredients-list">
-				{#each selectedProduct.product.ingredients as ingredient}
-					<li>
-						<p class="modal-ingredient-name">{ingredient.name}</p>
-						<p>{ingredient.description ?? 'geen beschrijving'}</p>
-						<p>Gevaarlijk: {ingredient.isHazardous ? 'ja' : 'nee'}</p>
-						<p>Concentratie: {ingredient.concentration}</p>
-					</li>
-				{/each}
-			</ul>
-		{:else}
-			<p class="empty-ingredients">Geen ingrediënten beschikbaar.</p>
-		{/if}-->
 	</div> 
 {/if}
 
@@ -198,7 +188,7 @@ return 'warnings-no';
 	.scan-card {
 		background-color: var(--color-bg);
 		border: 1px solid var(--color-border);
-		box-shadow: 0 2px 8px rgba(65, 20, 71, 0.12);
+		box-shadow: var(--shadow-card);
 		border-radius: 10px;
 		padding: 18px;
 		width: 100%;
@@ -207,110 +197,129 @@ return 'warnings-no';
 	}
 
 	.scan-card-header {
-		display: flex;
-		justify-content: space-between;
-		gap: 18px;
-	}
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 24px;
+}
 
-	.scan-main-info {
-		flex: 1;
-	}
+.scan-left {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	flex: 1;
+}
 
-	.municipality-block {
-		position: relative;
-		padding-left: 34px;
-	}
+.scan-info {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
 
-	.municipality-icon {
-		position: absolute;
-		left: -16px;
-		top: -2px;
-		width: 52px;
-		height: 52px; 
-		color: var(--color-primary);
-		pointer-events: none;
-	}
+.scan-meta {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
 
-	.municipality-label {
-		margin: 0;
-		font-size: 1.1rem;
-		font-weight: 700;
-		color: var(--color-text-muted);
-		line-height: 1.1;
-	}
+.municipality-tag {
+	background: #dff0d0;
+	color: #2f5d1f;
+	font-size: 0.72rem;
+	font-weight: 700;
+	padding: 4px 10px;
+	border-radius: 999px;
+	letter-spacing: 0.04em;
+}
 
-	.municipality-name {
-		margin: 8px 0 0;
-		font-size: 1.3rem;
-		font-weight: 700;
-		color: var(--color-primary-dark);
-	}
+.municipality-icon {
+	width: 34px;
+	height: 34px;
+	color: var(--color-primary);
+	flex-shrink: 0;
+}
 
-	.scan-date,
-	.detected-products,
-	.sustainability-summary {
-		margin: 8px 0 0;
-	}
+.municipality-name {
+	margin: 0;
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: var(--color-primary-dark);
+}
 
-	.sustainability-summary {
-		display: flex;
-		gap: 8px;
-		flex-wrap: wrap;
-	}
+.scan-date {
+	color: var(--color-text-muted);
+	font-size: 0.9rem;
+}
+
+.detected-products {
+	margin: 0;
+	color: var(--color-text-muted);
+	font-size: 0.95rem;
+}
+
+.scan-right {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+
+.sustainability-summary {
+	display: flex;
+	gap: 8px;
+	flex-wrap: nowrap;
+}
 
 .sustainability-safe,
 .sustainability-riskant,
 .sustainability-unsafe {
-display: inline-flex;
-align-items: center;
-padding: 4px 10px;
-border-radius: 999px;
-font-size: 0.9rem;
-font-weight: 600;
-line-height: 1.2;
+	display: inline-flex;
+	align-items: center;
+	padding: 8px 14px;
+	border-radius: 999px;
+	font-size: 0.9rem;
+	font-weight: 700;
 }
 
 .sustainability-safe {
-background: var(--color-bg);
-border: 1px solid var(--color-secondary);
-color: var(--color-secondary-dark);
+	background: #dff0d0;
+	color: #1b7a2f;
+	border: none;
 }
 
 .sustainability-riskant {
-background: var(--color-bg);
-border: 1px solid #f59e0b;
-color: #92400e;
+	background: #f8ead0;
+	color: #9a5c00;
+	border: none;
 }
 
 .sustainability-unsafe {
-background: var(--color-bg);
-border: 1px solid var(--color-primary);
-color: var(--color-primary-dark);
+	background: #f5dddd;
+	color: #a42323;
+	border: none;
 }
 
 	.show-products-toggle {
-		align-self: flex-start;
-		display: inline-flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 4px;
-		padding: 8px 12px;
-		color: var(--color-primary);
-		font-size: 0.85rem;
-		font-weight: 600;
-		cursor: pointer;
-		text-align: center;
-		min-width: 155px;
-		border: 1px solid var(--color-primary);
-		background: var(--color-bg);
-		border-radius: 2rem;
-	}
+	display: flex;
+	align-items: center;
+	gap: 8px;
 
-	.show-products-toggle:hover {
-		background: var(--color-primary);
-		color: var(--color-bg);
-	}
+	padding: 10px 16px;
+
+	background: white;
+	color: var(--color-primary-dark);
+
+	border: 1px solid var(--color-border);
+	border-radius: 14px;
+
+	font-weight: 600;
+	font-size: 0.95rem;
+
+	min-width: fit-content;
+}
+
+.show-products-toggle:hover {
+	background: #fafafa;
+}
 
 	.toggle-arrow {
 		font-size: 0.9rem;
@@ -325,6 +334,9 @@ color: var(--color-primary-dark);
 
 	.product-details-card {
 		border: 1px solid var(--color-border);
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 		border-radius: 10px;
 		padding: 12px;
 		background-color: #ffffff;
@@ -332,9 +344,9 @@ color: var(--color-primary-dark);
 	}
 
 	.product-name {
-		margin: 0 0 8px;
-		font-size: 1.2rem;
-		font-weight: 700;
+		margin-top: 6px;
+		font-size: 1rem;
+		font-weight: 500;
 		color: var(--color-primary-dark);
 	}
 
@@ -389,24 +401,11 @@ color: #92400e;
 		color: var(--color-secondary-dark);
 	}
 
-	.product-details-card p {
-		margin: 6px 0 0;
-		color: var(--color-text-muted);
-	}
-
-	.details-section {
-		margin-top: 10px;
-		display: flex;
-		gap: 10px;
-		align-items: center;
-		flex-wrap: wrap;
-	}
 
 	.view-details-link {
 		background: var(--color-bg);
 		border: 1px solid var(--color-primary);
 		padding: 6px 10px;
-		margin-top: 6px;
 		font-size: 0.95rem;
 		font-weight: 500;
 		color: var(--color-primary);
@@ -507,20 +506,6 @@ color: #92400e;
 		margin: 8px 0 0;
 		padding-left: 18px;
 		color: var(--color-text);
-	}
-
-	.modal-ingredients-list li {
-		margin-top: 8px;
-		padding: 8px;
-		border: 1px solid var(--color-primary);
-		border-radius: 8px;
-		background: var(--color-bg);
-		list-style: none;
-	}
-
-	.modal-ingredients-list p {
-		margin: 4px 0 0;
-		color: var(--color-text-muted);
 	}
 
 	.modal-ingredient-name {

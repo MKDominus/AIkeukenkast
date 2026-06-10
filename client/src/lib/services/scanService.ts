@@ -15,6 +15,8 @@ export type ScanProduct = {
         productId: number;
         productName: string;
         productType: string;
+        supplier?: string | null;
+        dangerSymbol?: string | null;
         imageURL?: string | null;
         riskLevel: string;
         warningLabels: { type: string; description: string }[];

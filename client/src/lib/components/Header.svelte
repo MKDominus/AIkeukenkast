@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TzorgLogo from "$lib/assets/tzorg_logo.png"
+    import TzorgLogo from "$lib/assets/logo.png"
 </script>
 
 <div id="headerBanner"></div>

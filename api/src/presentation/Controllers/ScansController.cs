@@ -1,5 +1,6 @@
 using api.Application.DTOs;
 using api.Application.Interfaces;
+using api.Application.Mappers;
 using api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,17 +11,19 @@ namespace api.Presentation.Controllers;
 public class ScansController : ControllerBase
 {
     private readonly IScanService _service;
+    private readonly IScanImportService _scanImportService;
 
-    public ScansController(IScanService service)
+    public ScansController(IScanService service, IScanImportService scanImportService)
     {
         _service = service;
+        _scanImportService = scanImportService;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ScanDto>>> GetAll()
     {
         var entities = await _service.GetAllAsync();
-        return Ok(entities.Select(ToDto));
+        return Ok(entities.Select(ScanMapper.ToDto));
     }
 
     [HttpGet("{id:int}")]
@@ -28,27 +31,27 @@ public class ScansController : ControllerBase
     {
         var item = await _service.GetByIdAsync(id);
         if (item == null) return NotFound();
-        return Ok(ToDto(item));
+        return Ok(ScanMapper.ToDto(item));
     }
 
     [HttpPost]
-    public async Task<ActionResult<ScanDto>> Create(CreateScanDto dto)
+    [Consumes("multipart/form-data")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<ActionResult<IEnumerable<ScanDto>>> Create([FromForm] CreateScanFormDto dto)
     {
-        var entity = new Scan 
-        { 
-            ScanDate = DateTime.UtcNow,
-            ImageUrl = dto.ImageUrl,
-            MunicipalityId = dto.MunicipalityId,
-            DetectedProducts = dto.DetectedProducts.Select(dp => new DetectedProduct
-            {
-                ProductId = dp.ProductId,
-                Confidence = dp.Confidence,
-                Count = dp.Count
-            }).ToList()
-        };
-        
-        await _service.AddAsync(entity);
-        return CreatedAtAction(nameof(GetById), new { id = entity.Id }, ToDto(entity));
+        try
+        {
+            var createdScans = await _scanImportService.CreateFromImagesAsync(dto.Images);
+            return Ok(createdScans.Select(ScanMapper.ToDto));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(StatusCodes.Status502BadGateway, ex.Message);
+        }
     }
 
     [HttpPut("{id:int}")]
@@ -80,48 +83,4 @@ public class ScansController : ControllerBase
         return Ok(stats);
     }
 
-    private static ScanDto ToDto(Scan s) => new ScanDto
-    {
-        Id = s.Id,
-        ScanDate = s.ScanDate,
-        ImageUrl = s.ImageUrl,
-        MunicipalityId = s.MunicipalityId,
-        Municipality = s.Municipality != null ? new MunicipalityDto 
-        { 
-            Id = s.Municipality.Id, 
-            Name = s.Municipality.Name, 
-            Population = s.Municipality.Population 
-        } : null,
-        DetectedProducts = s.DetectedProducts.Select(dp => new DetectedProductDto
-        {
-            Id = dp.Id,
-            ProductId = dp.ProductId,
-            Confidence = dp.Confidence,
-            Count = dp.Count,
-            Product = dp.Product != null ? new ProductDto 
-            { 
-                ProductId = dp.Product.ProductId,
-                ProductName = dp.Product.ProductName,
-                ProductType = dp.Product.ProductType,
-                ImageURL = dp.Product.ImageURL,
-                RiskLevel = dp.Product.RiskLevel.ToString(),
-                WarningLabels = dp.Product.WarningLabels.Select(label => new ProductWarningLabelDto
-                {
-                    Type = label.Type,
-                    Description = label.Description
-                }).ToList(),
-                Dangers = dp.Product.Dangers,
-                Precautions = dp.Product.Precautions,
-                Alternatives = dp.Product.Alternatives,
-                Ingredients = dp.Product.Ingredients.Select(i => new IngredientDto
-                {
-                    Id = i.Id,
-                    Name = i.Name,
-                    Description = i.Description,
-                    IsHazardous = i.IsHazardous,
-                    Concentration = i.Concentration
-                }).ToList()
-            } : null
-        }).ToList()
-    };
 }

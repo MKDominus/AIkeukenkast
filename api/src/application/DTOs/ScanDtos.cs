@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace api.Application.DTOs;
 
 public class ScanDto
@@ -30,4 +32,9 @@ public class ScanStatsDto
     public int ProductsScanned { get; set; }
     public double AverageSafety { get; set; }
     public double AverageRisk { get; set; }
+}
+
+public class CreateScanFormDto
+{
+    public List<IFormFile> Images { get; set; } = new();
 }

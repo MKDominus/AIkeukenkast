@@ -35,58 +35,113 @@ is required.
 -->
 
 <script lang="ts">
-    type KpiStatistic = {
-        statisticTitle: string
-        statistic: string
-    }
+    import totaleScansIcon from '$lib/assets/dashboard_icons/totale_scans.png';
+	import productenGescannedIcon from '$lib/assets/dashboard_icons/producten_gescanned.png';
+	import gemiddeldProductenPerScanIcon from '$lib/assets/dashboard_icons/gemiddeld_producten_per_scan.png';
+	import gemiddeldRisicoIcon from '$lib/assets/dashboard_icons/gemiddeld_risico.png';
 
-    let {
-        statisticTitle,
-        statistic
-    }: KpiStatistic = $props()
+	type KpiStatistic = {
+		statisticTitle: string;
+		statistic: string;
+	};
+
+	let {
+		statisticTitle,
+		statistic
+	}: KpiStatistic = $props();
+
+	const icons: Record<string, string> = {
+		'Totale Scans': totaleScansIcon,
+		'Producten Gescanned': productenGescannedIcon,
+		'Gemiddeld Producten per Scan': gemiddeldProductenPerScanIcon,
+		'Gemiddeld Risico': gemiddeldRisicoIcon
+	};
+
+	const fallbackIcon = '/dashboard_icons/default.png';
 </script>
 
 <div id="contentBody">
+    <div class="statisticHeader">
+        <div class="imageBox">
+        <img
+        src={icons[statisticTitle] ?? fallbackIcon}
+        alt={statisticTitle}
+        class="statisticIcon"
+        /> 
+    </div>
     <h2 id="statisticTitle">{statisticTitle}</h2>
-    <p id="statistic">{statistic}</p>
+    </div>
+	<p id="statistic">{statistic}</p>
 </div>
 
 <style>
-    #contentBody {
-        background-color: var(--color-bg);
-        border: 2px solid var(--color-primary);
-        border-top: 6px solid var(--color-secondary-dark);
-        padding: 10px 14px;
-        min-width: 0;
-        width: 100%;
-        max-width: none;
-        min-height: 72px;
-        height: 100%;
-        border-radius: 10px;
-        transition: transform 0.2s ease;
+	#contentBody {
+		background-color: var(--color-bg);
+		border: 2px solid var(--color-primary);
+
+		padding: 14px 18px;
+
+		min-width: 0;
+		width: 100%;
+		max-width: none;
+
+		min-height: 72px;
+		height: 100%;
+
+		border-radius: 10px;
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease;
+
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		box-shadow: var(--shadow-card);
+	}
+
+
+	#contentBody:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+	}
+    .statisticHeader {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 14px;
+        align-items: left;
+        gap: 12px;
+        height: 80px;
+     }
+
+	.imageBox {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px;
+    max-width: 30px;
+    max-height: 30px;
+	background-color: rgba(135, 177, 64, 0.648);
+	border-radius: 10px;
     }
 
-    #contentBody:hover {
-        transform: translateY(-4px);
-    }
+	.statisticIcon {
+		width: 24px;
+		height: 24px;
+		flex-shrink: 0;
+		object-fit: contain;
+	}
 
-    #statisticTitle {
-        color: var(--color-primary-dark);
-        font-weight: 700;
-        font-size: 1.05rem;
-        margin: 0;
-    }
+	#statisticTitle {
+		color: var(--color-text-muted);
+		font-weight: 700;
+		font-size: 1.05rem;
+		margin: 0;
+		line-height: 1.2;
+	}
 
-    #statistic {
-        color: var(--color-primary);
-        font-weight: 800;
-        font-size: 1.05rem;
-        margin-top: 0;
-        margin-bottom: 0;
-        white-space: nowrap;
-    }
+	#statistic {
+		color: var(--color-primary);
+		font-weight: 800;
+		font-size: 1.25rem;
+		margin: 0;
+		white-space: nowrap;
+	}
 </style>

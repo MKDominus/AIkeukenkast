@@ -24,12 +24,14 @@
 	#dangerousFilter {
 		appearance: none;
 		background: var(--color-secondary);
-		color: var(--color-bg);
+		color: var(--color-primary-dark);
 		text-align: center;
 		border: 1px solid var(--color-secondary-dark);
 		border-radius: 2rem;
 		padding: 10px 14px;
 		font-weight: 600;
+		font-size: 0.8rem;
+		width: 160px;
 		cursor: pointer;
 		box-shadow: 0 2px 8px rgba(102, 39, 115, 0.16);
 		transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
