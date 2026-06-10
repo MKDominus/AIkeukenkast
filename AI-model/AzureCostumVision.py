@@ -37,7 +37,7 @@ prediction_endpoint = os.getenv("ENDPOINT_PREDICTION")
 project_id = "c83cc105-d64c-4c3b-8ca9-c25f2da4ef62"
 
 # Naam van de gepubliceerde iteratie (modelversie)
-publish_iteration_name = "Iteration1"
+publish_iteration_name = "Iteration4"
 
 # Authenticatie voor Azure Custom Vision API
 credentials = ApiKeyCredentials(in_headers={
@@ -64,7 +64,7 @@ def get_bounding_box(prediction, image_bytes):
     image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
     for obj in prediction.predictions:
-        if obj.probability < 0.6:
+        if obj.probability < 0.5:
             continue
 
         box = obj.bounding_box
