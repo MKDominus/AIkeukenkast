@@ -9,11 +9,11 @@
     import type { ScannedProduct } from "$lib/stores/thuishulpScanResultaten.svelte";
 
 
-	const productId = $derived(Number(page.params.productId));
+	import type { PageData } from "./$types";
 
-	const product = $derived(
-		getProductById(productId) as ScannedProduct | undefined
-	);
+	let { data }: { data: PageData } = $props();
+
+	const product = data.product;
 	
 	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
 

@@ -14,11 +14,12 @@ export async function getScanResultsById(id: number, fetch: typeof window.fetch)
 
 	for (const scannedProduct of data.detectedProducts) {
 		let warningLabels: Ghs[] = []
-		for (const warningLabel of scannedProduct.product.warningLabels) {
+		for (const dangerSymbol of scannedProduct.product.dangerSymbols) {
+			let dangerSymbolData = dangerSymbol.split(";");
 
 			warningLabels.push({
-				type: warningLabel.type,
-				description: warningLabel.description
+				type: dangerSymbolData[0],
+				description: dangerSymbolData[1]
 			});
 		}
 
@@ -27,7 +28,11 @@ export async function getScanResultsById(id: number, fetch: typeof window.fetch)
 			productName: scannedProduct.product.productName,
 			productType: scannedProduct.product.productType,
 			productId: scannedProduct.product.productId,
-			riskLevel: scannedProduct.product.riskLevel
+			riskLevel: scannedProduct.product.riskLevel,
+			warningLabels: warningLabels,
+			dangers: scannedProduct.product.dangers,
+			precautions: scannedProduct.product.precautions,
+			alternatives: scannedProduct.product.alternatives
 		});
 	}
  
@@ -37,8 +42,30 @@ export async function getScanResultsById(id: number, fetch: typeof window.fetch)
 	return scanResults;
 }
 
-export function getProductById(productId: number): ScannedProduct | undefined {
-	return scanResults.find(
-		(product) => product.productId === productId
-	);
+export async function getProductById(productId: number, fetch: typeof window.fetch): Promise<ScannedProduct | undefined> {
+	const response = await fetch(buildApiUrl(`/api/products/${productId}`));
+	const data = await response.json();
+
+	let warningLabels: Ghs[] = []
+		for (const dangerSymbol of data.dangerSymbols) {
+			let dangerSymbolData = dangerSymbol.split(";");
+
+			warningLabels.push({
+				type: dangerSymbolData[0],
+				description: dangerSymbolData[1]
+			});
+		}
+
+		const scannedProduct: ScannedProduct = {
+			imageURL: data.imageURL,
+			productName: data.productName,
+			productType: data.productType,
+			productId: data.productId,
+			riskLevel: data.riskLevel,
+			warningLabels: warningLabels,
+			dangers: data.dangers,
+			precautions: data.precautions,
+			alternatives: data.alternatives
+		};
+	return scannedProduct;
 }
