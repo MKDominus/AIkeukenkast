@@ -12,7 +12,7 @@ public class ProductDto
     public required string ProductName { get; set; }
     public required string ProductType { get; set; }
     public string? Supplier { get; set; }
-    public string? DangerSymbol { get; set; }
+    public List<string> DangerSymbols { get; set; } = new();
     public string? ImageURL { get; set; }
     public required string RiskLevel { get; set; }
     public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
@@ -27,7 +27,7 @@ public class CreateProductDto
     public required string ProductName { get; set; }
     public required string ProductType { get; set; }
     public string? Supplier { get; set; }
-    public string? DangerSymbol { get; set; }
+    public List<string> DangerSymbols { get; set; } = new();
     public string? ImageURL { get; set; }
     public required string RiskLevel { get; set; }
     public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
@@ -43,7 +43,7 @@ public class UpdateProductDto
     public required string ProductName { get; set; }
     public required string ProductType { get; set; }
     public string? Supplier { get; set; }
-    public string? DangerSymbol { get; set; }
+    public List<string> DangerSymbols { get; set; } = new();
     public string? ImageURL { get; set; }
     public required string RiskLevel { get; set; }
     public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();

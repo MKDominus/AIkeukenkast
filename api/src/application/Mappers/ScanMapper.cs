@@ -29,7 +29,7 @@ public static class ScanMapper
                 ProductName = dp.Product.ProductName,
                 ProductType = dp.Product.ProductType,
                 Supplier = dp.Product.Supplier,
-                DangerSymbol = dp.Product.DangerSymbol,
+                DangerSymbols = dp.Product.DangerSymbols,
                 ImageURL = dp.Product.ImageURL,
                 RiskLevel = dp.Product.RiskLevel.ToString(),
                 WarningLabels = dp.Product.WarningLabels.Select(label => new ProductWarningLabelDto
