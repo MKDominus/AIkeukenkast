@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import PhoneHeader from "$lib/components/PhoneHeader.svelte";
 	import TitleCard from "$lib/components/TitleCard.svelte";
 	import ProgressIndicator from "$lib/components/ProgressIndicator.svelte";
@@ -54,8 +55,9 @@
 			console.log("AI result:", result);
 			currentStep = 3;
 
-			// Later: navigate to results page here
-			// goto("/results");
+			setTimeout(() => {
+				goto(`/scan_resultaten/${result[0]["id"]}`);
+			}, 3000);
 
 		} catch (error) {
 			currentStep = 1;

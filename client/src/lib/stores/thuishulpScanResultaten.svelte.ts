@@ -1,11 +1,11 @@
     export type RiskLevel = "Veilig" | "Riskant" | "Onveilig"
 
-    type Ghs = {
+    export type Ghs = {
         type: string;
         description: string;
     }
 
-    type Alternative = {
+    export type Alternative = {
         imageURL?: string;
         productName: string;      
         productType: string;

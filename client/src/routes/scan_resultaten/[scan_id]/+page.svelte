@@ -11,6 +11,7 @@
 	import type { PageData } from "./$types";
 
 	let { data }: { data: PageData } = $props();
+	console.log("Received scan results:", data);
 </script>
 
 <PhoneHeader />
