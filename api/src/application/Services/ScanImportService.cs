@@ -105,12 +105,13 @@ public class ScanImportService : IScanImportService
                         Count = 1
                     })
                     .ToList();
-
+                //THIS IS A TEMPORARY FIX FOR THE MUNICIPALITY ID, needs to change later.
+                int randomIdNumber = new Random().Next(1, 6); 
                 var entity = new Scan
                 {
                     ScanDate = DateTime.UtcNow,
                     ImageUrl = imageUrl,
-                    MunicipalityId = 1,
+                    MunicipalityId = randomIdNumber,
                     DetectedProducts = detectedProducts
                 };
 

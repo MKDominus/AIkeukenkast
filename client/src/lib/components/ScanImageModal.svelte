@@ -92,13 +92,15 @@
 		transform: translate(-50%, -50%);
 		z-index: 41;
 		width: min(960px, calc(100vw - 32px));
-		max-height: calc(100vh - 48px);
-		overflow-y: auto;
+		height: min(72vh, calc(100vh - 32px));
+		overflow: hidden;
 		background: var(--color-bg);
-		border: 1px solid var(--color-border);
 		border-radius: 14px;
-		box-shadow: 0 24px 50px rgba(65, 20, 71, 0.24);
-		padding: 18px;
+		box-shadow: 0 18px 40px rgba(65, 20, 71, 0.18);
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
 	}
 
 	.close-modal-button {
@@ -116,26 +118,25 @@
 	.scan-image-preview {
 		display: block;
 		width: 100%;
-		height: auto;
-		max-height: 76vh;
+		height: 100%;
 		object-fit: contain;
 		border-radius: 14px;
-		border: 1px solid var(--color-border);
 		background: #fff;
-		margin-top: 14px;
+		box-sizing: border-box;
 	}
 
 	.scan-image-stage {
-		min-height: min(60vh, 640px);
+		flex: 1;
+		min-height: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin-top: 14px;
+		margin-top: 10px;
 		border-radius: 14px;
-		border: 1px solid var(--color-border);
 		background: #fff;
-		padding: 24px;
+		padding: 12px;
 		box-sizing: border-box;
+		overflow: hidden;
 	}
 
 	.scan-image-loading,
