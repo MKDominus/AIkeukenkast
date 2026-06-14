@@ -23,6 +23,7 @@ public interface IProductService : IBaseService<Product>
 public interface IScanService : IBaseService<Scan>
 {
     Task<ScanStatsDto> GetStatsAsync();
+    Task<IEnumerable<ProductCategoryCountDto>> GetCategoryCountsAsync();
 }
 
 public interface IScanImportService
@@ -33,6 +34,7 @@ public interface IScanImportService
 public interface IBlobStorageService
 {
     Task<string> UploadImageAsync(IFormFile file);
+    Task<(Stream Content, string ContentType)?> DownloadImageAsync(string imageUrl);
 }
 
 public interface IIngredientService : IBaseService<Ingredient>

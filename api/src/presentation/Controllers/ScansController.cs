@@ -12,11 +12,16 @@ public class ScansController : ControllerBase
 {
     private readonly IScanService _service;
     private readonly IScanImportService _scanImportService;
+    private readonly IBlobStorageService _blobStorageService;
 
-    public ScansController(IScanService service, IScanImportService scanImportService)
+    public ScansController(
+        IScanService service,
+        IScanImportService scanImportService,
+        IBlobStorageService blobStorageService)
     {
         _service = service;
         _scanImportService = scanImportService;
+        _blobStorageService = blobStorageService;
     }
 
     [HttpGet]
@@ -81,6 +86,31 @@ public class ScansController : ControllerBase
     {
         var stats = await _service.GetStatsAsync();
         return Ok(stats);
+    }
+
+    [HttpGet("categories")]
+    public async Task<ActionResult<IEnumerable<ProductCategoryCountDto>>> GetCategoryCounts()
+    {
+        var categories = await _service.GetCategoryCountsAsync();
+        return Ok(categories);
+    }
+
+    [HttpGet("{id:int}/image")]
+    public async Task<IActionResult> GetImage(int id)
+    {
+        var scan = await _service.GetByIdAsync(id);
+        if (scan == null || string.IsNullOrWhiteSpace(scan.ImageUrl))
+        {
+            return NotFound();
+        }
+
+        var image = await _blobStorageService.DownloadImageAsync(scan.ImageUrl);
+        if (image == null)
+        {
+            return NotFound();
+        }
+
+        return File(image.Value.Content, image.Value.ContentType);
     }
 
 }

@@ -47,6 +47,11 @@ export type ScanStats = {
     averageRisk: number;
 };
 
+export type ProductCategoryCount = {
+    productType: string;
+    count: number;
+};
+
 const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL ?? 'http://localhost:5141';
 
 function buildApiUrl(path: string): string {
@@ -68,6 +73,18 @@ export async function getScanStats(fetch: typeof window.fetch): Promise<ScanStat
 
     if (!res.ok) {
         throw new Error(`Failed to load scan stats: ${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+}
+
+export async function getDetectedProductCategoryCounts(
+    fetch: typeof window.fetch
+): Promise<ProductCategoryCount[]> {
+    const res = await fetch(buildApiUrl('/api/scans/categories'));
+
+    if (!res.ok) {
+        throw new Error(`Failed to load detected product categories: ${res.status} ${res.statusText}`);
     }
 
     return res.json();

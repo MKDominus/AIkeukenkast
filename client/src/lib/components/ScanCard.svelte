@@ -2,6 +2,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import type { Scan, ScanProduct } from '$lib/services/scanService';
+	import ScanImageModal from '$lib/components/ScanImageModal.svelte';
 	import locationIcon from '$lib/assets/dashboard_icons/location_icon.png';
 
 	type Props = {
@@ -11,6 +12,7 @@
 	let { scan }: Props = $props();
 	let showAllProducts = $state(false);
 	let selectedProduct = $state<ScanProduct | null>(null);
+	let showScanImage = $state(false);
 
 let safeProductsDetected = $derived(
 scan.detectedProducts
@@ -61,6 +63,10 @@ return 'warnings-no';
 
 		return labels.map((label) => `${label.type}: ${label.description}`).join('; ');
 	}
+
+	function closeScanImage() {
+		showScanImage = false;
+	}
 </script>
 
 <article class="scan-card">
@@ -87,6 +93,14 @@ return 'warnings-no';
 	</div>
 
 	<div class="scan-right">
+		<button
+			type="button"
+			class="show-image-toggle"
+			onclick={() => (showScanImage = true)}
+		>
+			Bekijk foto
+		</button>
+
 		<div class="sustainability-summary">
 			<span class="sustainability-safe">
 				{safeProductsDetected} veilig
@@ -136,6 +150,14 @@ return 'warnings-no';
 		</section>
 	{/if}
 </article>
+
+{#if showScanImage}
+	<ScanImageModal
+		scanId={scan.id}
+		municipalityName={scan.municipality?.name}
+		onClose={closeScanImage}
+	/>
+{/if}
 
 {#if selectedProduct}
 	{@const selectedRiskLevel = selectedProduct.product?.riskLevel ?? 'Onbekend'}
@@ -261,6 +283,8 @@ return 'warnings-no';
 	display: flex;
 	align-items: center;
 	gap: 18px;
+		flex-wrap: wrap;
+		justify-content: flex-end;
 }
 
 .sustainability-summary {
@@ -320,6 +344,22 @@ return 'warnings-no';
 .show-products-toggle:hover {
 	background: #fafafa;
 }
+
+	.show-image-toggle {
+		padding: 10px 16px;
+		border: 1px solid var(--color-primary);
+		border-radius: 14px;
+		background: transparent;
+		color: var(--color-primary);
+		cursor: pointer;
+		font-weight: 600;
+		font-size: 0.95rem;
+		min-width: fit-content;
+	}
+
+	.show-image-toggle:hover {
+		background: rgba(65, 20, 71, 0.06);
+	}
 
 	.toggle-arrow {
 		font-size: 0.9rem;
@@ -530,6 +570,12 @@ color: #92400e;
 			min-width: 0;
 		}
 
+		.show-image-toggle {
+			align-self: stretch;
+			width: 100%;
+			min-width: 0;
+		}
+
 		.sustainability-row {
 			flex-wrap: wrap;
 			align-items: center;
@@ -543,6 +589,12 @@ color: #92400e;
 
 		.ingredients-modal {
 			width: min(560px, calc(100vw - 24px));
+			max-height: calc(100vh - 28px);
+			padding: 16px;
+		}
+
+		.scan-image-modal {
+			width: min(760px, calc(100vw - 24px));
 			max-height: calc(100vh - 28px);
 			padding: 16px;
 		}

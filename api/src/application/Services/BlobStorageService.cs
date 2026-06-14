@@ -32,4 +32,37 @@ public class BlobStorageService : IBlobStorageService
 
         return blobClient.Uri.ToString();
     }
+
+    public async Task<(Stream Content, string ContentType)?> DownloadImageAsync(string imageUrl)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl))
+        {
+            return null;
+        }
+
+        var uri = new Uri(imageUrl);
+        var relativePath = Uri.UnescapeDataString(uri.AbsolutePath).Trim('/');
+        var containerPrefix = "tzorgopslagfoto/";
+
+        var blobName = relativePath.StartsWith(containerPrefix, StringComparison.OrdinalIgnoreCase)
+            ? relativePath[containerPrefix.Length..]
+            : relativePath;
+
+        if (string.IsNullOrWhiteSpace(blobName))
+        {
+            return null;
+        }
+
+        var blobClient = _container.GetBlobClient(blobName);
+
+        if (!await blobClient.ExistsAsync())
+        {
+            return null;
+        }
+
+        var download = await blobClient.DownloadStreamingAsync();
+        var contentType = download.Value.Details.ContentType ?? "application/octet-stream";
+
+        return (download.Value.Content, contentType);
+    }
 }
