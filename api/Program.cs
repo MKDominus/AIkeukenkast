@@ -44,6 +44,7 @@ builder.Services.AddScoped<IScanImportService, ScanImportService>();
 builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IDetectedProductService, DetectedProductService>();
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
 var app = builder.Build();
 

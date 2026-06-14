@@ -13,15 +13,18 @@ public class ScanImportService : IScanImportService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IProductService _productService;
     private readonly IScanService _scanService;
+    private readonly IBlobStorageService _blobStorageService;
 
     public ScanImportService(
         IHttpClientFactory httpClientFactory,
         IProductService productService,
-        IScanService scanService)
+        IScanService scanService,
+        IBlobStorageService blobStorageService)
     {
         _httpClientFactory = httpClientFactory;
         _productService = productService;
         _scanService = scanService;
+        _blobStorageService = blobStorageService;
     }
 
     public async Task<IReadOnlyList<Scan>> CreateFromImagesAsync(IReadOnlyCollection<IFormFile> images)
@@ -76,8 +79,14 @@ public class ScanImportService : IScanImportService
 
             var createdScans = new List<Scan>();
 
-            foreach (var result in results)
+            for (int i = 0; i < results.Count; i++)
             {
+                var result = results[i];
+                var image = validImages[i];
+
+                var imageUrl =
+                    await _blobStorageService.UploadImageAsync(image);
+
                 var detectedProducts = result
                     .GetProperty("predictions")
                     .EnumerateArray()
@@ -86,7 +95,9 @@ public class ScanImportService : IScanImportService
                         ProductName = prediction.GetProperty("product name").GetString(),
                         Probability = prediction.GetProperty("probability").GetDouble()
                     })
-                    .Where(prediction => prediction.ProductName != null && knownProducts.ContainsKey(prediction.ProductName))
+                    .Where(prediction =>
+                        prediction.ProductName != null &&
+                        knownProducts.ContainsKey(prediction.ProductName))
                     .Select(prediction => new DetectedProduct
                     {
                         ProductId = knownProducts[prediction.ProductName!].ProductId,
@@ -98,14 +109,15 @@ public class ScanImportService : IScanImportService
                 var entity = new Scan
                 {
                     ScanDate = DateTime.UtcNow,
-                    ImageUrl = result.GetProperty("file name").GetString() ?? string.Empty,
+                    ImageUrl = imageUrl,
                     MunicipalityId = 1,
                     DetectedProducts = detectedProducts
                 };
 
-                await _scanService.AddAsync(entity);
-                createdScans.Add(entity);
-            }
+                    await _scanService.AddAsync(entity);
+
+                    createdScans.Add(entity);
+                }
 
             return createdScans;
         }

@@ -30,6 +30,11 @@ public interface IScanImportService
     Task<IReadOnlyList<Scan>> CreateFromImagesAsync(IReadOnlyCollection<IFormFile> images);
 }
 
+public interface IBlobStorageService
+{
+    Task<string> UploadImageAsync(IFormFile file);
+}
+
 public interface IIngredientService : IBaseService<Ingredient>
 {
 }
