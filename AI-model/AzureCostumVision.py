@@ -107,7 +107,7 @@ def get_predict(prediction, file_name, content_type, image_bytes):
     list_predictions = []
 
     for obj in prediction.predictions:
-        if obj.probability >= 0.6:
+        if obj.probability >= 0.7:
             product = {
                 "product name": obj.tag_name,
                 "probability": obj.probability
