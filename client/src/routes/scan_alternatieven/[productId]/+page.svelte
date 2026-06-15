@@ -3,19 +3,14 @@
 	import TitleCard from "$lib/components/TitleCard.svelte";
     import StyledButton from "$lib/components/StyledButton.svelte";
     import AlternativeProduct from "$lib/components/AlternativeProduct.svelte";
-
-    import { page } from "$app/state";
-	import { getProductById } from "$lib/services/scanResultsService";
-    import type { ScannedProduct } from "$lib/stores/thuishulpScanResultaten.svelte";
-
+	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
+	import TzorgDefault from "$lib/assets/tzorgDefault.png"
 
 	import type { PageData } from "./$types";
 
 	let { data }: { data: PageData } = $props();
 
-	const product = data.product;
-	
-	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
+	const alternatives = data.alternatives;
 
 </script>
 
@@ -31,11 +26,11 @@
     />
 
     <div id="alternativeProductsWrapper">
-        {#each product?.alternatives as alternative}
+        {#each alternatives as alternative}
             <AlternativeProduct 
-                imageURL={alternative.imageURL}
-                productName={alternative.productName || "Product naam niet beschikbaar"}
-                productType={alternative.productType || "Product type niet beschikbaar"}
+                imageURL={alternative.imageURL || TzorgDefault}
+                productName={alternative.productName}
+                productType={alternative.productType}
             />
         {/each}
     </div>

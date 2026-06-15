@@ -23,6 +23,13 @@ public class ProductsController : ControllerBase
         return Ok(entities.Select(ToDto));
     }
 
+    [HttpGet("{id}/alternatives")]
+    public async Task<ActionResult<IEnumerable<ProductAlternativesDto>>> GetAllAlternativesForProduct(int id)
+    {
+        var entities = await _service.GetAllAlternativesForProductAsync(id);
+        return Ok(entities.Select(ToDto));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetById(int id)
     {

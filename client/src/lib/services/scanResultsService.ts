@@ -42,7 +42,7 @@ export async function getScanResultsById(id: number, fetch: typeof window.fetch)
 	return scanResults;
 }
 
-export async function getProductById(productId: number, fetch: typeof window.fetch): Promise<ScannedProduct | undefined> {
+export async function getProductById(productId: number, fetch: typeof window.fetch): Promise<ScannedProduct> {
 	const response = await fetch(buildApiUrl(`/api/products/${productId}`));
 	const data = await response.json();
 
@@ -68,4 +68,17 @@ export async function getProductById(productId: number, fetch: typeof window.fet
 			alternatives: data.alternatives
 		};
 	return scannedProduct;
+}
+
+export async function getAlternativesByProductId(productId: number, fetch: typeof window.fetch): Promise<Alternative[]> {
+	const response = await fetch(buildApiUrl(`/api/products/${productId}/alternatives`));
+	if (!response.ok) {
+		throw new Error(`Failed to load alternatives for product ${productId}: ${response.status} ${response.statusText}`);
+	}
+	const data = await response.json();
+	return data.map((alt: Alternative) => ({
+		productName: alt.productName,
+		productType: alt.productType,
+		imageURL: alt.imageURL
+	}));
 }

@@ -64,7 +64,7 @@ def get_bounding_box(prediction, image_bytes):
     image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
     for obj in prediction.predictions:
-        if obj.probability < 0.5:
+        if obj.probability < 0.4:
             continue
 
         box = obj.bounding_box

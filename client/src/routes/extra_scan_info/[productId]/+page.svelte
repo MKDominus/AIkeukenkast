@@ -2,10 +2,7 @@
 	import PhoneHeader from "$lib/components/PhoneHeader.svelte";
 	import TitleCard from "$lib/components/TitleCard.svelte";
     import StyledButton from "$lib/components/StyledButton.svelte";
-    import { page } from "$app/state";
-	import { getProductById } from "$lib/services/scanResultsService";
-    import type { ScannedProduct } from "$lib/stores/thuishulpScanResultaten.svelte";
-
+    import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
     import TzorgDefault from "$lib/assets/tzorgDefault.png"
 
     import type { PageData } from "./$types";
@@ -13,9 +10,6 @@
 	let { data }: { data: PageData } = $props();
 
 	const product = data.product;
-	
-	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
-
 </script>
 
 <PhoneHeader />

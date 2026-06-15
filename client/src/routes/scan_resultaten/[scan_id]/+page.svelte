@@ -30,7 +30,7 @@
 		<img id="errorIllustration" src={TzorgIllustration} alt="Tzorg Illustratie">
 		<div id="retryButtonContainer">
 			<StyledButton 
-				buttonTitle="Probeer opnieuw" 
+				buttonTitle="Probeer het opnieuw" 
 				onclick={() => history.back()} 
 				color="var(--color-primary)"
 				width = "200px"
