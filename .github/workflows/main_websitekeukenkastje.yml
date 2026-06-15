@@ -93,6 +93,7 @@ jobs:
   deploy-api:
     runs-on: ubuntu-latest
     needs: build
+    environment: Production
 
     steps:
       - name: Download API artifact
@@ -111,6 +112,7 @@ jobs:
   deploy-python:
     runs-on: ubuntu-latest
     needs: build
+    environment: Production
 
     steps:
       - name: Download Python artifact
@@ -129,6 +131,7 @@ jobs:
   deploy-client:
     runs-on: ubuntu-latest
     needs: build
+    environment: Production
 
     steps:
       - name: Download frontend artifact
