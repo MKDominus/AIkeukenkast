@@ -1,14 +1,25 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - Websitekeukenkastje
+name: Build and deploy AIkeukenkastje apps
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '22.x'
+  API_APP_NAME: ${{ vars.AZURE_API_APP_NAME }}
+  API_PUBLISH_PROFILE: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
+  PYTHON_APP_NAME: ${{ vars.AZURE_PYTHON_APP_NAME }}
+  PYTHON_PUBLISH_PROFILE: ${{ secrets.AZURE_PYTHON_PUBLISH_PROFILE }}
+  CLIENT_APP_NAME: ${{ vars.AZURE_CLIENT_APP_NAME }}
+  CLIENT_PUBLISH_PROFILE: ${{ secrets.AZURE_CLIENT_PUBLISH_PROFILE }}
+  PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
 
 jobs:
   build:
@@ -19,48 +30,116 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
       - name: Set up Python version
         uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      # 🛠️ Local Build Section (Optional)
-      # The following section in your workflow is designed to catch build issues early on the client side, before deployment. This can be helpful for debugging and validation. However, if this step significantly increases deployment time and early detection is not critical for your workflow, you may remove this section to streamline the deployment process.
-      - name: Create and Start virtual environment and Install dependencies
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Publish API
+        run: dotnet publish api/api.csproj --configuration Release --output ${{ github.workspace }}/artifacts/api
+
+      - name: Validate Python dependencies
+        working-directory: AI-model
         run: |
-          python -m venv antenv
-          source antenv/bin/activate
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-                
-      # By default, when you enable GitHub CI/CD integration through the Azure portal, the platform automatically sets the SCM_DO_BUILD_DURING_DEPLOYMENT application setting to true. This triggers the use of Oryx, a build engine that handles application compilation and dependency installation (e.g., pip install) directly on the platform during deployment. Hence, we exclude the antenv virtual environment directory from the deployment artifact to reduce the payload size. 
-      - name: Upload artifact for deployment jobs
+
+      - name: Install frontend dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: client
+        run: npm run build
+
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-app
+          path: |
+            artifacts/api/**
+
+      - name: Upload Python artifact
         uses: actions/upload-artifact@v4
         with:
           name: python-app
           path: |
-            .
-            !antenv/
+            AI-model/**
+            !AI-model/.venv/**
+            !AI-model/**/__pycache__/**
 
-      # 🚫 Opting Out of Oryx Build
-      # If you prefer to disable the Oryx build process during deployment, follow these steps:
-      # 1. Remove the SCM_DO_BUILD_DURING_DEPLOYMENT app setting from your Azure App Service Environment variables.
-      # 2. Refer to sample workflows for alternative deployment strategies: https://github.com/Azure/actions-workflow-samples/tree/master/AppService
-      
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-app
+          path: |
+            client/**
+            !client/node_modules/**
+            !client/.svelte-kit/**
+            !client/.vscode/**
 
-  deploy:
+  deploy-api:
     runs-on: ubuntu-latest
     needs: build
-    
+
     steps:
-      - name: Download artifact from build job
+      - name: Download API artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: api-app
+
+      - name: Deploy API to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.API_APP_NAME }}
+          slot-name: Production
+          publish-profile: ${{ env.API_PUBLISH_PROFILE }}
+          package: artifacts/api
+
+  deploy-python:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download Python artifact
         uses: actions/download-artifact@v4
         with:
           name: python-app
       
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy Python app to Azure Web App
         uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
         with:
-          app-name: 'Websitekeukenkastje'
+          app-name: ${{ env.PYTHON_APP_NAME }}
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23FA7EA156C84F829DE1147F1B7E4DBE }}
+          publish-profile: ${{ env.PYTHON_PUBLISH_PROFILE }}
+          package: AI-model
+
+  deploy-client:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: client-app
+
+      - name: Deploy frontend to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.CLIENT_APP_NAME }}
+          slot-name: Production
+          publish-profile: ${{ env.CLIENT_PUBLISH_PROFILE }}
+          package: client

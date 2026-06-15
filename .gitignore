@@ -63,3 +63,6 @@ project.lock.json
 
 # Mac
 .DS_Store
+
+# Secrets
+appsettings.Development.json
