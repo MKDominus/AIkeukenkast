@@ -45,33 +45,43 @@ namespace api.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Brand = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Category = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    SustainabilityScore = table.Column<int>(type: "int", nullable: false),
-                    IsSustainable = table.Column<bool>(type: "bit", nullable: false),
-                    SafetyWarnings = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ProductName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ProductType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Supplier = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    DangerSymbols = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageURL = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    RiskLevel = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    WarningLabels = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Dangers = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Precautions = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Alternatives = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.ProductId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Scans",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false)
+                    ScanDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MunicipalityId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_Scans", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Scans_Municipalities_MunicipalityId",
+                        column: x => x.MunicipalityId,
+                        principalTable: "Municipalities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,36 +104,8 @@ namespace api.Migrations
                         name: "FK_IngredientProduct_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
+                        principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Scans",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ScanDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MunicipalityId = table.Column<int>(type: "int", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Scans", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Scans_Municipalities_MunicipalityId",
-                        column: x => x.MunicipalityId,
-                        principalTable: "Municipalities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Scans_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,7 +126,7 @@ namespace api.Migrations
                         name: "FK_DetectedProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
+                        principalColumn: "ProductId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_DetectedProducts_Scans_ScanId",
@@ -185,11 +167,6 @@ namespace api.Migrations
                 name: "IX_Scans_MunicipalityId",
                 table: "Scans",
                 column: "MunicipalityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Scans_UserId",
-                table: "Scans",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -212,9 +189,6 @@ namespace api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Municipalities");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

@@ -23,6 +23,13 @@ public class ProductsController : ControllerBase
         return Ok(entities.Select(ToDto));
     }
 
+    [HttpGet("{id}/alternatives")]
+    public async Task<ActionResult<IEnumerable<ProductAlternativesDto>>> GetAllAlternativesForProduct(int id)
+    {
+        var entities = await _service.GetAllAlternativesForProductAsync(id);
+        return Ok(entities.Select(ToDto));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetById(int id)
     {
@@ -41,7 +48,7 @@ public class ProductsController : ControllerBase
             ProductName = dto.ProductName,
             ProductType = dto.ProductType,
             Supplier = dto.Supplier,
-            DangerSymbol = dto.DangerSymbol,
+            DangerSymbols = dto.DangerSymbols,
             ImageURL = dto.ImageURL,
             RiskLevel = Enum.Parse<ProductRiskLevel>(dto.RiskLevel, ignoreCase: true),
             WarningLabels = dto.WarningLabels.Select(label => new ProductWarningLabel
@@ -72,7 +79,7 @@ public class ProductsController : ControllerBase
         entity.ProductName = dto.ProductName;
         entity.ProductType = dto.ProductType;
         entity.Supplier = dto.Supplier;
-        entity.DangerSymbol = dto.DangerSymbol;
+        entity.DangerSymbols = dto.DangerSymbols;
         entity.ImageURL = dto.ImageURL;
         entity.RiskLevel = Enum.Parse<ProductRiskLevel>(dto.RiskLevel, ignoreCase: true);
         entity.WarningLabels = dto.WarningLabels.Select(label => new ProductWarningLabel
@@ -123,7 +130,7 @@ public class ProductsController : ControllerBase
         ProductName = p.ProductName,
         ProductType = p.ProductType,
         Supplier = p.Supplier,
-        DangerSymbol = p.DangerSymbol,
+        DangerSymbols = p.DangerSymbols,
         ImageURL = p.ImageURL,
         RiskLevel = p.RiskLevel.ToString(),
         WarningLabels = p.WarningLabels.Select(label => new ProductWarningLabelDto
