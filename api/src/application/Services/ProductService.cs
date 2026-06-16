@@ -29,6 +29,24 @@ public class ProductService : IProductService
             .FirstOrDefaultAsync(p => p.ProductId == id);
     }
 
+    public async Task<IEnumerable<Product>> GetAllAlternativesForProductAsync(int id)
+    {
+        var product = await _context.Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.ProductId == id);
+
+        if (product == null || product.Alternatives.Count == 0)
+        {
+            return Enumerable.Empty<Product>();
+        }
+
+        return await _context.Products
+            .AsNoTracking()
+            .Where(p => product.Alternatives.Contains(p.ProductId))
+            .ToListAsync();
+    }
+
+
     public async Task<Product> AddAsync(Product entity)
     {
         _context.Products.Add(entity);

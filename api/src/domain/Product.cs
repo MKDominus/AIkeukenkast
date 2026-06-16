@@ -13,7 +13,7 @@ public class Product
     public List<ProductWarningLabel> WarningLabels { get; set; } = new();
     public List<string> Dangers { get; set; } = new();
     public List<string> Precautions { get; set; } = new();
-    public List<string> Alternatives { get; set; } = new();
+    public List<int> Alternatives { get; set; } = new();
 
     public List<Ingredient> Ingredients { get; set; } = new();
 }

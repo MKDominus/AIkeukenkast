@@ -18,7 +18,7 @@ public class ProductDto
     public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
     public List<string> Dangers { get; set; } = new();
     public List<string> Precautions { get; set; } = new();
-    public List<string> Alternatives { get; set; } = new();
+    public List<int> Alternatives { get; set; } = new();
     public List<IngredientDto> Ingredients { get; set; } = new();
 }
 
@@ -33,7 +33,7 @@ public class CreateProductDto
     public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
     public List<string> Dangers { get; set; } = new();
     public List<string> Precautions { get; set; } = new();
-    public List<string> Alternatives { get; set; } = new();
+    public List<int> Alternatives { get; set; } = new();
     public List<int>? IngredientIds { get; set; }
 }
 
@@ -49,7 +49,7 @@ public class UpdateProductDto
     public List<ProductWarningLabelDto> WarningLabels { get; set; } = new();
     public List<string> Dangers { get; set; } = new();
     public List<string> Precautions { get; set; } = new();
-    public List<string> Alternatives { get; set; } = new();
+    public List<int> Alternatives { get; set; } = new();
     public List<int>? IngredientIds { get; set; }
 }
 
@@ -57,4 +57,11 @@ public class ProductCategoryCountDto
 {
     public string ProductType { get; set; } = string.Empty;
     public int Count { get; set; }
+}
+
+public class ProductAlternativesDto
+{
+    public required string ProductName { get; set; }
+    public required string ProductType { get; set; }
+    public string? ImageURL { get; set; }
 }

@@ -42,6 +42,16 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             value => value.Aggregate(0, (hash, item) => HashCode.Combine(hash, item)),
             value => value.ToList());
 
+        var intListConverter = new ValueConverter<List<int>, string>(
+            value => JsonSerializer.Serialize(value, (JsonSerializerOptions?)null),
+            value => JsonSerializer.Deserialize<List<int>>(value, (JsonSerializerOptions?)null)
+                    ?? new List<int>());
+
+        var intListComparer = new ValueComparer<List<int>>(
+            (left, right) => left!.SequenceEqual(right!),
+            value => value.Aggregate(0, (hash, item) => HashCode.Combine(hash, item)),
+            value => value.ToList());
+
         builder.Property(p => p.DangerSymbols)
             .HasConversion(stringListConverter)
             .Metadata.SetValueComparer(stringListComparer);
@@ -55,8 +65,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .Metadata.SetValueComparer(stringListComparer);
 
         builder.Property(p => p.Alternatives)
-            .HasConversion(stringListConverter)
-            .Metadata.SetValueComparer(stringListComparer);
+            .HasConversion(intListConverter)
+            .Metadata.SetValueComparer(intListComparer);
 
         builder.Property(p => p.WarningLabels)
             .HasConversion(new ValueConverter<List<ProductWarningLabel>, string>(
