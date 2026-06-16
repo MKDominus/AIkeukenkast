@@ -92,4 +92,21 @@ public class ScanService : IScanService
             AverageRisk = (double)aggregates.RiskProducts / aggregates.ProductsScanned * 100
         };
     }
+
+    public async Task<IEnumerable<ProductCategoryCountDto>> GetCategoryCountsAsync()
+    {
+        return await _context.DetectedProducts
+            .AsNoTracking()
+            .Include(dp => dp.Product)
+            .Where(dp => dp.Product != null)
+            .GroupBy(dp => dp.Product!.ProductType)
+            .Select(group => new ProductCategoryCountDto
+            {
+                ProductType = group.Key,
+                Count = group.Sum(item => item.Count)
+            })
+            .OrderByDescending(item => item.Count)
+            .ThenBy(item => item.ProductType)
+            .ToListAsync();
+    }
 }

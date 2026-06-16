@@ -3,6 +3,9 @@ bin/
 obj/
 .env
 
+# Dev secrets
+appsettings.Development.json
+
 # Visual Studio files
 .vs/
 *.user
@@ -63,6 +66,7 @@ project.lock.json
 
 # Mac
 .DS_Store
+api/appsettings.Development.json
 
 # Secrets
 appsettings.Development.json
