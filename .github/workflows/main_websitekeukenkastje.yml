@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy AIkeukenkastje apps
+name: Build and deploy Websitekeukenkastje
 
 on:
   push:
@@ -10,51 +7,25 @@ on:
   workflow_dispatch:
 
 env:
+  NODE_VERSION: '22.x'
   DOTNET_VERSION: '10.0.x'
   PYTHON_VERSION: '3.11'
-  NODE_VERSION: '22.x'
-  API_APP_NAME: ${{ vars.AZURE_API_APP_NAME }}
-  API_PUBLISH_PROFILE: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
-  PYTHON_APP_NAME: ${{ vars.AZURE_PYTHON_APP_NAME }}
-  PYTHON_PUBLISH_PROFILE: ${{ secrets.AZURE_PYTHON_PUBLISH_PROFILE }}
-  CLIENT_APP_NAME: ${{ vars.AZURE_CLIENT_APP_NAME }}
-  CLIENT_PUBLISH_PROFILE: ${{ secrets.AZURE_CLIENT_PUBLISH_PROFILE }}
-  PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
+  PUBLIC_API_BASE_URL: https://dummy.local
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Set up Python version
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
+      # Frontend
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Publish API
-        run: dotnet publish api/api.csproj --configuration Release --output ${{ github.workspace }}/artifacts/api
-
-      - name: Validate Python dependencies
-        working-directory: AI-model
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
 
       - name: Install frontend dependencies
         working-directory: client
@@ -64,85 +35,55 @@ jobs:
         working-directory: client
         run: npm run build
 
-      - name: Upload API artifact
+      # API build (optioneel)
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish API
+        run: dotnet publish api/api.csproj --configuration Release --output ${{ github.workspace }}/artifact-api
+
+      # Python validation
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Validate Python environment
+        working-directory: AI-model
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Combine deployment package
+      - name: Prepare deployment package
+        run: |
+          mkdir deploy
+          cp -r client/* deploy/
+          cp -r artifact-api/* deploy/ || true
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: api-app
-          path: |
-            artifacts/api/**
+          name: website
+          path: deploy
 
-      - name: Upload Python artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-app
-          path: |
-            AI-model/**
-            !AI-model/.venv/**
-            !AI-model/**/__pycache__/**
-
-      - name: Upload frontend artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: client-app
-          path: |
-            client/**
-            !client/node_modules/**
-            !client/.svelte-kit/**
-            !client/.vscode/**
-
-  deploy-api:
+  deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment: Production
 
     steps:
-      - name: Download API artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: api-app
+          name: website
 
-      - name: Deploy API to Azure Web App
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.API_APP_NAME }}
-          slot-name: Production
-          publish-profile: ${{ env.API_PUBLISH_PROFILE }}
-          package: artifacts/api
-
-  deploy-python:
-    runs-on: ubuntu-latest
-    needs: build
-    environment: Production
-
-    steps:
-      - name: Download Python artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-      
-      - name: Deploy Python app to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.PYTHON_APP_NAME }}
-          slot-name: 'Production'
-          publish-profile: ${{ env.PYTHON_PUBLISH_PROFILE }}
-          package: AI-model
-
-  deploy-client:
-    runs-on: ubuntu-latest
-    needs: build
-    environment: Production
-
-    steps:
-      - name: Download frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: client-app
-
-      - name: Deploy frontend to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.CLIENT_APP_NAME }}
-          slot-name: Production
-          publish-profile: ${{ env.CLIENT_PUBLISH_PROFILE }}
-          package: client
+          app-name: Websitekeukenkastje
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23FA7EA156C84F829DE1147F1B7E4DBE }}
+          package: .
