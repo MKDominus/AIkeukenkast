@@ -105,7 +105,7 @@
                 {#if warningLabels.length > 0}
                     {#each warningLabels as warning}
                         <div class="warningLabelContainer">
-                            <img class="ghsIcon" src={`/src/lib/assets/ghs_icons/${warning.type}.png`} alt={warning.description} />
+                            <img class="ghsIcon" src={`/ghs_icons/${warning.type}.png`} alt={warning.description} />
                             <p>{warning.description}</p>
                         </div>
                     {/each}
