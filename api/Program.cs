@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
                 "https://localhost:5173",
                 "http://localhost:4173",
                 "https://localhost:4173",
-                "websitekeukenkastje-cag6d6augegebbc9.germanywestcentral-01.azurewebsites.net"
+                "https://websitekeukenkastje-cag6d6augegebbc9.germanywestcentral-01.azurewebsites.net"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
