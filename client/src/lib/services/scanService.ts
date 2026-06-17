@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/public';
 export type ProductIngredient = {
     id: number;
     name: string;
@@ -52,7 +53,7 @@ export type ProductCategoryCount = {
     count: number;
 };
 
-const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL ?? 'http://localhost:5141';
+const API_BASE_URL = env.PUBLIC_API_BASE_URL ?? 'http://localhost:5141';
 
 function buildApiUrl(path: string): string {
     return `${API_BASE_URL}${path}`;
