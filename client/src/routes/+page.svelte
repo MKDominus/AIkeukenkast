@@ -12,9 +12,9 @@
 	import GalleryIcon from "$lib/assets/photo_icon.png"
 	import LoadingGif from "$lib/assets/loading.gif"
 	import ImportCompleteIcon from "$lib/assets/importComplete_icon.png"
-	import { PUBLIC_API_BASE_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 
-	const API_BASE_URL = PUBLIC_API_BASE_URL ?? "http://localhost:5141";
+	const API_BASE_URL = env.PUBLIC_API_BASE_URL ?? "http://localhost:5141";
 	let currentStep = $state(1);
 	let totalSteps = 3;
 	let errorMessage = $state("");
