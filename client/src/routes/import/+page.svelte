@@ -52,7 +52,6 @@
 			}
 
 			const result = await response.json();
-			console.log("AI result:", result);
 			currentStep = 3;
 
 			setTimeout(() => {
