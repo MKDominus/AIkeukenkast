@@ -48,7 +48,7 @@
 			});
 
 			if (!response.ok) {
-				throw new Error("Afbeelding analyseren mislukt.");
+				throw new Error("Afbeelding analyseren mislukt."); 
 			}
 
 			const result = await response.json();
