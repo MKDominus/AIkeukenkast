@@ -89,7 +89,6 @@
 				url: URL.createObjectURL(file)
 			});
 		}
-
 		input.value = "";
 	}
 </script>
