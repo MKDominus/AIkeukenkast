@@ -42,7 +42,7 @@
 			errorOccurred = false;
 
 			// stuur afbeelding naar backend
-			const response = await fetch("http://localhost:5141/api/scans", {
+			const response = await fetch("https://keukenkastje-api-gnbhf5cwghabgwch.germanywestcentral-01.azurewebsites.net/api/scans", {
 				method: "POST",
 				body: formData
 			});

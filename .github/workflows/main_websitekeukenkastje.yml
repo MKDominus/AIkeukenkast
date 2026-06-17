@@ -1,4 +1,4 @@
-name: Build and deploy Websitekeukenkastje
+name: Build and deploy Keukenkastje
 
 on:
   push:
@@ -10,18 +10,15 @@ env:
   NODE_VERSION: '22.x'
   DOTNET_VERSION: '10.0.x'
   PYTHON_VERSION: '3.11'
-  PUBLIC_API_BASE_URL: https://dummy.local
+  PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
 
 jobs:
-  build:
+  build-frontend:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
-      # Frontend - SvelteKit adapter-node
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,60 +31,72 @@ jobs:
       - name: Build frontend
         working-directory: client
         run: npm run build
+        env:
+          PUBLIC_API_BASE_URL: ${{ env.PUBLIC_API_BASE_URL }}
 
-      # API build
+      - name: Prepare frontend package
+        run: |
+          mkdir deploy-frontend
+          cp -r client/build deploy-frontend/build
+          cp client/package.json deploy-frontend/
+          cp client/package-lock.json deploy-frontend/
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend
+          path: deploy-frontend
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: build-frontend
+
+    steps:
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend
+
+      - name: Deploy frontend to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: Websitekeukenkastje
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23FA7EA156C84F829DE1147F1B7E4DBE }}
+          package: .
+
+  build-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish API
-        run: dotnet publish api/api.csproj --configuration Release --output ${{ github.workspace }}/artifact-api
+        run: dotnet publish api/api.csproj --configuration Release --output api-publish
 
-      # Python validation
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Validate Python environment
-        working-directory: AI-model
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      # Deployment package for SvelteKit Node app
-      - name: Prepare deployment package
-        run: |
-          mkdir deploy
-          cp -r client/build deploy/build
-          cp client/package.json deploy/
-          cp client/package-lock.json deploy/
-
-      - name: Upload artifact
+      - name: Upload API artifact
         uses: actions/upload-artifact@v4
         with:
-          name: website
-          path: deploy
+          name: api
+          path: api-publish
 
-  deploy:
+  deploy-api:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-api
 
     steps:
-      - name: Download artifact
+      - name: Download API artifact
         uses: actions/download-artifact@v4
         with:
-          name: website
+          name: api
 
-      - name: Install production dependencies
-        run: npm ci --omit=dev
-
-      - name: Deploy to Azure Web App
+      - name: Deploy API to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: Websitekeukenkastje
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23FA7EA156C84F829DE1147F1B7E4DBE }}
+          app-name: keukenkastje-api
+          publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
           package: .
