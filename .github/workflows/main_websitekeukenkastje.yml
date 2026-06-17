@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Node (frontend)
+      # Frontend
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -35,7 +35,7 @@ jobs:
         working-directory: client
         run: npm run build
 
-      # .NET API build (optioneel maar veilig laten staan)
+      # API build (optioneel)
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -44,7 +44,7 @@ jobs:
       - name: Publish API
         run: dotnet publish api/api.csproj --configuration Release --output ${{ github.workspace }}/artifact-api
 
-      # Python check (geen deploy meer, alleen validatie)
+      # Python validation
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -58,14 +58,14 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Combine everything into ONE deployable package
+      # Combine deployment package
       - name: Prepare deployment package
         run: |
           mkdir deploy
           cp -r client/* deploy/
           cp -r artifact-api/* deploy/ || true
 
-      - name: Upload deployment artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: website
@@ -85,5 +85,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: Websitekeukenkastje
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23FA7EA156C84F829DE1147F1B7E4DBE }}
           package: .
