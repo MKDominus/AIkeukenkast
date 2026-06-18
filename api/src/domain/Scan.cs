@@ -5,6 +5,7 @@ public class Scan
     public int Id { get; set; }
     public DateTime ScanDate { get; set; }
     public required string ImageUrl { get; set; } 
+    public string? PostalCode { get; set; }
     public int? MunicipalityId { get; set; } 
     public Municipality? Municipality { get; set; }
     public ICollection<DetectedProduct> DetectedProducts { get; set; } = new List<DetectedProduct>();

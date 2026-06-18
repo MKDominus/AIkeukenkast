@@ -29,13 +29,17 @@ public class ScanImportService : IScanImportService
         _configuration = configuration;
     }
 
-    public async Task<IReadOnlyList<Scan>> CreateFromImagesAsync(IReadOnlyCollection<IFormFile> images)
+    public async Task<IReadOnlyList<Scan>> CreateFromImagesAsync(
+        IReadOnlyCollection<IFormFile> images,
+        string? postalCode)
     {
         var validImages = images.Where(image => image.Length > 0).ToList();
         if (validImages.Count == 0)
         {
             throw new ArgumentException("At least one image file is required.", nameof(images));
         }
+
+        var normalizedPostalCode = string.IsNullOrWhiteSpace(postalCode) ? null : postalCode.Trim();
 
         var aiServiceBaseUrl = _configuration["AI_SERVICE_BASE_URL"];
 
@@ -46,6 +50,7 @@ public class ScanImportService : IScanImportService
 
         var predictionEndpoint = $"{aiServiceBaseUrl.TrimEnd('/')}/predict";
 
+        //expensive operation -> will change to get only product names and ids instead of all products
         var knownProducts = (await _productService.GetAllAsync())
             .ToDictionary(product => product.ProductName, StringComparer.OrdinalIgnoreCase);
 
@@ -122,6 +127,7 @@ public class ScanImportService : IScanImportService
                 {
                     ScanDate = DateTime.UtcNow,
                     ImageUrl = imageUrl,
+                    PostalCode = normalizedPostalCode,
                     MunicipalityId = randomIdNumber,
                     DetectedProducts = detectedProducts
                 };

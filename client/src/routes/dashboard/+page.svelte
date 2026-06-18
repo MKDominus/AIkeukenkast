@@ -199,7 +199,7 @@
         <p>No scans found.</p>
     {:else}
         {#each filteredScans as scan}
-            <ScanCard {scan} />
+            <ScanCard {scan} showPostalCode />
         {/each}
     {/if}
 </div>

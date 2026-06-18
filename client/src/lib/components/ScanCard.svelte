@@ -1,15 +1,49 @@
+<!--
+@component
+
+### ScanCard
+
+---
+
+#### Description
+
+Renders a single scan summary card with municipality details, scan date, detected
+product counts, safety badges, and expandable product details. The card can also
+optionally show the scan postal code next to the municipality name.
+
+---
+
+#### Usage
+
+```svelte
+<ScanCard scan={scan} showPostalCode />
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| scan | Scan | The scan data to display in the card |
+| showPostalCode | boolean | Optional flag to show the postal code next to the municipality name |
+
+-->
+
 <script lang="ts">
 	import { cubicOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import type { Scan, ScanProduct } from '$lib/services/scanService';
 	import ScanImageModal from '$lib/components/ScanImageModal.svelte';
+	import TzorgDefault from '$lib/assets/tzorgDefault.png';
 	import locationIcon from '$lib/assets/dashboard_icons/location_icon.png';
 
 	type Props = {
 		scan: Scan;
+		showPostalCode?: boolean;
 	};
 
-	let { scan }: Props = $props();
+	let { scan, showPostalCode = false }: Props = $props();
 	let showAllProducts = $state(false);
 	let selectedProduct = $state<ScanProduct | null>(null);
 	let showScanImage = $state(false);
@@ -84,6 +118,9 @@ return 'warnings-no';
 
 			<h3 class="municipality-name">
 				{scan.municipality?.name ?? 'Onbekende gemeente'}
+				{#if showPostalCode && scan.postalCode}
+					<span class="postal-code">{scan.postalCode}</span>
+				{/if}
 			</h3>
 
 			<p class="detected-products">
@@ -177,6 +214,14 @@ return 'warnings-no';
 			×
 		</button>
 
+		<div class="modal-imageContainer">
+			{#if selectedProduct.product?.imageURL}
+				<img src={selectedProduct.product.imageURL} alt={selectedProduct.product?.productName ?? 'Product afbeelding'} />
+			{:else}
+				<img src={TzorgDefault} alt="geen product afbeelding beschikbaar" />
+			{/if}
+		</div>
+
 		<h3 class="modal-product-name">{selectedProduct.product?.productName ?? 'Onbekend product'}</h3>
 		<p class="modal-manufacturer"><strong>Producttype:</strong> {selectedProduct.product?.productType ?? '-'}</p>
 
@@ -266,6 +311,13 @@ return 'warnings-no';
 	font-size: 1.2rem;
 	font-weight: 700;
 	color: var(--color-primary-dark);
+}
+
+.postal-code {
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: var(--color-text-muted);
+	margin-left: 8px;
 }
 
 .scan-date {
@@ -468,6 +520,7 @@ color: #92400e;
 		position: fixed;
 		inset: 0;
 		border: none;
+		border-radius: 0;
 		padding: 0;
 		background: rgba(17, 24, 39, 0.28);
 		backdrop-filter: blur(4px);
@@ -480,7 +533,7 @@ color: #92400e;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		z-index: 41;
+		z-index: 101;
 		width: min(640px, calc(100vw - 32px));
 		max-height: calc(100vh - 48px);
 		overflow-y: auto;
@@ -504,10 +557,30 @@ color: #92400e;
 	}
 
 	.modal-product-name {
+		margin-top: 12px;
 		margin: 0;
 		font-weight: 700;
 		font-size: 1.35rem;
 		color: var(--color-primary-dark);
+	}
+
+	.modal-imageContainer {
+		height: 180px;
+		margin-top: 6px;
+		margin-bottom: 8px;
+		padding: 12px;
+		border-radius: 12px;
+		background: #fff;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.modal-imageContainer img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 	}
 
 	.modal-manufacturer {

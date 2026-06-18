@@ -10,6 +10,9 @@ public class ScanConfiguration : IEntityTypeConfiguration<Scan>
     {
         builder.HasKey(s => s.Id);
 
+        builder.Property(s => s.PostalCode)
+            .HasMaxLength(20);
+
         builder.HasOne(s => s.Municipality)
             .WithMany()
             .HasForeignKey(s => s.MunicipalityId)

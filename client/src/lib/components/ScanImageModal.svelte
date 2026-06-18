@@ -1,3 +1,43 @@
+<!--
+@component
+
+### ScanImageModal
+
+---
+
+#### Description
+
+Displays a modal dialog with a scan image fetched lazily from the API.
+
+The component manages image loading states, error handling, and blob URL lifecycle.
+Images are fetched only when the modal is opened, and object URLs are automatically
+revoked on component destruction to prevent memory leaks. The modal includes a backdrop
+with blur effect and a close button for dismissal.
+
+---
+
+#### Usage
+
+```svelte
+<ScanImageModal
+	scanId={123}
+	municipalityName="Amsterdam"
+	onClose={() => {}}
+/>
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| scanId | number | The ID of the scan to fetch the image for |
+| municipalityName | string \| null | Optional name of the municipality to display below the title |
+| onClose | () => void | Callback function invoked when the user closes the modal |
+
+-->
+
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { getScanImageObjectUrl } from '$lib/services/scanImageService';
