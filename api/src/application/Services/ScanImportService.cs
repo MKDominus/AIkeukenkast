@@ -41,7 +41,7 @@ public class ScanImportService : IScanImportService
 
         var normalizedPostalCode = string.IsNullOrWhiteSpace(postalCode) ? null : postalCode.Trim();
 
-        var aiServiceBaseUrl = _configuration["AI_SERVICE_BASE_URL"];
+        var aiServiceBaseUrl = _configuration["AI_SERVICE_BASE_URL"] ?? "http://127.0.0.1:8000";
 
         if (string.IsNullOrWhiteSpace(aiServiceBaseUrl))
         {

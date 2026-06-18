@@ -115,6 +115,9 @@
 	<ProgressIndicator steps={totalSteps} visualCurrentStep={currentStep} />
 	<div id="stepContent">
 		{#if currentStep === 1}
+			{#if errorOccurred}
+				<ErrorMessage message={errorMessage} />
+			{/if}
 			<p class="instructionText_small">
 				Maak een foto of selecteer een afbeelding uit uw galerij
 			</p>
@@ -181,9 +184,6 @@
 					maxlength="20"
 				/>
 			</div>
-			{#if errorOccurred}
-				<ErrorMessage message={errorMessage} />
-			{/if}
 		{:else if currentStep === 2}
 			<img class="visualAidIcon" src={LoadingGif} alt="Bezig met verwerken" />
 			<p class="instructionText">Afbeelding(en) Analyseren</p>
