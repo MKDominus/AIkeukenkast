@@ -35,6 +35,7 @@ optionally show the scan postal code next to the municipality name.
 	import { slide } from 'svelte/transition';
 	import type { Scan, ScanProduct } from '$lib/services/scanService';
 	import ScanImageModal from '$lib/components/ScanImageModal.svelte';
+	import TzorgDefault from '$lib/assets/tzorgDefault.png';
 	import locationIcon from '$lib/assets/dashboard_icons/location_icon.png';
 
 	type Props = {
@@ -212,6 +213,14 @@ return 'warnings-no';
 		>
 			×
 		</button>
+
+		<div class="modal-imageContainer">
+			{#if selectedProduct.product?.imageURL}
+				<img src={selectedProduct.product.imageURL} alt={selectedProduct.product?.productName ?? 'Product afbeelding'} />
+			{:else}
+				<img src={TzorgDefault} alt="geen product afbeelding beschikbaar" />
+			{/if}
+		</div>
 
 		<h3 class="modal-product-name">{selectedProduct.product?.productName ?? 'Onbekend product'}</h3>
 		<p class="modal-manufacturer"><strong>Producttype:</strong> {selectedProduct.product?.productType ?? '-'}</p>
@@ -511,6 +520,7 @@ color: #92400e;
 		position: fixed;
 		inset: 0;
 		border: none;
+		border-radius: 0;
 		padding: 0;
 		background: rgba(17, 24, 39, 0.28);
 		backdrop-filter: blur(4px);
@@ -523,7 +533,7 @@ color: #92400e;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		z-index: 41;
+		z-index: 101;
 		width: min(640px, calc(100vw - 32px));
 		max-height: calc(100vh - 48px);
 		overflow-y: auto;
@@ -547,10 +557,30 @@ color: #92400e;
 	}
 
 	.modal-product-name {
+		margin-top: 12px;
 		margin: 0;
 		font-weight: 700;
 		font-size: 1.35rem;
 		color: var(--color-primary-dark);
+	}
+
+	.modal-imageContainer {
+		height: 180px;
+		margin-top: 6px;
+		margin-bottom: 8px;
+		padding: 12px;
+		border-radius: 12px;
+		background: #fff;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.modal-imageContainer img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 	}
 
 	.modal-manufacturer {
