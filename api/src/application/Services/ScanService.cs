@@ -22,6 +22,8 @@ public class ScanService : IScanService
             .ThenInclude(dp => dp.Product)
             .ThenInclude(p => p!.Ingredients)
             .Include(s => s.Municipality)
+            .OrderByDescending(s => s.ScanDate)
+            .ThenByDescending(s => s.Id)
             .ToListAsync();
     }
 

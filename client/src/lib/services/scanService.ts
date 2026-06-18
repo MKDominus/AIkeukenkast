@@ -31,6 +31,8 @@ export type Scan = {
     id: number;
     scanDate: string;
     imageUrl: string;
+    postalCode?: string | null;
+    postalCodePermission: boolean;
     municipalityId?: number | null;
     municipality?: {
         id: number;

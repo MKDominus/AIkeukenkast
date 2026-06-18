@@ -17,6 +17,8 @@
 	let totalSteps = 3;
 	let errorMessage = $state("");
 	let errorOccurred = $state(false);
+	let postalCode = $state("");
+	let postalCodePermission = $state(false);
 
 	let uploadedImages = $state<
 		{
@@ -35,6 +37,11 @@
 
 		for (const image of images) {
 			formData.append("images", image.file);
+		}
+
+		formData.append("postalCodePermission", postalCodePermission ? "true" : "false");
+		if (postalCodePermission && postalCode.trim().length > 0) {
+			formData.append("postalCode", postalCode.trim());
 		}
 
 		try {
@@ -142,6 +149,31 @@
 				</div>
 			</form>
 			<ImageCarousel images={uploadedImages} onDelete={deleteImage} onSubmit={submitImages} />
+			<div class="postalCodeContainer">
+				<label class="postalCodeCard" for="postalCodePermission">
+					<div class="postalCodeToggleRow">
+						<input
+							id="postalCodePermission"
+							type="checkbox"
+							class="postalCodeCheckbox"
+							bind:checked={postalCodePermission}
+						/>
+						<span class="customCheckbox" aria-hidden="true"></span>
+						<span class="postalCodeConsentText">toestemming voor postcode</span>
+					</div>
+
+					{#if postalCodePermission}
+						<input
+							id="postalCode"
+							type="text"
+							inputmode="text"
+							placeholder="Bijv. 1234AB"
+							bind:value={postalCode}
+							maxlength="20"
+						/>
+					{/if}
+				</label>
+			</div>
 			{#if errorOccurred}
 				<ErrorMessage message={errorMessage} />
 			{/if}
@@ -199,6 +231,92 @@
 
 	.instructionText_small {
 		text-align: center;
+	}
+
+	.postalCodeContainer {
+		display: flex;
+		width: 100%;
+		max-width: 420px;
+		margin-top: 48px;
+		margin-bottom: 8px;
+	}
+
+	.postalCodeCard {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		width: 100%;
+		padding: 12px 14px;
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		background: var(--color-surface-primary-soft);
+		cursor: pointer;
+	}
+
+	.postalCodeToggleRow {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		width: 100%;
+	}
+
+	.postalCodeCheckbox {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.customCheckbox {
+		width: 20px;
+		height: 20px;
+		border-radius: 6px;
+		border: 2px solid var(--color-primary);
+		background: var(--color-bg);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s ease, border-color 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.customCheckbox::after {
+		content: "";
+		width: 6px;
+		height: 11px;
+		border: solid var(--color-bg);
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg) scale(0);
+		transition: transform 0.15s ease;
+	}
+
+	.postalCodeCheckbox:checked + .customCheckbox {
+		background: var(--color-primary);
+		border-color: var(--color-primary);
+	}
+
+	.postalCodeCheckbox:checked + .customCheckbox::after {
+		transform: rotate(45deg) scale(1);
+	}
+
+	.postalCodeCheckbox:focus-visible + .customCheckbox {
+		outline: 2px solid var(--color-primary-dark);
+		outline-offset: 2px;
+	}
+
+	.postalCodeConsentText {
+		color: var(--color-primary-dark);
+		font-weight: 600;
+		text-transform: lowercase;
+	}
+
+	#postalCode {
+		padding: 10px 12px;
+		border: 1px solid var(--color-primary);
+		border-radius: 8px;
+		font-size: 1rem;
+		color: var(--color-text);
+		background: var(--color-bg);
+		width: 100%;
 	}
 
 	#buttonsContainer {

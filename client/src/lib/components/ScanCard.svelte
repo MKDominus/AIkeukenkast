@@ -7,9 +7,10 @@
 
 	type Props = {
 		scan: Scan;
+		showPostalCode?: boolean;
 	};
 
-	let { scan }: Props = $props();
+	let { scan, showPostalCode = false }: Props = $props();
 	let showAllProducts = $state(false);
 	let selectedProduct = $state<ScanProduct | null>(null);
 	let showScanImage = $state(false);
@@ -84,6 +85,9 @@ return 'warnings-no';
 
 			<h3 class="municipality-name">
 				{scan.municipality?.name ?? 'Onbekende gemeente'}
+				{#if showPostalCode && scan.postalCode}
+					<span class="postal-code">{scan.postalCode}</span>
+				{/if}
 			</h3>
 
 			<p class="detected-products">
@@ -266,6 +270,13 @@ return 'warnings-no';
 	font-size: 1.2rem;
 	font-weight: 700;
 	color: var(--color-primary-dark);
+}
+
+.postal-code {
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: var(--color-text-muted);
+	margin-left: 8px;
 }
 
 .scan-date {

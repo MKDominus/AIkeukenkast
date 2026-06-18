@@ -27,13 +27,20 @@ public class ScanImportService : IScanImportService
         _blobStorageService = blobStorageService;
     }
 
-    public async Task<IReadOnlyList<Scan>> CreateFromImagesAsync(IReadOnlyCollection<IFormFile> images)
+    public async Task<IReadOnlyList<Scan>> CreateFromImagesAsync(
+        IReadOnlyCollection<IFormFile> images,
+        string? postalCode,
+        bool postalCodePermission)
     {
         var validImages = images.Where(image => image.Length > 0).ToList();
         if (validImages.Count == 0)
         {
             throw new ArgumentException("At least one image file is required.", nameof(images));
         }
+
+        var normalizedPostalCode = postalCodePermission
+            ? string.IsNullOrWhiteSpace(postalCode) ? null : postalCode.Trim()
+            : null;
 
         //expensive operation -> will change to get only product names and ids instead of all products
         var knownProducts = (await _productService.GetAllAsync())
@@ -111,6 +118,8 @@ public class ScanImportService : IScanImportService
                 {
                     ScanDate = DateTime.UtcNow,
                     ImageUrl = imageUrl,
+                    PostalCode = normalizedPostalCode,
+                    PostalCodePermission = postalCodePermission,
                     MunicipalityId = randomIdNumber,
                     DetectedProducts = detectedProducts
                 };
