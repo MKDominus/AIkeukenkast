@@ -35,10 +35,10 @@ prediction_key = os.getenv("PREDICTION_KEY")
 prediction_endpoint = os.getenv("ENDPOINT_PREDICTION")
 
 # Azure Custom Vision project ID
-project_id = "c83cc105-d64c-4c3b-8ca9-c25f2da4ef62"
+project_id = "dce83bdd-1ba0-4aa2-9ff7-adb31c5119e2"
 
 # Naam van de gepubliceerde iteratie (modelversie)
-publish_iteration_name = "Iteration4"
+publish_iteration_name = "Iteration2"
 
 # Authenticatie voor Azure Custom Vision API
 credentials = ApiKeyCredentials(in_headers={
