@@ -12,6 +12,9 @@
 	import GalleryIcon from "$lib/assets/photo_icon.png"
 	import LoadingGif from "$lib/assets/loading.gif"
 	import ImportCompleteIcon from "$lib/assets/importComplete_icon.png"
+	import { env } from '$env/dynamic/public';
+
+	const API_BASE_URL = env.PUBLIC_API_BASE_URL ?? "http://localhost:5141";
 
 	let currentStep = $state(1);
 	let totalSteps = 3;
@@ -55,7 +58,7 @@
 			errorOccurred = false;
 
 			// stuur afbeelding naar backend
-			const response = await fetch("http://localhost:5141/api/scans", {
+			const response = await fetch(`${API_BASE_URL}/api/scans`, {
 				method: "POST",
 				body: formData
 			});
@@ -65,7 +68,6 @@
 			}
 
 			const result = await response.json();
-			console.log("AI result:", result);
 			currentStep = 3;
 
 			setTimeout(() => {
