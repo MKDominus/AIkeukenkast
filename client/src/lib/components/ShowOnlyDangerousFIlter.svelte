@@ -1,3 +1,34 @@
+<!--
+@component
+
+### ShowOnlyDangerousFilter
+
+---
+
+#### Description
+
+Provides a themed dropdown filter for narrowing scans by safety level. The selected
+value is forwarded through the optional callback so parent pages can control scan
+filtering state.
+
+---
+
+#### Usage
+
+```svelte
+<ShowOnlyDangerousFIlter itemChosenEvent={handleSafetyFilter} />
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| itemChosenEvent | (value: FilterMode) => void | Callback invoked whenever the selected safety filter changes |
+
+-->
+
 <script lang="ts">
 	type FilterMode = 'all' | 'safe' | 'riskant' | 'unsafe';
 

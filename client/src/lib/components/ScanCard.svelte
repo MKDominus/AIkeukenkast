@@ -1,3 +1,35 @@
+<!--
+@component
+
+### ScanCard
+
+---
+
+#### Description
+
+Renders a single scan summary card with municipality details, scan date, detected
+product counts, safety badges, and expandable product details. The card can also
+optionally show the scan postal code next to the municipality name.
+
+---
+
+#### Usage
+
+```svelte
+<ScanCard scan={scan} showPostalCode />
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| scan | Scan | The scan data to display in the card |
+| showPostalCode | boolean | Optional flag to show the postal code next to the municipality name |
+
+-->
+
 <script lang="ts">
 	import { cubicOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';

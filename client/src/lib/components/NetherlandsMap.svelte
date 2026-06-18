@@ -1,3 +1,35 @@
+<!--
+@component
+
+### NetherlandsMap
+
+---
+
+#### Description
+
+Displays a Leaflet-based map of the Netherlands and plots municipality scan counts as
+circle markers. Municipality names are geocoded and cached locally so the map can
+reuse coordinates between visits. Marker sizes reflect the number of scans per
+municipality.
+
+---
+
+#### Usage
+
+```svelte
+<NetherlandsMap municipalityCounts={municipalityCounts} />
+```
+
+---
+
+#### Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| municipalityCounts | MunicipalityScanCount[] | Scan counts per municipality to render on the map |
+
+-->
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import 'leaflet/dist/leaflet.css';
