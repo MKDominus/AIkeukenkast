@@ -7,14 +7,19 @@
 	import ImageCarousel from "$lib/components/ImageCarousel.svelte";
 	import ErrorMessage from "$lib/components/ErrorMessage.svelte";
 
-	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png"
-	import CameraIcon from "$lib/assets/camera_icon.png"
-	import GalleryIcon from "$lib/assets/photo_icon.png"
-	import LoadingGif from "$lib/assets/loading.gif"
-	import ImportCompleteIcon from "$lib/assets/importComplete_icon.png"
-	import { env } from '$env/dynamic/public';
+	import ThuishulpHeaderImage from "$lib/assets/Thuishulp header card.png";
+	import CameraIcon from "$lib/assets/camera_icon.png";
+	import GalleryIcon from "$lib/assets/photo_icon.png";
+	import LoadingGif from "$lib/assets/loading.gif";
+	import ImportCompleteIcon from "$lib/assets/importComplete_icon.png";
+	import { env } from "$env/dynamic/public";
 
 	const API_BASE_URL = env.PUBLIC_API_BASE_URL ?? "http://localhost:5141";
+	const MAX_IMAGE_SIZE_BYTES = 4 * 1024 * 1024; // 4 MB
+
+	function formatFileSize(bytes: number) {
+		return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+	}
 
 	let currentStep = $state(1);
 	let totalSteps = 3;
@@ -43,6 +48,19 @@
 			return;
 		}
 
+		const tooLargeImage = images.find(
+			(image) => image.file.size > MAX_IMAGE_SIZE_BYTES
+		);
+
+		if (tooLargeImage) {
+			currentStep = 1;
+			errorOccurred = true;
+			errorMessage = `"${tooLargeImage.file.name}" is te groot (${formatFileSize(
+				tooLargeImage.file.size
+			)}). Upload een afbeelding kleiner dan 4 MB.`;
+			return;
+		}
+
 		const formData = new FormData();
 
 		for (const image of images) {
@@ -57,7 +75,6 @@
 			currentStep = 2;
 			errorOccurred = false;
 
-			// stuur afbeelding naar backend
 			const response = await fetch(`${API_BASE_URL}/api/scans`, {
 				method: "POST",
 				body: formData
@@ -68,18 +85,19 @@
 			}
 
 			const result = await response.json();
+			console.log(result);
 			currentStep = 3;
 
 			setTimeout(() => {
 				goto(`/scan_resultaten/${result[0]["id"]}`);
 			}, 3000);
-
 		} catch (error) {
 			currentStep = 1;
 			errorOccurred = true;
-			errorMessage = error instanceof Error
-				? error.message
-				: "Er ging iets mis bij het analyseren.";
+			errorMessage =
+				error instanceof Error
+					? error.message
+					: "Er ging iets mis bij het analyseren.";
 		}
 	}
 
@@ -96,7 +114,14 @@
 			if (!file.type.startsWith("image/")) {
 				errorOccurred = true;
 				errorMessage = `"${file.name}" is geen geldige afbeelding.`;
+				continue;
+			}
 
+			if (file.size > MAX_IMAGE_SIZE_BYTES) {
+				errorOccurred = true;
+				errorMessage = `"${file.name}" is te groot (${formatFileSize(
+					file.size
+				)}). Upload een afbeelding kleiner dan 4 MB.`;
 				continue;
 			}
 
@@ -200,10 +225,7 @@
 	</div>
 </div>
 
-
-
 <style>
-	
 	.visualAidIcon {
 		width: 150px;
 		height: 150px;
@@ -360,7 +382,7 @@
 		content: "";
 		width: 2px;
 		flex: 1;
-		background-color: #000000; /* line color */
+		background-color: #000000;
 	}
 
 	.divider span {
@@ -383,4 +405,3 @@
 		}
 	}
 </style>
-
