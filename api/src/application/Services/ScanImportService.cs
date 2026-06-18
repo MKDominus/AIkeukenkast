@@ -1,6 +1,7 @@
 using api.Application.Interfaces;
 using api.Domain;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -8,23 +9,24 @@ namespace api.Application.Services;
 
 public class ScanImportService : IScanImportService
 {
-    private const string PredictionEndpoint = "http://127.0.0.1:8000/predict";
-
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IProductService _productService;
     private readonly IScanService _scanService;
     private readonly IBlobStorageService _blobStorageService;
+    private readonly IConfiguration _configuration;
 
     public ScanImportService(
         IHttpClientFactory httpClientFactory,
         IProductService productService,
         IScanService scanService,
-        IBlobStorageService blobStorageService)
+        IBlobStorageService blobStorageService,
+        IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
         _productService = productService;
         _scanService = scanService;
         _blobStorageService = blobStorageService;
+        _configuration = configuration;
     }
 
     public async Task<IReadOnlyList<Scan>> CreateFromImagesAsync(
@@ -38,6 +40,15 @@ public class ScanImportService : IScanImportService
         }
 
         var normalizedPostalCode = string.IsNullOrWhiteSpace(postalCode) ? null : postalCode.Trim();
+
+        var aiServiceBaseUrl = _configuration["AI_SERVICE_BASE_URL"];
+
+        if (string.IsNullOrWhiteSpace(aiServiceBaseUrl))
+        {
+            throw new InvalidOperationException("AI_SERVICE_BASE_URL is not configured.");
+        }
+
+        var predictionEndpoint = $"{aiServiceBaseUrl.TrimEnd('/')}/predict";
 
         //expensive operation -> will change to get only product names and ids instead of all products
         var knownProducts = (await _productService.GetAllAsync())
@@ -65,7 +76,8 @@ public class ScanImportService : IScanImportService
                 form.Add(fileContent, "images", image.FileName);
             }
 
-            using var response = await httpClient.PostAsync(PredictionEndpoint, form);
+            using var response = await httpClient.PostAsync(predictionEndpoint, form);
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new InvalidOperationException(
@@ -88,8 +100,7 @@ public class ScanImportService : IScanImportService
                 var result = results[i];
                 var image = validImages[i];
 
-                var imageUrl =
-                    await _blobStorageService.UploadImageAsync(image);
+                var imageUrl = await _blobStorageService.UploadImageAsync(image);
 
                 var detectedProducts = result
                     .GetProperty("predictions")
@@ -109,8 +120,9 @@ public class ScanImportService : IScanImportService
                         Count = 1
                     })
                     .ToList();
-                //THIS IS A TEMPORARY FIX FOR THE MUNICIPALITY ID, needs to change later.
-                int randomIdNumber = new Random().Next(1, 6); 
+
+                int randomIdNumber = new Random().Next(1, 6);
+
                 var entity = new Scan
                 {
                     ScanDate = DateTime.UtcNow,
@@ -120,10 +132,9 @@ public class ScanImportService : IScanImportService
                     DetectedProducts = detectedProducts
                 };
 
-                    await _scanService.AddAsync(entity);
-
-                    createdScans.Add(entity);
-                }
+                await _scanService.AddAsync(entity);
+                createdScans.Add(entity);
+            }
 
             return createdScans;
         }
