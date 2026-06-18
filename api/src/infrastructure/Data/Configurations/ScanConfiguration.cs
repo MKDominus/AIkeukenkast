@@ -13,9 +13,6 @@ public class ScanConfiguration : IEntityTypeConfiguration<Scan>
         builder.Property(s => s.PostalCode)
             .HasMaxLength(20);
 
-        builder.Property(s => s.PostalCodePermission)
-            .HasDefaultValue(false);
-
         builder.HasOne(s => s.Municipality)
             .WithMany()
             .HasForeignKey(s => s.MunicipalityId)

@@ -11,7 +11,6 @@ public static class ScanMapper
         ScanDate = s.ScanDate,
         ImageUrl = s.ImageUrl,
         PostalCode = s.PostalCode,
-        PostalCodePermission = s.PostalCodePermission,
         MunicipalityId = s.MunicipalityId,
         Municipality = s.Municipality != null ? new MunicipalityDto
         {

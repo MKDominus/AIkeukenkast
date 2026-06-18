@@ -48,8 +48,7 @@ public class ScansController : ControllerBase
         {
             var createdScans = await _scanImportService.CreateFromImagesAsync(
                 dto.Images,
-                dto.PostalCode,
-                dto.PostalCodePermission);
+                dto.PostalCode);
             return Ok(createdScans.Select(ScanMapper.ToDto));
         }
         catch (ArgumentException ex)
@@ -71,10 +70,7 @@ public class ScansController : ControllerBase
         if (entity == null) return NotFound();
         
         entity.ImageUrl = dto.ImageUrl;
-        entity.PostalCodePermission = dto.PostalCodePermission;
-        entity.PostalCode = dto.PostalCodePermission
-            ? string.IsNullOrWhiteSpace(dto.PostalCode) ? null : dto.PostalCode.Trim()
-            : null;
+        entity.PostalCode = string.IsNullOrWhiteSpace(dto.PostalCode) ? null : dto.PostalCode.Trim();
         entity.MunicipalityId = dto.MunicipalityId;
         
         await _service.UpdateAsync(entity);

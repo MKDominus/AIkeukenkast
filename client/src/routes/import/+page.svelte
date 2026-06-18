@@ -17,8 +17,8 @@
 	let totalSteps = 3;
 	let errorMessage = $state("");
 	let errorOccurred = $state(false);
+	let uploadConsentGiven = $state(false);
 	let postalCode = $state("");
-	let postalCodePermission = $state(false);
 
 	let uploadedImages = $state<
 		{
@@ -33,14 +33,20 @@
 	}
 
 	async function submitImages(images: { file: File; url: string }[]) {
+		if (!uploadConsentGiven) {
+			currentStep = 1;
+			errorOccurred = true;
+			errorMessage = "Je moet toestemming geven om een foto te uploaden.";
+			return;
+		}
+
 		const formData = new FormData();
 
 		for (const image of images) {
 			formData.append("images", image.file);
 		}
 
-		formData.append("postalCodePermission", postalCodePermission ? "true" : "false");
-		if (postalCodePermission && postalCode.trim().length > 0) {
+		if (postalCode.trim().length > 0) {
 			formData.append("postalCode", postalCode.trim());
 		}
 
@@ -149,30 +155,31 @@
 				</div>
 			</form>
 			<ImageCarousel images={uploadedImages} onDelete={deleteImage} onSubmit={submitImages} />
-			<div class="postalCodeContainer">
-				<label class="postalCodeCard" for="postalCodePermission">
-					<div class="postalCodeToggleRow">
+			<div class="uploadConsentContainer">
+				<label class="uploadConsentCard" for="uploadConsentGiven">
+					<div class="uploadConsentToggleRow">
 						<input
-							id="postalCodePermission"
+							id="uploadConsentGiven"
 							type="checkbox"
-							class="postalCodeCheckbox"
-							bind:checked={postalCodePermission}
+							class="uploadConsentCheckbox"
+							bind:checked={uploadConsentGiven}
 						/>
 						<span class="customCheckbox" aria-hidden="true"></span>
-						<span class="postalCodeConsentText">toestemming voor postcode</span>
+						<span class="uploadConsentText">toestemming voor upload</span>
 					</div>
-
-					{#if postalCodePermission}
-						<input
-							id="postalCode"
-							type="text"
-							inputmode="text"
-							placeholder="Bijv. 1234AB"
-							bind:value={postalCode}
-							maxlength="20"
-						/>
-					{/if}
 				</label>
+			</div>
+
+			<div class="postalCodeContainer">
+				<label class="postalCodeLabel" for="postalCode">Postcode</label>
+				<input
+					id="postalCode"
+					type="text"
+					inputmode="text"
+					placeholder="Bijv. 1234AB"
+					bind:value={postalCode}
+					maxlength="20"
+				/>
 			</div>
 			{#if errorOccurred}
 				<ErrorMessage message={errorMessage} />
@@ -233,18 +240,16 @@
 		text-align: center;
 	}
 
-	.postalCodeContainer {
+	.uploadConsentContainer {
 		display: flex;
 		width: 100%;
 		max-width: 420px;
-		margin-top: 48px;
-		margin-bottom: 8px;
+		margin-top: 24px;
+		margin-bottom: 12px;
 	}
 
-	.postalCodeCard {
+	.uploadConsentCard {
 		display: flex;
-		flex-direction: column;
-		gap: 10px;
 		width: 100%;
 		padding: 12px 14px;
 		border: 1px solid var(--color-border);
@@ -253,14 +258,14 @@
 		cursor: pointer;
 	}
 
-	.postalCodeToggleRow {
+	.uploadConsentToggleRow {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		width: 100%;
 	}
 
-	.postalCodeCheckbox {
+	.uploadConsentCheckbox {
 		position: absolute;
 		opacity: 0;
 		pointer-events: none;
@@ -289,24 +294,38 @@
 		transition: transform 0.15s ease;
 	}
 
-	.postalCodeCheckbox:checked + .customCheckbox {
+	.uploadConsentCheckbox:checked + .customCheckbox {
 		background: var(--color-primary);
 		border-color: var(--color-primary);
 	}
 
-	.postalCodeCheckbox:checked + .customCheckbox::after {
+	.uploadConsentCheckbox:checked + .customCheckbox::after {
 		transform: rotate(45deg) scale(1);
 	}
 
-	.postalCodeCheckbox:focus-visible + .customCheckbox {
+	.uploadConsentCheckbox:focus-visible + .customCheckbox {
 		outline: 2px solid var(--color-primary-dark);
 		outline-offset: 2px;
 	}
 
-	.postalCodeConsentText {
+	.uploadConsentText {
 		color: var(--color-primary-dark);
 		font-weight: 600;
 		text-transform: lowercase;
+	}
+
+	.postalCodeContainer {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		width: 100%;
+		max-width: 420px;
+		margin-bottom: 12px;
+	}
+
+	.postalCodeLabel {
+		font-weight: 600;
+		color: var(--color-primary-dark);
 	}
 
 	#postalCode {

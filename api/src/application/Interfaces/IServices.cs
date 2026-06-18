@@ -32,8 +32,7 @@ public interface IScanImportService
 {
     Task<IReadOnlyList<Scan>> CreateFromImagesAsync(
         IReadOnlyCollection<IFormFile> images,
-        string? postalCode,
-        bool postalCodePermission);
+    string? postalCode);
 }
 
 public interface IBlobStorageService
